@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* Site-wide colour variables. Change these two values and the whole site follows. */
+:root {
+  --background: #070b08; /* very dark forest, near black */
+  --foreground: #ebe9e2; /* soft off-white for text */
+}
+
+/* Makes the variables above usable as Tailwind classes, e.g. bg-background, text-foreground */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, sans-serif;
+}
