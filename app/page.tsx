@@ -1,12 +1,11 @@
-// The homepage. Right now it is intentionally empty apart from the site name,
-// so we can confirm everything runs before designing anything.
+// The homepage. For now it contains only Act 01, the opening hero.
+
+import Hero from "@/components/Hero";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-sm uppercase tracking-[0.3em] text-foreground/60">
-        Hidden Foliage
-      </p>
+    <main>
+      <Hero />
     </main>
   );
 }
