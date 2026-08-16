@@ -1,0 +1,287 @@
+"use client";
+
+// 03 / Four Levels of Living.
+//
+// No film, no photograph: the plans themselves are the event. Four levels drawn
+// as thin linework on the dark field, presented in a shallow oblique projection.
+//
+//   0–12%    the principal lines resolve out of the dark (stroke draw-on),
+//            the finer lines fade in; the four levels sit almost collapsed
+//            into one dense drawing, aligned on the stair/lift core
+//   15–50%   the house separates vertically into its four levels
+//            (attic · second · first · basement) — slow, even, no overshoot
+//   50–88%   each level in turn comes to full ivory while the others fall to
+//            hairline; a small caption for the active level
+//   88–100%  all four equal; the exploded house holds
+//
+// One ScrollTrigger timeline; everything reverses. Reduced motion shows the
+// exploded drawing statically with all four captions.
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { LEVELS, PLAN_BOUNDS, type Level, type Shape } from "./floorPlans";
+
+// Oblique projection: x' = x + C·y, y' = D·y. Phones use a flatter, taller plate.
+const PROJ = {
+  desktop: { c: 0.36, d: 0.55, sep: 250 },
+  mobile: { c: 0.12, d: 0.9, sep: 480 }, // near plan-view, taller plates
+};
+// Small resting offsets in the collapsed state, so depth is sensed but walls
+// don't turn into spaghetti (top → bottom).
+const COLLAPSED = [-9, -3, 3, 9];
+const EXPLODED = [-1.5, -0.5, 0.5, 1.5]; // × sep
+
+const STROKE = {
+  principal: { color: "#ebe9e2", width: 1.25, opacity: 0.95 },
+  secondary: { color: "#b8b2a4", width: 0.8, opacity: 0.7 },
+  hair: { color: "#b8b2a4", width: 0.6, opacity: 0.42 },
+};
+
+function projection(c: number, d: number, sep: number) {
+  const b = PLAN_BOUNDS;
+  const xs = [b.x + c * b.y, b.x + b.w + c * (b.y + b.h), b.x + c * (b.y + b.h), b.x + b.w + c * b.y];
+  const xMin = Math.min(...xs), xMax = Math.max(...xs);
+  const yMin = d * b.y - 1.5 * sep, yMax = d * (b.y + b.h) + 1.5 * sep;
+  const m = 40;
+  const ml = 150; // extra room on the left for the level names
+  return { matrix: `matrix(1 0 ${c} ${d} 0 0)`, inverse: `matrix(1 0 ${-c / d} ${1 / d} 0 0)`, viewBox: `${xMin - ml} ${yMin - m} ${xMax - xMin + ml + m} ${yMax - yMin + 2 * m}` };
+}
+
+function levelExtentX(level: Level) {
+  let min = Infinity;
+  for (const s of level.shapes) {
+    if (s.kind === "rect") min = Math.min(min, s.x);
+    if (s.kind === "poly") for (const [x] of s.pts) min = Math.min(min, x);
+  }
+  return min;
+}
+
+function ShapeEl({ s }: { s: Shape }) {
+  const w = "weight" in s && s.weight ? STROKE[s.weight] : STROKE.secondary;
+  const common = { fill: "none", stroke: w.color, strokeWidth: w.width, strokeOpacity: w.opacity, vectorEffect: "non-scaling-stroke" as const, strokeLinejoin: "miter" as const, strokeLinecap: "square" as const };
+  const dashed = "dashed" in s && s.dashed ? { strokeDasharray: "5 4" } : {};
+  switch (s.kind) {
+    case "rect":
+      return <rect x={s.x} y={s.y} width={s.w} height={s.h} {...common} {...dashed} className={s.draw ? "draw" : undefined} />;
+    case "poly": {
+      const d = s.pts.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ") + (s.close === false ? "" : " Z");
+      return <path d={d} {...common} {...dashed} className={s.draw ? "draw" : undefined} />;
+    }
+    case "line":
+      return <line x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} {...common} {...dashed} />;
+    case "stair": {
+      const n = s.treads ?? 8;
+      const lines = [];
+      for (let i = 1; i < n; i++) {
+        const t = i / n;
+        lines.push(s.dir === "v"
+          ? <line key={i} x1={s.x} y1={s.y + s.h * t} x2={s.x + s.w} y2={s.y + s.h * t} />
+          : <line key={i} x1={s.x + s.w * t} y1={s.y} x2={s.x + s.w * t} y2={s.y + s.h} />);
+      }
+      return (
+        <g {...common} strokeWidth={STROKE.secondary.width} stroke={STROKE.secondary.color} strokeOpacity={STROKE.secondary.opacity}>
+          <rect x={s.x} y={s.y} width={s.w} height={s.h} />
+          <g strokeOpacity={STROKE.hair.opacity} strokeWidth={STROKE.hair.width}>{lines}</g>
+        </g>
+      );
+    }
+    case "lift":
+      return (
+        <g {...common} stroke={STROKE.secondary.color} strokeWidth={STROKE.secondary.width} strokeOpacity={STROKE.secondary.opacity}>
+          <rect x={s.x} y={s.y} width={s.w} height={s.h} />
+          <rect x={s.x + s.w * 0.22} y={s.y + s.h * 0.2} width={s.w * 0.56} height={s.h * 0.44} strokeOpacity={STROKE.hair.opacity} strokeWidth={STROKE.hair.width} />
+          <path d={`M${s.x + s.w * 0.22} ${s.y + s.h * 0.2} l${s.w * 0.56} ${s.h * 0.44} M${s.x + s.w * 0.78} ${s.y + s.h * 0.2} l${-s.w * 0.56} ${s.h * 0.44}`} strokeOpacity={STROKE.hair.opacity} strokeWidth={STROKE.hair.width} />
+        </g>
+      );
+    case "cross":
+      return <path d={`M${s.x} ${s.y} L${s.x + s.w} ${s.y + s.h} M${s.x + s.w} ${s.y} L${s.x} ${s.y + s.h}`} {...common} stroke={STROKE.hair.color} strokeWidth={STROKE.hair.width} strokeOpacity={STROKE.hair.opacity} strokeDasharray="5 4" />;
+    case "label":
+      // Positioned in plan space; the glyphs are counter-skewed (see .plan-label
+      // transform set at runtime) so type stays upright and unsquashed.
+      return (
+        <g transform={`translate(${s.x} ${s.y})`} className="plan-room-label">
+          <text className="plan-label" data-rotate={s.rotate ? "1" : undefined} textAnchor={s.anchor ?? "middle"} fontSize={s.size === "m" ? 25 : 21} fill="#b8b2a4" fillOpacity={0.85}>
+            {s.text.split("\n").map((line, i) => (
+              <tspan key={i} x={0} dy={i ? "1.15em" : 0}>
+                {line}
+              </tspan>
+            ))}
+          </text>
+        </g>
+      );
+  }
+}
+
+export default function FourLevels() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const captionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const svg = svgRef.current;
+    const captions = captionsRef.current;
+    if (!section || !svg || !captions) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      { desktop: "(min-width: 768px)", mobile: "(max-width: 767px)", reduce: "(prefers-reduced-motion: reduce)" },
+      (ctx) => {
+        const { mobile, reduce } = ctx.conditions as { mobile: boolean; reduce: boolean };
+        const P = mobile ? PROJ.mobile : PROJ.desktop;
+        const proj = projection(P.c, P.d, P.sep);
+
+        // Geometry for this breakpoint.
+        svg.setAttribute("viewBox", proj.viewBox);
+        svg.querySelectorAll(".proj").forEach((el) => el.setAttribute("transform", proj.matrix));
+        svg.querySelectorAll(".plan-label").forEach((el) => el.setAttribute("transform", el.getAttribute("data-rotate") ? `${proj.inverse} rotate(-90)` : proj.inverse));
+        // Level names: left of each plate on desktop; above the plate's left corner on
+        // phones (no room to the left there), and larger, since they carry the story.
+        svg.querySelectorAll<SVGGElement>(".lvl-name").forEach((g) => {
+          const x0 = Number(g.getAttribute("data-x0"));
+          const t = g.querySelector("text")!;
+          if (mobile) {
+            g.setAttribute("transform", `translate(${x0 + 4} ${PLAN_BOUNDS.y - 30})`);
+            t.setAttribute("text-anchor", "start");
+            t.setAttribute("font-size", "38");
+          } else {
+            g.setAttribute("transform", `translate(${x0 - 30} ${PLAN_BOUNDS.y + PLAN_BOUNDS.h * 0.55})`);
+            t.setAttribute("text-anchor", "end");
+            t.setAttribute("font-size", "20");
+          }
+        });
+
+        const levels = LEVELS.map((l) => svg.querySelector<SVGGElement>(`.level-${l.id}`)!);
+        const lines = levels.map((g) => g.querySelector<SVGGElement>(".lines")!);
+        const names = levels.map((g) => g.querySelector<SVGGElement>(".lvl-name")!);
+        const draws = svg.querySelectorAll<SVGGeometryElement>(".draw");
+        const roomLabels = svg.querySelectorAll<SVGGElement>(".plan-room-label");
+        const caps = LEVELS.map((l) => captions.querySelector<HTMLElement>(`.cap-${l.id}`)!);
+
+        // ── Reduced motion: the exploded drawing, all captions, no pin ─────
+        if (reduce) {
+          levels.forEach((g, i) => gsap.set(g, { y: EXPLODED[i] * P.sep, opacity: 1 }));
+          gsap.set(lines, { opacity: 1 });
+          gsap.set(names, { opacity: 1 });
+          gsap.set(roomLabels, { opacity: 1 });
+          gsap.set(caps, { opacity: 1 });
+          return;
+        }
+
+        // Prepare draw-on: each principal outline hidden behind its own length.
+        draws.forEach((el) => {
+          const len = el.getTotalLength();
+          gsap.set(el, { attr: { "stroke-dasharray": len, "stroke-dashoffset": len } });
+        });
+        gsap.set(lines, { opacity: 0 });
+        gsap.set(names, { opacity: 0 });
+        gsap.set(roomLabels, { opacity: 0 }); // room names only once the levels have parted
+        gsap.set(caps, { opacity: 0 });
+        levels.forEach((g, i) => gsap.set(g, { y: COLLAPSED[i], opacity: 1 }));
+
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // 0–12%: linework resolves.
+        tl.to(draws, { attr: { "stroke-dashoffset": 0 }, duration: 0.12, ease: "sine.out" }, 0)
+          .to(lines, { opacity: 1, duration: 0.1, ease: "sine.inOut" }, 0.02);
+
+        // 15–50%: the house separates into four levels.
+        levels.forEach((g, i) => tl.to(g, { y: EXPLODED[i] * P.sep, duration: 0.35, ease: "power1.inOut" }, 0.15));
+        tl.to(names, { opacity: 1, duration: 0.08, ease: "sine.inOut" }, 0.42)
+          .to(roomLabels, { opacity: 1, duration: 0.1, ease: "sine.inOut" }, 0.38);
+
+        // 50–88%: focus sequence (order: basement, first, second, attic — the
+        // arrays run top→bottom, so indexes 3, 2, 1, 0). First storey dwells longest.
+        const windows: [number, number, number][] = [
+          [3, 0.5, 0.585],
+          [2, 0.585, 0.72],
+          [1, 0.72, 0.81],
+          [0, 0.81, 0.885],
+        ];
+        windows.forEach(([idx, from, to]) => {
+          levels.forEach((g, i) => tl.to(g, { opacity: i === idx ? 1 : 0.28, duration: 0.03, ease: "sine.inOut" }, from));
+          tl.to(caps[idx], { opacity: 1, duration: 0.03, ease: "sine.out" }, from + 0.005)
+            .to(caps[idx], { opacity: 0, duration: 0.02, ease: "sine.in" }, to - 0.02);
+        });
+
+        // 88–92%: everything back to equal; then hold to 100%.
+        levels.forEach((g) => tl.to(g, { opacity: 1, duration: 0.04, ease: "sine.inOut" }, 0.885));
+        tl.to({}, { duration: 1 }, 0);
+
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
+      },
+    );
+
+    return () => mm.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="four-levels relative h-[300vh] bg-background max-md:h-[260vh]"
+    >
+      <div className="fl-stage sticky top-0 h-dvh w-full overflow-hidden">
+        {/* The drawing */}
+        <div className="fl-drawing absolute inset-x-0 top-[4vh] bottom-[37vh] md:inset-x-auto md:left-[3vw] md:top-[7vh] md:bottom-[7vh] md:w-[68vw]">
+          <svg ref={svgRef} className="h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            {LEVELS.map((level) => (
+              <g key={level.id} className={`level level-${level.id}`}>
+                <g className="proj">
+                  <g className="lines">
+                    {level.shapes.map((s, i) => (
+                      <ShapeEl key={i} s={s} />
+                    ))}
+                  </g>
+                  {/* Level name, upright, just left of the plate. */}
+                  <g className="lvl-name" data-x0={levelExtentX(level)} transform={`translate(${levelExtentX(level) - 30} ${PLAN_BOUNDS.y + PLAN_BOUNDS.h * 0.55})`}>
+                    <text className="plan-label" textAnchor="end" fontSize={20} fill="#b8b2a4" letterSpacing="3">
+                      {level.name.toUpperCase()}
+                    </text>
+                  </g>
+                </g>
+              </g>
+            ))}
+          </svg>
+        </div>
+
+        {/* Captions — an architectural caption for the active level. Right of the
+            drawing on desktop, beneath it on phones. No containers. */}
+        <div
+          ref={captionsRef}
+          className="fl-captions absolute inset-x-[6vw] top-[65vh] md:inset-x-auto md:right-[5vw] md:top-1/2 md:w-[20vw] md:-translate-y-1/2"
+        >
+          {LEVELS.map((level) => (
+            <div key={level.id} className={`fl-cap cap-${level.id} absolute inset-x-0 top-0`} style={{ opacity: 0 }}>
+              <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">{level.name}</p>
+              <div className="my-3 h-px w-8 bg-stone/40" />
+              <p className="font-sans text-sm leading-relaxed text-foreground/85">{level.caption}</p>
+              {level.note && (
+                <p className="mt-2 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/80">{level.note}</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Section notation */}
+        <p className="fl-label absolute bottom-[8vh] left-[6vw] font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
+          03 <span aria-hidden="true">/</span> Four Levels of Living
+        </p>
+      </div>
+    </section>
+  );
+}
