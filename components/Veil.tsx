@@ -12,12 +12,16 @@
 //
 //   tint      0.7 → 0.45 (0–15%)  → 0.2 (→55%)   settles in dark, then rests
 //   veil      retracts left over 15% → 80%
-//   film      held closed; louvres open over 25% → 60%; then held half-open
+//   film      PLAYS (not scrubbed) once the veil starts moving: the louvres
+//             open at their natural speed and the film holds on a half-open frame
 //   statement in 25% → 45%, out 48% → 58% (gone before the edge reaches it)
 //   label     present throughout
 //
-// The film file: 4 s excerpt of video2, re-encoded with frequent keyframes so it
-// can be scrubbed (like Act 01). Only 1.2 s → 2.5 s is used: closed → half-open.
+// The film file: 4 s excerpt of video2 (louvres closed → open → closing). We
+// play from 1.2 s and stop on the half-open frame at 2.6 s — pattern still
+// legible, but you can see through it. Scrolling back reverses the interface;
+// the film pauses where it is and is only rewound once the section is fully
+// off screen, so re-entering replays it.
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
@@ -27,9 +31,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const VEIL_VIDEO = "/videos/video2- veil.mp4";
 const VEIL_STILL = "/images/exterior blinds open.png"; // reduced-motion fallback
 
-// Which part of the film we scrub: louvres closed → half-open (pattern still legible).
+// Which part of the film plays: louvres closed → half-open (pattern still legible).
 const FILM_FROM = 1.2;
-const FILM_TO = 2.5;
+const FILM_TO = 2.6;
+// Scroll fraction at which the film starts playing (the veil starts retracting here).
+const FILM_STARTS_AT = 0.15;
 
 const TINT_START = 0.7;
 const TINT_END = 0.2;
@@ -54,24 +60,84 @@ export default function Veil() {
 
     // ── Full experience ────────────────────────────────────────────────────
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      let tl: gsap.core.Timeline | null = null;
+      // ── Film playback lifecycle (not scrubbed) ──────────────────────────
+      let active = false; // scroll is past FILM_STARTS_AT
+      let onScreen = false; // any part of the section is in the viewport
+      const rewind = () => {
+        if (Number.isFinite(video.duration)) video.currentTime = FILM_FROM;
+      };
+      const play = () => {
+        if (!video.paused || video.currentTime >= FILM_TO) return; // no stacked play(); hold at the end frame
+        const p = video.play();
+        if (p) p.catch(() => {}); // autoplay refused → stays on the closed frame
+      };
+      const pause = () => {
+        if (!video.paused) video.pause();
+      };
+      // Stop on the intentional final frame. requestVideoFrameCallback is
+      // frame-accurate; timeupdate is the coarse fallback for older browsers.
+      const watchEnd = () => {
+        if ("requestVideoFrameCallback" in video) {
+          const tick = (_now: number, meta: { mediaTime: number }) => {
+            if (video.paused) return;
+            if (meta.mediaTime >= FILM_TO) pause();
+            else video.requestVideoFrameCallback(tick);
+          };
+          video.requestVideoFrameCallback(tick);
+        }
+      };
+      const onTimeUpdate = () => {
+        if (video.currentTime >= FILM_TO) pause();
+      };
+      video.addEventListener("playing", watchEnd);
+      video.addEventListener("timeupdate", onTimeUpdate);
+      video.addEventListener("loadedmetadata", rewind);
+      if (video.readyState >= HTMLMediaElement.HAVE_METADATA) rewind();
 
-      const build = () => {
-        if (tl) return; // never build twice
-        const duration = video.duration;
-        if (!Number.isFinite(duration) || duration <= 0) return;
-        const to = Math.min(FILM_TO, duration);
+      // Section entirely off screen (scrolled back up into the hero) → rewind
+      // for a possible second pass. Off the bottom → just pause.
+      const visibility = ScrollTrigger.create({
+        trigger: section,
+        start: "top bottom",
+        end: "bottom top",
+        onEnter: () => {
+          onScreen = true;
+        },
+        onEnterBack: () => {
+          onScreen = true;
+          if (active) play();
+        },
+        onLeave: () => {
+          onScreen = false;
+          pause();
+        },
+        onLeaveBack: () => {
+          onScreen = false;
+          pause();
+          rewind();
+        },
+      });
 
-        tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 0.8, // a touch more smoothing than the hero: this movement is slower
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.8, // a touch more smoothing than the hero: this movement is slower
+          onUpdate: (self) => {
+            if (self.progress >= FILM_STARTS_AT && !active) {
+              active = true;
+              if (onScreen) play();
+            } else if (self.progress < FILM_STARTS_AT && active) {
+              active = false;
+              pause();
+            }
           },
-        });
+        },
+      });
 
+      {
         tl
           // Settle into darkness, then let the façade come through and rest.
           .fromTo(tint, { opacity: TINT_START }, { opacity: 0.45, duration: 0.15 }, 0)
@@ -85,13 +151,7 @@ export default function Veil() {
           // The veil retracts: 15% → 80%. Slow, even, no overshoot.
           .fromTo(veil, { xPercent: 0 }, { xPercent: -100, duration: 0.65, ease: "power1.inOut" }, 0.15)
 
-          // The louvres open: 25% → 60%, then hold half-open.
-          .fromTo(
-            video,
-            { currentTime: FILM_FROM },
-            { currentTime: to, duration: 0.35 },
-            0.25,
-          )
+          // (The film's playhead is not tweened — see the lifecycle above.)
 
           // The statement: composed as one block. In 25% → 45%, out 48% → 58%,
           //    so the words have gone before the veil edge passes over them.
@@ -112,27 +172,29 @@ export default function Veil() {
           // scrubbed timeline is stretched to fit the scroll range, so without it
           // every stage above would be stretched by a third.
           .to({}, { duration: 0.2 }, 0.8);
-      };
+      }
 
       // Sensible loading: the film only starts downloading in full when the
-      // section is one screen away, then the timeline is built once its length
-      // is known. (preload="metadata" until then.)
+      // section is one screen away. (preload="metadata" until then.)
       const approach = ScrollTrigger.create({
         trigger: section,
         start: "top bottom+=100%",
         once: true,
         onEnter: () => {
           video.preload = "auto";
-          video.load();
+          video.load(); // re-fires loadedmetadata → rewind() puts it on FILM_FROM
         },
       });
-      video.addEventListener("loadedmetadata", build);
 
       return () => {
-        video.removeEventListener("loadedmetadata", build);
+        pause();
+        video.removeEventListener("playing", watchEnd);
+        video.removeEventListener("timeupdate", onTimeUpdate);
+        video.removeEventListener("loadedmetadata", rewind);
         approach.kill();
-        tl?.scrollTrigger?.kill();
-        tl?.kill();
+        visibility.kill();
+        tl.scrollTrigger?.kill();
+        tl.kill();
       };
     });
 
@@ -173,7 +235,7 @@ export default function Veil() {
             src={VEIL_STILL}
             alt=""
             fill
-            sizes="100vw"
+            sizes="(orientation: portrait) 178vh, 100vw"
             quality={85}
             className={`hidden motion-reduce:block ${mediaCrop}`}
           />

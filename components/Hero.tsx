@@ -15,11 +15,14 @@
 //
 // Only three things happen for the visitor: darkness recedes, the title
 // disappears, the statement appears. The still→film hand-off is invisible: the
-// film's first frame is the still, so it is held on that frame while it fades in,
-// and only starts moving once it is fully in front.
+// film's first frame is the still, so it sits on that frame while it fades in.
 //
-// Note on the footage: scroll-scrubbing seeks the video constantly, so the file
-// must have frequent keyframes (this one has one every 6 frames).
+// The film is NOT scrubbed frame-by-frame by scroll (24 fps footage dragged
+// through wheel notches looks stepped). Scroll drives the interface — veil,
+// typography, the hand-off — and once the film is in front it simply PLAYS,
+// once, at its natural speed, and holds on its final frame. Scrolling back
+// reverses the interface; the film pauses, and is reset only once it is hidden
+// again behind the still, so a second pass replays it from the top.
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
@@ -35,9 +38,12 @@ const HERO_VIDEO = "/videos/video1-hero.mp4";
 const VEIL_START = 0.86;
 const VEIL_END = 0.14;
 
-// Where the film starts moving (as a fraction of the hero's scroll). Before this
+// Where the film starts playing (as a fraction of the hero's scroll). Before this
 // it sits on its first frame while it fades in over the still.
 const FILM_STARTS_MOVING = 0.2;
+// Below this fraction the film is fully hidden behind the still, so it can be
+// reset to its first frame without anyone seeing a cut.
+const FILM_HIDDEN_BELOW = 0.08;
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -65,23 +71,51 @@ export default function Hero() {
 
     // ── Full experience: scroll drives the sequence ────────────────────────
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      let tl: gsap.core.Timeline | null = null;
+      // ── Film playback lifecycle (not scrubbed) ──────────────────────────
+      let active = false; // true while scroll is past FILM_STARTS_MOVING
+      let onScreen = true; // false once the whole hero has scrolled away
+      const play = () => {
+        if (!video.paused || video.ended) return; // never stack play() calls; hold on the last frame
+        const p = video.play();
+        if (p) p.catch(() => {}); // autoplay refused (e.g. iOS Low Power Mode) → stays on frame 0
+      };
+      const pause = () => {
+        if (!video.paused) video.pause();
+      };
+      const onProgress = (progress: number) => {
+        if (progress >= FILM_STARTS_MOVING && !active) {
+          active = true;
+          if (onScreen) play();
+        } else if (progress < FILM_STARTS_MOVING && active) {
+          active = false;
+          pause();
+        }
+        // Hidden behind the still again → quietly rewind for a possible second pass.
+        if (progress < FILM_HIDDEN_BELOW && video.currentTime > 0 && !video.seeking) {
+          video.currentTime = 0;
+        }
+      };
 
-      const build = () => {
-        // The film's real length, read from the file — never hard-coded.
-        const duration = video.duration;
-        if (!Number.isFinite(duration) || duration <= 0) return;
-
-        tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: section,
-            start: "top top", // when the top of the hero reaches the top of the screen
-            end: "bottom bottom", // until the bottom of the hero reaches the bottom of the screen
-            scrub: 0.6, // small lag (seconds) that smooths wheel steps into motion
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: section,
+          start: "top top", // when the top of the hero reaches the top of the screen
+          end: "bottom bottom", // until the bottom of the hero reaches the bottom of the screen
+          scrub: 0.6, // small lag (seconds) that smooths wheel steps into motion
+          onUpdate: (self) => onProgress(self.progress),
+          onLeave: () => {
+            onScreen = false;
+            pause();
           },
-        });
+          onEnterBack: () => {
+            onScreen = true;
+            if (active) play();
+          },
+        },
+      });
 
+      {
         // Positions below are fractions of the hero's scroll distance (0 → 1).
         // Every tween declares its own start and end value, so nothing depends
         // on what happened to be on screen when the tween was first rendered.
@@ -91,13 +125,7 @@ export default function Hero() {
           // image quietly gaining life.
           .fromTo(video, { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "sine.inOut" }, 0.08)
 
-          // The film's playhead: held on frame 0, then plays to the end.
-          .fromTo(
-            video,
-            { currentTime: 0 },
-            { currentTime: duration, duration: 1 - FILM_STARTS_MOVING, immediateRender: false },
-            FILM_STARTS_MOVING,
-          )
+          // (The film's playhead is not tweened — see the lifecycle above.)
 
           // 1. Darkness recedes — in three tempos, then it rests.
           //    0–15%  deeply shadowed, barely changing
@@ -134,18 +162,17 @@ export default function Hero() {
             { opacity: 1 },
             { opacity: 0, duration: 0.06, ease: "sine.in", immediateRender: false },
             0.9,
-          );
-      };
+          )
 
-      // The duration is only known once the browser has read the file's header.
-      if (video.readyState >= HTMLMediaElement.HAVE_METADATA) build();
-      else video.addEventListener("loadedmetadata", build, { once: true });
+          // Keeps the timeline exactly 1.0 long, so scroll fractions map 1:1.
+          .to({}, { duration: 1 }, 0);
+      }
 
       // Cleanup: runs when the component unmounts or the media query stops matching.
       return () => {
-        video.removeEventListener("loadedmetadata", build);
-        tl?.scrollTrigger?.kill();
-        tl?.kill();
+        pause();
+        tl.scrollTrigger?.kill();
+        tl.kill();
       };
     });
 
@@ -183,7 +210,12 @@ export default function Hero() {
             fill
             priority
             quality={85}
-            sizes="100vw"
+            // How wide the browser should assume the image is drawn. With
+            // object-cover, a 16:9 image filling a portrait screen is scaled to
+            // the screen's HEIGHT, so its drawn width is ~1.78 × the viewport
+            // height — far wider than the viewport. Landscape screens are
+            // covered by 100vw (16:10 laptops are within ~10% of it).
+            sizes="(orientation: portrait) 178vh, 100vw"
             className={mediaCrop}
           />
           <video
