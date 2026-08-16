@@ -20,7 +20,7 @@ export type Shape =
   | { kind: "stair"; x: number; y: number; w: number; h: number; treads?: number; dir?: "h" | "v" }
   | { kind: "lift"; x: number; y: number; w: number; h: number }
   | { kind: "cross"; x: number; y: number; w: number; h: number } // void / shaft marker
-  | { kind: "label"; x: number; y: number; text: string; size?: "s" | "m"; anchor?: "start" | "middle" | "end"; rotate?: -90 };
+  | { kind: "label"; x: number; y: number; text: string; size?: "s" | "m"; anchor?: "start" | "middle" | "end"; rotate?: -90; along?: boolean };
 
 export interface Level {
   id: "attic" | "second" | "first" | "basement";
@@ -64,7 +64,7 @@ const first: Level = {
     L(400, 700, "Car porch"),
     // outdoor decks: north strip, west strip, east
     R(637, 545, 763, 47, "secondary"),
-    L(1020, 574, "Outdoor deck"),
+    { kind: "label", x: 1020, y: 574, text: "Outdoor deck", size: "s", anchor: "middle", along: true },
     R(637, 592, 35, 313, "secondary"),
     L(655, 750, "Deck", "s"),
     R(1275, 687, 125, 218, "secondary"),
@@ -89,7 +89,7 @@ const first: Level = {
     L(1180, 760, "Dining", "m"),
     // pool
     R(675, 840, 575, 65, "principal", { draw: true }),
-    L(962, 878, "Swimming pool · 18 m × 2 m"),
+    { kind: "label", x: 962, y: 878, text: "Swimming pool · 18 m × 2 m", size: "s", anchor: "middle", along: true },
     R(1250, 840, 25, 65, "hair"), // step
   ],
 };

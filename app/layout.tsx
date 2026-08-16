@@ -4,6 +4,7 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Instrument_Sans } from "next/font/google";
 import "./globals.css";
+import Nav from "@/components/Nav";
 
 // Large editorial serif for titles. Loaded once, self-hosted by Next.js.
 const serif = Bodoni_Moda({
@@ -31,7 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        <Nav />
+        {children}
+      </body>
     </html>
   );
 }

@@ -45,7 +45,7 @@ body {
 /* Four Levels: room labels are too small to read on phones; the level names and
    captions carry the information there. */
 @media (max-width: 767px) {
-  .plan-room-label {
+  .four-levels .plan-room-label {
     display: none;
   }
 }
