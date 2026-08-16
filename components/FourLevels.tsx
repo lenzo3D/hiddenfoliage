@@ -5,14 +5,14 @@
 // No film, no photograph: the plans themselves are the event. Four levels drawn
 // as thin linework on the dark field, presented in a shallow oblique projection.
 //
-//   0–12%    the principal lines resolve out of the dark (stroke draw-on),
+//   0–8%     the principal lines resolve out of the dark (stroke draw-on),
 //            the finer lines fade in; the four levels sit almost collapsed
 //            into one dense drawing, aligned on the stair/lift core
-//   15–50%   the house separates vertically into its four levels
+//   10–45%   the house separates vertically into its four levels
 //            (attic · second · first · basement) — slow, even, no overshoot
-//   50–88%   each level in turn comes to full ivory while the others fall to
-//            hairline; a small caption for the active level
-//   88–100%  all four equal; the exploded house holds
+//   46–87%   each level in turn comes to full ivory while the others recede
+//            (still readable); a small caption for the active level
+//   87–100%  all four equal; the exploded house holds
 //
 // One ScrollTrigger timeline; everything reverses. Reduced motion shows the
 // exploded drawing statically with all four captions.
@@ -24,18 +24,19 @@ import { LEVELS, PLAN_BOUNDS, type Level, type Shape } from "./floorPlans";
 
 // Oblique projection: x' = x + C·y, y' = D·y. Phones use a flatter, taller plate.
 const PROJ = {
-  desktop: { c: 0.36, d: 0.55, sep: 250 },
+  desktop: { c: 0.3, d: 0.55, sep: 250 },
   mobile: { c: 0.12, d: 0.9, sep: 480 }, // near plan-view, taller plates
 };
 // Small resting offsets in the collapsed state, so depth is sensed but walls
 // don't turn into spaghetti (top → bottom).
 const COLLAPSED = [-9, -3, 3, 9];
+const INACTIVE = 0.42; // resting opacity of the levels not in focus: quiet, still readable
 const EXPLODED = [-1.5, -0.5, 0.5, 1.5]; // × sep
 
 const STROKE = {
-  principal: { color: "#ebe9e2", width: 1.25, opacity: 0.95 },
-  secondary: { color: "#b8b2a4", width: 0.8, opacity: 0.7 },
-  hair: { color: "#b8b2a4", width: 0.6, opacity: 0.42 },
+  principal: { color: "#ebe9e2", width: 1.25, opacity: 1 },
+  secondary: { color: "#b8b2a4", width: 0.8, opacity: 0.8 },
+  hair: { color: "#b8b2a4", width: 0.6, opacity: 0.5 },
 };
 
 function projection(c: number, d: number, sep: number) {
@@ -43,8 +44,8 @@ function projection(c: number, d: number, sep: number) {
   const xs = [b.x + c * b.y, b.x + b.w + c * (b.y + b.h), b.x + c * (b.y + b.h), b.x + b.w + c * b.y];
   const xMin = Math.min(...xs), xMax = Math.max(...xs);
   const yMin = d * b.y - 1.5 * sep, yMax = d * (b.y + b.h) + 1.5 * sep;
-  const m = 40;
-  const ml = 150; // extra room on the left for the level names
+  const m = 30;
+  const ml = 130; // extra room on the left for the level names
   return { matrix: `matrix(1 0 ${c} ${d} 0 0)`, inverse: `matrix(1 0 ${-c / d} ${1 / d} 0 0)`, viewBox: `${xMin - ml} ${yMin - m} ${xMax - xMin + ml + m} ${yMax - yMin + 2 * m}` };
 }
 
@@ -193,31 +194,36 @@ export default function FourLevels() {
           },
         });
 
-        // 0–12%: linework resolves.
-        tl.to(draws, { attr: { "stroke-dashoffset": 0 }, duration: 0.12, ease: "sine.out" }, 0)
-          .to(lines, { opacity: 1, duration: 0.1, ease: "sine.inOut" }, 0.02);
+        // 0–8%: linework resolves.
+        tl.to(draws, { attr: { "stroke-dashoffset": 0 }, duration: 0.08, ease: "sine.out" }, 0)
+          .to(lines, { opacity: 1, duration: 0.07, ease: "sine.inOut" }, 0.015);
 
-        // 15–50%: the house separates into four levels.
-        levels.forEach((g, i) => tl.to(g, { y: EXPLODED[i] * P.sep, duration: 0.35, ease: "power1.inOut" }, 0.15));
-        tl.to(names, { opacity: 1, duration: 0.08, ease: "sine.inOut" }, 0.42)
-          .to(roomLabels, { opacity: 1, duration: 0.1, ease: "sine.inOut" }, 0.38);
+        // 10–45%: the house separates into four levels.
+        levels.forEach((g, i) => tl.to(g, { y: EXPLODED[i] * P.sep, duration: 0.35, ease: "power1.inOut" }, 0.1));
+        tl.to(names, { opacity: 1, duration: 0.08, ease: "sine.inOut" }, 0.36)
+          .to(roomLabels, { opacity: 1, duration: 0.1, ease: "sine.inOut" }, 0.33);
 
-        // 50–88%: focus sequence (order: basement, first, second, attic — the
+        // 46–87%: focus sequence (order: basement, first, second, attic — the
         // arrays run top→bottom, so indexes 3, 2, 1, 0). First storey dwells longest.
+        // The active level: full opacity and its name turns ivory; the others
+        // recede to INACTIVE but stay readable.
+        const nameTexts = names.map((g) => g.querySelector("text")!);
         const windows: [number, number, number][] = [
-          [3, 0.5, 0.585],
-          [2, 0.585, 0.72],
-          [1, 0.72, 0.81],
-          [0, 0.81, 0.885],
+          [3, 0.46, 0.55],
+          [2, 0.55, 0.69],
+          [1, 0.69, 0.79],
+          [0, 0.79, 0.87],
         ];
         windows.forEach(([idx, from, to]) => {
-          levels.forEach((g, i) => tl.to(g, { opacity: i === idx ? 1 : 0.28, duration: 0.03, ease: "sine.inOut" }, from));
+          levels.forEach((g, i) => tl.to(g, { opacity: i === idx ? 1 : INACTIVE, duration: 0.03, ease: "sine.inOut" }, from));
+          nameTexts.forEach((t, i) => tl.to(t, { attr: { fill: i === idx ? "#ebe9e2" : "#b8b2a4" }, duration: 0.03 }, from));
           tl.to(caps[idx], { opacity: 1, duration: 0.03, ease: "sine.out" }, from + 0.005)
             .to(caps[idx], { opacity: 0, duration: 0.02, ease: "sine.in" }, to - 0.02);
         });
 
-        // 88–92%: everything back to equal; then hold to 100%.
-        levels.forEach((g) => tl.to(g, { opacity: 1, duration: 0.04, ease: "sine.inOut" }, 0.885));
+        // 87–90%: everything back to equal; then hold to 100%.
+        levels.forEach((g) => tl.to(g, { opacity: 1, duration: 0.03, ease: "sine.inOut" }, 0.87));
+        nameTexts.forEach((t) => tl.to(t, { attr: { fill: "#b8b2a4" }, duration: 0.03 }, 0.87));
         tl.to({}, { duration: 1 }, 0);
 
         return () => {
@@ -237,7 +243,7 @@ export default function FourLevels() {
     >
       <div className="fl-stage sticky top-0 h-dvh w-full overflow-hidden">
         {/* The drawing */}
-        <div className="fl-drawing absolute inset-x-0 top-[4vh] bottom-[37vh] md:inset-x-auto md:left-[3vw] md:top-[7vh] md:bottom-[7vh] md:w-[68vw]">
+        <div className="fl-drawing absolute inset-x-0 top-[4vh] bottom-[37vh] md:inset-x-auto md:left-[2vw] md:top-[6vh] md:bottom-[6vh] md:w-[84vw]">
           <svg ref={svgRef} className="h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             {LEVELS.map((level) => (
               <g key={level.id} className={`level level-${level.id}`}>
@@ -263,13 +269,13 @@ export default function FourLevels() {
             drawing on desktop, beneath it on phones. No containers. */}
         <div
           ref={captionsRef}
-          className="fl-captions absolute inset-x-[6vw] top-[65vh] md:inset-x-auto md:right-[5vw] md:top-1/2 md:w-[20vw] md:-translate-y-1/2"
+          className="fl-captions absolute inset-x-[6vw] top-[65vh] md:inset-x-auto md:right-[6vw] md:top-auto md:bottom-[13vh] md:w-[22vw]"
         >
           {LEVELS.map((level) => (
-            <div key={level.id} className={`fl-cap cap-${level.id} absolute inset-x-0 top-0`} style={{ opacity: 0 }}>
-              <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">{level.name}</p>
-              <div className="my-3 h-px w-8 bg-stone/40" />
-              <p className="font-sans text-sm leading-relaxed text-foreground/85">{level.caption}</p>
+            <div key={level.id} className={`fl-cap cap-${level.id} absolute inset-x-0 top-0 md:top-auto md:bottom-0`} style={{ opacity: 0 }}>
+              <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-foreground/90 md:text-[0.8125rem]">{level.name}</p>
+              <div className="my-3 h-px w-10 bg-stone/50" />
+              <p className="font-sans text-sm leading-relaxed text-foreground/90 md:text-[0.9375rem]">{level.caption}</p>
               {level.note && (
                 <p className="mt-2 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/80">{level.note}</p>
               )}
