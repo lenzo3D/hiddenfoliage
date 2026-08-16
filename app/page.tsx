@@ -2,12 +2,14 @@
 
 import Hero from "@/components/Hero";
 import Veil from "@/components/Veil";
+import InsideOut from "@/components/InsideOut";
 
 export default function Home() {
   return (
     <main>
       <Hero />
       <Veil />
+      <InsideOut />
     </main>
   );
 }
