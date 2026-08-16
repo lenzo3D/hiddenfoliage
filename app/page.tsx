@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Veil from "@/components/Veil";
 import InsideOut from "@/components/InsideOut";
 import FourLevels from "@/components/FourLevels";
+import Sanctuary from "@/components/Sanctuary";
 import Close from "@/components/Close";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <Veil />
       <InsideOut />
       <FourLevels />
+      <Sanctuary />
       <Close />
     </main>
   );
