@@ -1,11 +1,12 @@
 "use client";
 
-// Act 04 — Close.
+// 05 — Close.
 //
 // The last shot of the film: the house at night, the privacy screen lit from
 // within — what conceals by day glows after dark. This act is the quietest and
-// mirrors the opening: Act 01 let darkness recede; here darkness returns, slowly,
-// until only the lantern is left. No panels, no doors. One transformation.
+// mirrors the opening: the Reveal let darkness recede; here darkness returns,
+// slowly, until only the lantern is left. No panels, no doors. One
+// transformation. The Signature (wordmark, address, enquiry) follows it.
 //
 //   tint      0.35 → 0.12 over 0–20% (the night house comes through), rests,
 //             then 0.12 → 0.72 over 60% → 95% (night gathers), rests
@@ -201,7 +202,7 @@ export default function Close() {
             What conceals by day, glows by&nbsp;night.
           </p>
           <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-            03 <span aria-hidden="true">/</span> Close
+            05 <span aria-hidden="true">/</span> Close
           </p>
         </div>
       </div>

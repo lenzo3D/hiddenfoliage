@@ -1,8 +1,9 @@
-// A quiet, consistent ending for the inner pages: wordmark, address, the
-// marketing agencies (with their CEA licence numbers, as Singapore requires),
-// and the artist's-impression note.
+// A quiet, consistent ending for the inner pages: wordmark, address, page links,
+// and the small print (see Colophon). The homepage ends with the Signature
+// instead, which carries the same small print.
 
 import Link from "next/link";
+import Colophon from "./Colophon";
 
 export default function SiteFooter() {
   return (
@@ -27,10 +28,7 @@ export default function SiteFooter() {
           ))}
         </nav>
       </div>
-      <p className="mt-10 max-w-[70ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
-        Marketed by SRI Pte Ltd (CEA licence L3010738A) and ERA Realty Network Pte Ltd (CEA licence L3002382K).
-        Images are artist&rsquo;s impressions. Plans are diagrammatic and not to scale.
-      </p>
+      <Colophon className="mt-10" />
     </footer>
   );
 }

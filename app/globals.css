@@ -42,6 +42,15 @@ body {
   }
 }
 
+/* Enquiry form: browsers paint autofilled fields pale yellow/white, which
+   would flash on the dark field. Keep them dark, ivory text. */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--foreground);
+  box-shadow: 0 0 0 1000px var(--background) inset;
+  caret-color: var(--foreground);
+}
+
 /* Four Levels: room labels are too small to read on phones; the level names and
    captions carry the information there. */
 @media (max-width: 767px) {
