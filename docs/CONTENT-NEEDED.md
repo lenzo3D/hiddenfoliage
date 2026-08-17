@@ -64,9 +64,17 @@ connectivity. Copy and credits live in `components/locationChapters.ts`; files i
 - **The district map was removed.** Reliable map data could not be fetched (all
   Overpass mirrors were down), so the page links Google Maps for 23 Berrima Road
   rather than drawing an approximation.
-- **Drive times** are still not printed anywhere. To add them, take typical
-  off-peak times from Google Maps for 23 Berrima Road and they will be added with
-  the source and date.
+- **Driving times are now printed** on Location (By car): Orchard Road approx. 10 min, the PIE
+  approx. 5 min, Marina Bay / CBD approx. 15 min, Changi Airport approx. 25 min. They were
+  routed on the real road network with OSRM from 23 Berrima Road (3.3 km, 2.5 km, 7.8 km and
+  22.8 km respectively) and rounded UP to allow for junctions, since OSRM does not model
+  traffic signals. **Please confirm each against Google Maps for an off-peak journey** and
+  correct `BY_CAR` in `app/location/page.tsx` - it is a four-line array. The page carries
+  "Driving times are approximate and vary with traffic conditions."
+- **Postal code:** the site now prints and links "23 Berrima Road, Singapore 299919" as
+  instructed. OpenStreetMap records No. 23 under 298063 (Berrima Road spans several codes), so
+  please confirm which belongs on the listing; `NEXT_PUBLIC_MAPS_QUERY` overrides the map links
+  and the printed address is in `app/location/page.tsx`.
 
 ## Later features (roadmap, from docs/HANDOFF.md)
 By-invitation links + viewing report, presentation mode, generated PDF

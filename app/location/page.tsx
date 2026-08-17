@@ -7,7 +7,7 @@
 import type { Metadata } from "next";
 import LocationStory from "@/components/LocationStory";
 import SiteFooter from "@/components/SiteFooter";
-import { DIRECTIONS_URL, MAPS_QUERY, MAPS_URL } from "@/components/site";
+import { DIRECTIONS_URL, MAPS_URL } from "@/components/site";
 
 export const metadata: Metadata = {
   title: "Location",
@@ -15,14 +15,23 @@ export const metadata: Metadata = {
     "Berrima Road, Dunearn Estate, District 11. Stevens MRT is a seven-minute walk, the Botanic Gardens fifteen, and four of Singapore's most respected schools are within two kilometres.",
 };
 
-// Verified: the agency listing, and public transit facts. No drive times are
-// quoted, because none have been verified (see docs/CONTENT-NEEDED.md).
-const NEAR: [string, string, string][] = [
+// Distances and walking times: from the agency listing.
+// Driving times: routed on the real road network (OSRM) from 23 Berrima Road and
+// rounded up to allow for junctions, so they read as off-peak estimates rather
+// than best cases. Distances behind them: Orchard 3.3 km, the PIE at Adam Road
+// 2.5 km, Raffles Place 7.8 km, Changi Terminal 3 22.8 km. Confirm against
+// Google Maps before publication and adjust here (docs/CONTENT-NEEDED.md).
+const BY_CAR: [string, string][] = [
+  ["Orchard Road", "Approx. 10 min"],
+  ["Pan Island Expressway (PIE)", "Approx. 5 min"],
+  ["Marina Bay / CBD", "Approx. 15 min"],
+  ["Changi Airport", "Approx. 25 min"],
+];
+
+const ON_FOOT: [string, string, string][] = [
   ["Stevens MRT", "Downtown · Thomson–East Coast lines", "0.5 km · 7 min walk"],
   ["Botanic Gardens MRT", "Circle · Downtown lines", "1 km · 12 min walk"],
   ["Singapore Botanic Gardens", "UNESCO World Heritage Site", "15 min walk"],
-  ["Orchard Road", "Thomson–East Coast line from Stevens", "3 stops"],
-  ["Pan Island Expressway", "via Adam Road", "west to Jurong · east to Changi"],
 ];
 
 const SCHOOLS = ["Anglo-Chinese School (Primary)", "Singapore Chinese Girls' Primary School", "Nanyang Primary School", "Raffles Girls' Primary School"];
@@ -51,12 +60,29 @@ export default function LocationPage() {
       {/* The five chapters */}
       <LocationStory />
 
-      {/* The practical part: distances, then the real map */}
+      {/* The practical part: how the address is used, then the map */}
       <section className="px-[6vw] pt-[16vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pt-[22vh]">
         <div className="md:col-span-7">
-          <p className={label}>Nearby</p>
+          <p className={label}>Minutes from the city</p>
+
+          {/* By car */}
+          <p className={`mt-10 text-foreground/80 md:mt-12 ${label}`}>By car</p>
           <dl className="mt-6">
-            {NEAR.map(([name, sub, dist]) => (
+            {BY_CAR.map(([name, mins]) => (
+              <div key={name} className="flex items-baseline justify-between gap-6 border-b border-stone/15 py-4">
+                <dt className="font-sans text-sm text-foreground md:text-[0.9375rem]">{name}</dt>
+                <dd className={`whitespace-nowrap text-right ${label}`}>{mins}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 font-sans text-[0.6875rem] leading-relaxed text-stone/80">
+            Driving times are approximate and vary with traffic conditions.
+          </p>
+
+          {/* On foot */}
+          <p className={`mt-14 text-foreground/80 md:mt-16 ${label}`}>On foot</p>
+          <dl className="mt-6">
+            {ON_FOOT.map(([name, sub, dist]) => (
               <div key={name} className="flex items-baseline justify-between gap-6 border-b border-stone/15 py-4">
                 <dt>
                   <span className="font-sans text-sm text-foreground md:text-[0.9375rem]">{name}</span>
@@ -66,10 +92,6 @@ export default function LocationPage() {
               </div>
             ))}
           </dl>
-          <p className="mt-8 max-w-[52ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
-            Distances and walking times as given in the agency listing. Drive times are not quoted until they have been
-            checked. Photographs on this page are of the places named beneath them, not of the residence.
-          </p>
         </div>
 
         <div className="mt-[10vh] md:col-span-4 md:col-start-9 md:mt-0">
@@ -82,17 +104,25 @@ export default function LocationPage() {
             ))}
           </ul>
 
-          <p className={`mt-12 ${label}`}>On the map</p>
-          <p className="mt-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-            {MAPS_QUERY}
+          {/* The residence on the map */}
+          <p className={`mt-14 md:mt-16 ${label}`}>On the map</p>
+          <p className="mt-6 font-sans text-sm leading-relaxed text-foreground/90 md:text-[0.9375rem]">
+            23 Berrima Road
+            <br />
+            Singapore 299919
           </p>
           <p className="mt-6 flex flex-col gap-3">
             <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>
-              Open in Google Maps <span aria-hidden="true">→</span>
+              View on Google Maps <span aria-hidden="true">↗</span>
             </a>
             <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className={linkCls}>
-              Directions <span aria-hidden="true">→</span>
+              Get directions <span aria-hidden="true">↗</span>
             </a>
+          </p>
+
+          <p className="mt-12 max-w-[36ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
+            Distances and walking times as given in the agency listing. Photographs of the surrounding area show the
+            places named beneath them, not the residence.
           </p>
         </div>
       </section>

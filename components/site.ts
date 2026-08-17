@@ -4,6 +4,6 @@
 // NEXT_PUBLIC_MAPS_QUERY can override it (e.g. to add the postal code). These
 // are Google's documented cross-platform URLs: they open the Maps app on
 // phones and the website on desktops.
-export const MAPS_QUERY = process.env.NEXT_PUBLIC_MAPS_QUERY || "23 Berrima Road, Singapore";
+export const MAPS_QUERY = process.env.NEXT_PUBLIC_MAPS_QUERY || "23 Berrima Road, Singapore 299919";
 export const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAPS_QUERY)}`;
 export const DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MAPS_QUERY)}`;

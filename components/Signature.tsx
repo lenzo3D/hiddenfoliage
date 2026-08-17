@@ -121,12 +121,26 @@ export default function Signature() {
         <p data-fade className={`mt-6 ${label}`}>
           Berrima Road <span aria-hidden="true">·</span> Singapore
         </p>
-        {/* The schedule in one line — the facts a buyer wants beside the enquiry. */}
-        <p data-fade className={`mt-8 max-w-[64ch] leading-loose ${label}`}>
-          Freehold <span aria-hidden="true">·</span> Land 4,821 sq ft <span aria-hidden="true">·</span> Built-up 9,462 sq ft{" "}
-          <span aria-hidden="true">·</span> 5+1 bedrooms <span aria-hidden="true">·</span> 7 bathrooms{" "}
-          <span aria-hidden="true">·</span> Guide price S$23,810,000
-        </p>
+        {/* The schedule, on two quiet lines. */}
+        <div data-fade className={`mt-12 leading-loose md:mt-14 ${label}`}>
+          <p>
+            Freehold <span aria-hidden="true">·</span> Land 4,821 sq ft <span aria-hidden="true">·</span> Built-up 9,462 sq ft
+          </p>
+          <p>
+            5+1 bedrooms <span aria-hidden="true">·</span> 7 bathrooms
+          </p>
+        </div>
+
+        {/* The price: given room of its own, in the serif — larger than the
+            schedule, well below the wordmark. A hairline above it, as the plan
+            captions do; no box, no badge. */}
+        <div data-fade className="mt-12 md:mt-16">
+          <div aria-hidden="true" className="h-px w-12 bg-stone/40" />
+          <p className={`mt-6 ${label}`}>Guide price</p>
+          <p className="mt-3 font-serif text-[clamp(1.75rem,3.2vw,3.25rem)] leading-none tracking-[0.01em] text-foreground">
+            S$23.81M
+          </p>
+        </div>
       </div>
 
       {/* ── 2  Enquiry ─────────────────────────────────────────────────── */}
