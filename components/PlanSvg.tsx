@@ -17,7 +17,9 @@ export function ShapeEl({ s, labelTransform }: { s: Shape; labelTransform?: stri
   const dashed = "dashed" in s && s.dashed ? { strokeDasharray: "5 4" } : {};
   switch (s.kind) {
     case "rect":
-      return <rect x={s.x} y={s.y} width={s.w} height={s.h} {...common} {...dashed} className={s.draw ? "draw" : undefined} />;
+      return <rect x={s.x} y={s.y} width={s.w} height={s.h} rx={s.rx} {...common} {...dashed} className={s.draw ? "draw" : undefined} />;
+    case "circle":
+      return <circle cx={s.cx} cy={s.cy} r={s.r} {...common} />;
     case "poly": {
       const d = s.pts.map(([x, y], i) => `${i ? "L" : "M"}${x} ${y}`).join(" ") + (s.close === false ? "" : " Z");
       return <path d={d} {...common} {...dashed} className={s.draw ? "draw" : undefined} />;

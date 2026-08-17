@@ -6,6 +6,7 @@ import LocationMap from "@/components/LocationMap";
 import MapFrame from "@/components/MapFrame";
 import Reveal from "@/components/Reveal";
 import SiteFooter from "@/components/SiteFooter";
+import { DIRECTIONS_URL, MAPS_URL } from "@/components/site";
 
 export const metadata: Metadata = {
   title: "Location",
@@ -45,6 +46,23 @@ export default function LocationPage() {
             <LocationMap />
           </MapFrame>
         </Reveal>
+        {/* The real map, one tap away — the schematic is for understanding, this is for going. */}
+        <p className="mt-6 flex flex-wrap gap-x-8 gap-y-3 px-[3vw] md:mt-8 md:px-0">
+          {[
+            [MAPS_URL, "Open in Google Maps"],
+            [DIRECTIONS_URL, "Directions to Berrima Road"],
+          ].map(([href, text]) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-foreground/90 transition-colors hover:text-foreground md:text-xs"
+            >
+              {text} <span aria-hidden="true">→</span>
+            </a>
+          ))}
+        </p>
       </section>
 
       <section className="px-[6vw] pt-[12vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pt-[16vh]">

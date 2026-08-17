@@ -50,9 +50,15 @@ about what's verified vs assumed. Never invent a property fact — see
   the `MAKING` array until supplied), footer.
 - `/plans`: PlanViewer (tabs, true plan view, zoom/pan/fullscreen desktop; rotated sheet on
   phones) — same data as Four Levels (`components/floorPlans.ts`, renderer `PlanSvg.tsx`).
-  North point drawn as on the architect's sheets: north = plan LEFT (towards the road);
-  on phones it points down. **Confirm north with the agent** (docs/CONTENT-NEEDED.md).
-- `/location`: schematic SVG map (`LocationMap.tsx`, `MapFrame.tsx` for phone sideways scroll).
+  Furnished / Bare switch (`FURNITURE` in floorPlans.ts — the sales plans' suggested layout,
+  hairline symbols; never shown on Home), a 5 m scale bar, and a Measure tool (tap two points →
+  "≈ x.x m", calibrated on the 18 m pool: `METRES_PER_UNIT = 18/575`; screen→plan via
+  `getScreenCTM`, works through zoom/pan/rotation). Only verified sizes are printed (land,
+  built-up, pool). North point drawn as on the architect's sheets: north = plan LEFT (towards
+  the road); on phones it points down. **Confirm north with the agent** (docs/CONTENT-NEEDED.md).
+- `/location`: schematic SVG map (`LocationMap.tsx`, `MapFrame.tsx` for phone sideways scroll);
+  the house marker and two links beneath open Google Maps (`components/site.ts`:
+  `NEXT_PUBLIC_MAPS_QUERY`, currently "Berrima Road, Singapore" — exact address to be supplied).
 - `components/Nav.tsx` (fixed 5 tabs incl. Enquire → `/#enquire`; on phones the HF wordmark
   stands in for Home), `SiteFooter.tsx` (inner pages: "Private viewings by appointment ·
   Enquire →", wordmark, links, `Colophon.tsx`), `Reveal.tsx` (inner-page image reveal),

@@ -14,9 +14,10 @@
 export type Weight = "principal" | "secondary" | "hair";
 
 export type Shape =
-  | { kind: "rect"; x: number; y: number; w: number; h: number; weight?: Weight; dashed?: boolean; draw?: boolean }
+  | { kind: "rect"; x: number; y: number; w: number; h: number; weight?: Weight; dashed?: boolean; draw?: boolean; rx?: number }
   | { kind: "poly"; pts: [number, number][]; close?: boolean; weight?: Weight; dashed?: boolean; draw?: boolean }
   | { kind: "line"; x1: number; y1: number; x2: number; y2: number; weight?: Weight; dashed?: boolean }
+  | { kind: "circle"; cx: number; cy: number; r: number; weight?: Weight }
   | { kind: "stair"; x: number; y: number; w: number; h: number; treads?: number; dir?: "h" | "v" }
   | { kind: "lift"; x: number; y: number; w: number; h: number }
   | { kind: "cross"; x: number; y: number; w: number; h: number } // void / shaft marker
@@ -125,7 +126,7 @@ const second: Level = {
     R2(587, 170, 715, 255, "secondary"), // master bath
     L(X2(651), Y2(215), "Master bath"),
     R2(587, 255, 765, 400, "secondary"), // master bedroom
-    L(X2(676), Y2(335), "Master\nbedroom", "m"),
+    L(X2(676), Y2(350), "Master\nbedroom", "m"),
     R2(760, 300, 795, 400, "hair"), // wardrobe
     { kind: "label", x: X2(777), y: Y2(350), text: "Wardrobe", size: "s", anchor: "middle", rotate: -90 },
     { kind: "stair", x: X2(750), y: Y2(170), w: X2(837) - X2(750), h: Y2(255) - Y2(170), treads: 9, dir: "h" },
@@ -135,9 +136,9 @@ const second: Level = {
     R2(937, 170, 1017, 245, "secondary"), // bath 1
     L(X2(977), Y2(212), "Bath"),
     R2(1017, 170, 1130, 292, "secondary"), // bedroom 1
-    L(X2(1073), Y2(240), "Bedroom 1"),
+    L(X2(1073), Y2(268), "Bedroom 1"),
     R2(1017, 292, 1130, 400, "secondary"), // bedroom 2
-    L(X2(1073), Y2(350), "Bedroom 2"),
+    L(X2(1073), Y2(322), "Bedroom 2"),
     R2(937, 340, 1017, 400, "secondary"), // bath 2
     L(X2(977), Y2(375), "Bath"),
   ],
@@ -164,9 +165,9 @@ const attic: Level = {
     RA(937, 650, 1017, 717, "secondary"), // bath 3
     L(X2(977), YA(688), "Bath"),
     RA(1017, 650, 1130, 765, "secondary"), // bedroom 3
-    L(X2(1073), YA(715), "Bedroom 3"),
+    L(X2(1073), YA(745), "Bedroom 3"),
     RA(1017, 765, 1130, 872, "secondary"), // bedroom 4
-    L(X2(1073), YA(825), "Bedroom 4"),
+    L(X2(1073), YA(790), "Bedroom 4"),
     RA(937, 805, 1017, 872, "secondary"), // bath 4
     L(X2(977), YA(842), "Bath"),
   ],
@@ -177,3 +178,91 @@ export const LEVELS: Level[] = [attic, second, first, basement];
 
 // The shared plan space (sheet-1 units) all four levels are drawn in.
 export const PLAN_BOUNDS = { x: 150, y: 500, w: 1410, h: 430 };
+
+// ── Scale ──────────────────────────────────────────────────────────────────
+// The only dimension written on the sales plans is the pool: 18 m × 2 m. It is
+// drawn 575 units long, so 1 unit ≈ 3.13 cm (its 65-unit width comes out at
+// 2.03 m, which agrees). Everything measured on the diagram is therefore
+// approximate — a few percent either way — and is labelled as such.
+export const METRES_PER_UNIT = 18 / 575;
+
+// ── Suggested furniture (the sales plans' indicative layout, redrawn) ───────
+// Hairline symbols only — beds, seating, tables, the island, cars, deck seats —
+// placed as the plan sheets place them. Shown on the Plans page behind a
+// "Furnished / Bare" switch; never on the Four Levels act, which stays bare.
+const H = (s: Omit<Extract<Shape, { kind: "rect" }>, "kind" | "weight">): Shape => ({ kind: "rect", weight: "hair", ...s });
+const H2 = (x1: number, y1: number, x2: number, y2: number, rx?: number): Shape => ({ kind: "rect", weight: "hair", x: X2(x1), y: Y2(y1), w: X2(x2) - X2(x1), h: Y2(y2) - Y2(y1), rx });
+const HA = (x1: number, y1: number, x2: number, y2: number, rx?: number): Shape => ({ kind: "rect", weight: "hair", x: X2(x1), y: YA(y1), w: X2(x2) - X2(x1), h: YA(y2) - YA(y1), rx });
+const C = (cx: number, cy: number, r: number): Shape => ({ kind: "circle", weight: "hair", cx, cy, r });
+const C2 = (cx: number, cy: number, r: number): Shape => C(X2(cx), Y2(cy), r);
+const CA = (cx: number, cy: number, r: number): Shape => C(X2(cx), YA(cy), r);
+const bed2 = (x: number, y: number, w: number, h: number, headAtTop: boolean): Shape[] => [
+  H2(x, y, x + w, y + h, 3),
+  { kind: "line", weight: "hair", x1: X2(x + 4), y1: Y2(headAtTop ? y + 12 : y + h - 12), x2: X2(x + w - 4), y2: Y2(headAtTop ? y + 12 : y + h - 12) }, // pillow line
+];
+const bedA = (x: number, y: number, w: number, h: number, headAtTop: boolean): Shape[] => [
+  HA(x, y, x + w, y + h, 3),
+  { kind: "line", weight: "hair", x1: X2(x + 4), y1: YA(headAtTop ? y + 12 : y + h - 12), x2: X2(x + w - 4), y2: YA(headAtTop ? y + 12 : y + h - 12) },
+];
+
+export const FURNITURE: Record<Level["id"], Shape[]> = {
+  first: [
+    // Living: an L-shaped sofa facing the pool, two armchairs, a low table
+    H({ x: 690, y: 727, w: 150, h: 27, rx: 3 }),
+    H({ x: 812, y: 754, w: 28, h: 58, rx: 3 }),
+    H({ x: 695, y: 785, w: 27, h: 27, rx: 3 }),
+    H({ x: 735, y: 785, w: 27, h: 27, rx: 3 }),
+    H({ x: 768, y: 780, w: 36, h: 22 }),
+    // Dry kitchen: the island with four stools
+    H({ x: 968, y: 738, w: 110, h: 25 }),
+    ...[985, 1010, 1035, 1060].map((x) => C(x, 774, 5)),
+    // Dining: a long table for ten
+    H({ x: 1118, y: 752, w: 134, h: 32 }),
+    ...[1126, 1153, 1180, 1207, 1234].flatMap((x) => [H({ x, y: 736, w: 14, h: 9, rx: 2 }), H({ x, y: 791, w: 14, h: 9, rx: 2 })]),
+    // Wet kitchen: counters along the outer wall; the maid's room bed
+    H({ x: 1186, y: 596, w: 144, h: 18 }),
+    H({ x: 1312, y: 614, w: 18, h: 68 }),
+    H({ x: 1106, y: 622, w: 29, h: 61, rx: 3 }),
+    // Car porch: four cars in four bays
+    ...[562, 642, 725, 807].map((y0) => H({ x: 478, y: y0 + 4.5, w: 140, h: 54, rx: 9 })),
+    // East deck: a round table for four
+    C(1338, 760, 20),
+    ...[[1306, 760], [1370, 760], [1338, 728], [1338, 792]].map(([cx, cy]) => C(cx, cy, 6)),
+  ],
+  second: [
+    // Master bath: the tub and the vanity
+    H2(598, 180, 622, 246, 6),
+    H2(700, 178, 712, 246),
+    // Master bedroom: the bed, head to the bath wall, bedside tables
+    ...bed2(640, 258, 56, 57, true),
+    H2(624, 258, 636, 270),
+    H2(700, 258, 712, 270),
+    // Wardrobe: two rails
+    { kind: "line", weight: "hair", x1: X2(772), y1: Y2(305), x2: X2(772), y2: Y2(395) },
+    { kind: "line", weight: "hair", x1: X2(785), y1: Y2(305), x2: X2(785), y2: Y2(395) },
+    // Family / study: a desk and chair
+    H2(850, 372, 905, 392),
+    C2(877, 362, 6),
+    // Bedrooms 1 and 2
+    ...bed2(1052, 175, 42, 57, true),
+    H2(1040, 175, 1050, 185),
+    H2(1096, 175, 1106, 185),
+    ...bed2(1052, 338, 42, 57, false),
+    H2(1040, 385, 1050, 395),
+    H2(1096, 385, 1106, 395),
+    // Outdoor deck: two loungers and a small table
+    H2(500, 220, 518, 268, 3),
+    H2(530, 220, 548, 268, 3),
+    C2(524, 285, 8),
+  ],
+  attic: [
+    // Bedrooms 3 and 4
+    ...bedA(1052, 655, 42, 57, true),
+    ...bedA(1052, 810, 42, 57, false),
+    // Roof deck: two loungers and a table, below the label
+    HA(650, 780, 668, 828, 3),
+    HA(680, 780, 698, 828, 3),
+    CA(735, 804, 9),
+  ],
+  basement: [],
+};

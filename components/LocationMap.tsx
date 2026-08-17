@@ -1,6 +1,9 @@
 // A schematic map of Berrima Road and its context, drawn in the site's own line
 // language. It is a diagram: relative positions and the named distances are
 // right; it is not a survey. North is up. Scale ≈ 300 units per kilometre.
+// The house marker is a link that opens the real map (Google Maps).
+
+import { MAPS_URL } from "./site";
 
 const IVORY = "#ebe9e2";
 const STONE = "#b8b2a4";
@@ -93,11 +96,14 @@ export default function LocationMap() {
           );
         })}
 
-        {/* The house */}
-        <circle cx={HOUSE[0]} cy={HOUSE[1]} r={22} fill="none" stroke={IVORY} strokeOpacity={0.35} strokeWidth={0.7} vectorEffect="non-scaling-stroke" strokeDasharray="3 4" />
-        <circle cx={HOUSE[0]} cy={HOUSE[1]} r={4} fill={IVORY} />
-        <T x={HOUSE[0]} y={HOUSE[1] - 40} size={16} fill={IVORY} anchor="middle">Hidden Foliage</T>
-        <T x={HOUSE[0]} y={HOUSE[1] - 20} size={11} anchor="middle">BERRIMA ROAD · DUNEARN ESTATE · D11</T>
+        {/* The house — a link to the real map */}
+        <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" aria-label="Open Berrima Road in Google Maps (opens in a new tab)" className="group cursor-pointer">
+          <circle cx={HOUSE[0]} cy={HOUSE[1]} r={22} fill="none" stroke={IVORY} strokeOpacity={0.35} strokeWidth={0.7} vectorEffect="non-scaling-stroke" strokeDasharray="3 4" className="transition-opacity group-hover:[stroke-opacity:0.8] group-focus-visible:[stroke-opacity:0.8]" />
+          <circle cx={HOUSE[0]} cy={HOUSE[1]} r={4} fill={IVORY} />
+          <T x={HOUSE[0]} y={HOUSE[1] - 40} size={16} fill={IVORY} anchor="middle">Hidden Foliage</T>
+          <T x={HOUSE[0]} y={HOUSE[1] - 20} size={11} anchor="middle">BERRIMA ROAD · DUNEARN ESTATE · D11</T>
+          <T x={HOUSE[0]} y={HOUSE[1] + 44} size={11} anchor="middle" op={0.75}>OPEN IN GOOGLE MAPS →</T>
+        </a>
 
         {/* Scale and north */}
         <g>

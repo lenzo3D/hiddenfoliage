@@ -11,6 +11,9 @@ of how much each would strengthen the site.
 - **Email delivery** for the enquiry form — `RESEND_API_KEY`, `ENQUIRY_TO`
   (and optionally `ENQUIRY_FROM` on a verified domain). See `.env.example`.
 - **Public site URL** — `NEXT_PUBLIC_SITE_URL` (used for share-card links).
+- **Exact address for the Google Maps links** — `NEXT_PUBLIC_MAPS_QUERY`
+  (e.g. "12 Berrima Road, Singapore 299xxx"); until set, the links search for
+  "Berrima Road, Singapore".
 
 ## Construction confidence (Residence → "The making")
 Rows appear automatically once filled in `app/residence/page.tsx` (`MAKING`);
@@ -28,6 +31,13 @@ until then they are folded into one "available on request" line.
   towards the road, so the pool runs along the western edge). **Please confirm**
   with the agent/architect; the arrow, the Plans intro sentence and the phone
   note all depend on it.
+
+## Sizes (Plans)
+- The sales plans give no room dimensions, only the pool (18 m × 2 m). The
+  Plans page therefore prints only the verified areas and offers a Measure tool
+  calibrated on the pool (approximate). **Room dimensions / a dimensioned plan**
+  from the architect would let us print sizes on the drawing.
+- Furniture shown is the sales plans' suggested layout, redrawn schematically.
 
 ## Materials (Residence → "Materials")
 - **Material specification**: timber species, stone, joinery, glazing, screen

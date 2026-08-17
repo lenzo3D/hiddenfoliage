@@ -22,7 +22,13 @@ export default function PlansPage() {
           Every level is organised around the stair and lift. The first storey stretches the full plot — car porch,
           living, dining, kitchens and the 18-metre pool; the private floors sit above, and the basement holds the
           household shelter. As drawn, north lies towards the road: the car porch faces it, and the pool runs along
-          the plot&rsquo;s western edge. Choose a level to inspect it.
+          the plot&rsquo;s western edge. Choose a level to inspect it; switch the suggested furniture on or off, and
+          measure between any two points.
+        </p>
+        {/* The verified sizes — the only dimensions we print. */}
+        <p className="mt-8 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
+          Land 4,821 sq ft <span className="normal-case tracking-normal">(448 m²)</span> <span aria-hidden="true">·</span> Built-up 9,462 sq ft{" "}
+          <span className="normal-case tracking-normal">(879 m²)</span> <span aria-hidden="true">·</span> Pool 18 m × 2 m
         </p>
       </section>
 
