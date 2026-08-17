@@ -68,29 +68,6 @@ connectivity. Copy and credits live in `components/locationChapters.ts`; files i
   off-peak times from Google Maps for 23 Berrima Road and they will be added with
   the source and date.
 
-## Location
-All five chapters now carry real photographs (no diagrams). Files live in
-`public/images/location/`; captions and credits are in
-`components/locationChapters.ts`. To swap any picture: drop a file in, point the
-chapter's `src` at it, and correct the credit line.
-- `estate-dalvey.jpg` — Dalvey Hill, Tanglin (Wzhkevin). **Wanted:** Berrima Road
-  or Dunearn Estate itself, ideally with the canopy over the road.
-- `schools.jpg` — St Joseph's Institution (Independent), Thomson Road. **Wanted:**
-  ACS Barker Road (the clock tower) or SJI Malcolm Road at ≥ 2000 px.
-- `gardens.jpg` — the Botanic Gardens bandstand (Mokkie). Good.
-- `orchard-ion.jpg` — ION Orchard (Diego Delso). Good.
-- `expressway.jpg` — the Pan Island Expressway (LN9267), daylight. **Wanted:** the
-  dusk light-trail expressway photograph Richard picked; save it as
-  `public/images/location/expressway.jpg` and it is used immediately.
-- **The district map was removed.** Reliable map data could not be fetched
-  (all Overpass mirrors were down), so rather than draw an approximate district
-  map the page links Google Maps for 23 Berrima Road. If an accurate reconstruction
-  is wanted later, the inputs are: OSM road geometry for the Dunearn/Bukit Timah
-  area, or a licensed static-map tile.
-- **Drive times** are still not printed anywhere. To add them, take typical
-  off-peak times from Google Maps for 23 Berrima Road → Orchard Road, Raffles
-  Place and Changi Airport, and they will be added with the source and date.
-
 ## Later features (roadmap, from docs/HANDOFF.md)
 By-invitation links + viewing report, presentation mode, generated PDF
 "Residence Book", Mandarin toggle, analytics events, hooks for Matterport /
