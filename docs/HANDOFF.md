@@ -84,16 +84,25 @@ about what's verified vs assumed. Never invent a property fact — see
 - Films are NOT scrubbed by scroll (24fps source stepped badly). Each act plays its film once
   at natural speed when its portion becomes active, pauses off-screen, holds last frame,
   rewinds only when hidden. Overlays/typography remain scroll-scrubbed.
-- All four source MP4s were 1280×720/24fps, ONE keyframe per clip, with a generator sparkle
-  watermark at ~x1135–1185/y575–625. Current site files: watermark removed (per-pixel
-  un-blend + ring cleanup), re-encoded GOP 6, no audio, CRF 27. Originals untouched in
-  `C:\Users\m\Downloads` (video1-hero.mp4, video2- veil.mp4, video3- inside out.mp4,
-  video4- close.mp4) and in git history.
-- Media is the main quality limit (720p enlarged 1.25–3.5×). Real-ESRGAN test = FAIL
-  (herringbone screen redrawn/shimmering). Plan: client regenerates all four at ≥1080p, same
-  shots (hero must open on the same frame as `hero image.png`), then a single media-swap pass
-  (prep pipeline exists: watermark check → un-blend → GOP-6 encode → harness).
-- Veil act uses only 1.2s→2.6s of video2 (louvres closed→half-open); file trimmed to 4s.
+- **Hero (done):** the client re-rendered the opening shot at 3840x2160 / 24fps / 4.9s
+  (`Downloads/video1-hero (1).mp4`, 31 MB, no watermark, no audio). The site serves
+  `public/videos/video1-hero-1080.mp4` - 1920x1080, CRF 24, preset veryslow, GOP 24, no audio,
+  +faststart, 6.7 MB - compared crop-by-crop against the 4K master and visually transparent.
+  `public/images/hero-still.jpg` (2560x1440) is frame 0 of that master, so the still-to-film
+  hand-off is pixel-identical; Residence's opening image uses it too. The old 1280x720 hero
+  file was deleted (it remains in git history). NOTE the new clip is 4.9s where the old was
+  10s - the same camera move at roughly twice the speed - so the reveal completes earlier in
+  the scroll and then holds. Ask Richard if he wants it slowed (retiming needs frame
+  interpolation, which risks artefacts on the herringbone screen).
+- **The other three acts are still 1280x720** (Veil, Inside Out, Close): same treatment awaits
+  their 4K re-renders - watermark check, 1080p CRF 24 encode, still from frame 0, harness.
+  Their originals were 1280x720/24fps with ONE keyframe per clip and a generator sparkle
+  watermark at ~x1135-1185/y575-625; the current site files have it removed (per-pixel
+  un-blend + ring cleanup), re-encoded GOP 6, no audio, CRF 27. Originals untouched in the
+  Downloads folder.
+- Veil act uses only 1.2s to 2.6s of video2 (louvres closed to half-open); file trimmed to 4s.
+- A phone-weight hero encode (720p, ~3 MB, via a second <source media=...>) is an easy future
+  saving; today every device downloads the 6.7 MB file.
 
 ## Stills at 2× (`public/images/2x/`)
 - The renders are 1672 px wide; anywhere the site enlarges them (Arrival full-bleed, the Sanctuary
