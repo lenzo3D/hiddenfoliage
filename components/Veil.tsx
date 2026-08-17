@@ -44,6 +44,10 @@ const FILM_STARTS_AT = 0.15;
 
 const TINT_START = 0.7;
 const TINT_END = 0.2;
+// Phones see much less of the façade at once (the panel covers a bigger share of
+// a narrow screen), so the act opens less dark there — otherwise the first
+// screen of the act reads as black rather than shadowed.
+const TINT_START_PHONE = 0.5;
 
 export default function Veil() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -64,7 +68,10 @@ export default function Veil() {
     const mm = gsap.matchMedia();
 
     // ── Full experience ────────────────────────────────────────────────────
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", phone: "(max-width: 767px)" }, (ctx) => {
+      const { motion, phone } = ctx.conditions as { motion: boolean; phone: boolean };
+      if (!motion) return;
+      const tintStart = phone ? TINT_START_PHONE : TINT_START;
       // ── Film playback lifecycle (not scrubbed) ──────────────────────────
       let active = false; // scroll is past FILM_STARTS_AT
       let onScreen = false; // any part of the section is in the viewport
@@ -145,10 +152,10 @@ export default function Veil() {
       {
         tl
           // Settle into darkness, then let the façade come through and rest.
-          .fromTo(tint, { opacity: TINT_START }, { opacity: 0.45, duration: 0.15 }, 0)
+          .fromTo(tint, { opacity: tintStart }, { opacity: phone ? 0.34 : 0.45, duration: 0.15 }, 0)
           .fromTo(
             tint,
-            { opacity: 0.45 },
+            { opacity: phone ? 0.34 : 0.45 },
             { opacity: TINT_END, duration: 0.4, ease: "sine.out", immediateRender: false },
             0.15,
           )
@@ -259,7 +266,7 @@ export default function Veil() {
         <div
           ref={veilRef}
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-[60%] border-r border-stone/25 bg-background max-md:w-[76%]"
+          className="absolute inset-y-0 left-0 w-[60%] border-r border-stone/25 bg-background max-md:w-[52%]"
         />
 
         {/* Statement: left, vertically centred on the veil (desktop). On phones it

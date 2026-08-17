@@ -27,7 +27,7 @@ import { ShapeEl } from "./PlanSvg";
 // Oblique projection: x' = x + C·y, y' = D·y. Phones use a flatter, taller plate.
 const PROJ = {
   desktop: { c: 0.3, d: 0.55, sep: 250 },
-  mobile: { c: 0.12, d: 0.9, sep: 480 }, // near plan-view, taller plates
+  mobile: { c: 0.12, d: 0.9, sep: 430 }, // near plan-view, taller plates
 };
 // Small resting offsets in the collapsed state, so depth is sensed but walls
 // don't turn into spaghetti (top → bottom).
@@ -35,14 +35,20 @@ const COLLAPSED = [-9, -3, 3, 9];
 const INACTIVE = 0.42; // resting opacity of the levels not in focus: quiet, still readable
 const EXPLODED = [-1.5, -0.5, 0.5, 1.5]; // × sep
 
-function projection(c: number, d: number, sep: number) {
+function projection(c: number, d: number, sep: number, mobile = false) {
   const b = PLAN_BOUNDS;
   const xs = [b.x + c * b.y, b.x + b.w + c * (b.y + b.h), b.x + c * (b.y + b.h), b.x + b.w + c * b.y];
   const xMin = Math.min(...xs), xMax = Math.max(...xs);
   const yMin = d * b.y - 1.5 * sep, yMax = d * (b.y + b.h) + 1.5 * sep;
-  const m = 30;
-  const ml = 130; // extra room on the left for the level names
-  return { matrix: `matrix(1 0 ${c} ${d} 0 0)`, inverse: `matrix(1 0 ${-c / d} ${1 / d} 0 0)`, viewBox: `${xMin - ml} ${yMin - m} ${xMax - xMin + ml + m} ${yMax - yMin + 2 * m}` };
+  const m = mobile ? 14 : 30;
+  // Room on the left for the level names — only desktop puts them beside the
+  // plate; on phones they sit above it, so that margin is dead space and the
+  // drawing can be scaled up by dropping it (the viewBox width is what limits
+  // the plate size on a narrow screen). On phones the names need headroom
+  // instead: the topmost one sits above the attic plate and would be clipped.
+  const ml = mobile ? 16 : 130;
+  const mt = mobile ? 95 : m;
+  return { matrix: `matrix(1 0 ${c} ${d} 0 0)`, inverse: `matrix(1 0 ${-c / d} ${1 / d} 0 0)`, viewBox: `${xMin - ml} ${yMin - mt} ${xMax - xMin + ml + m} ${yMax - yMin + mt + m}` };
 }
 
 function levelExtentX(level: Level) {
@@ -81,7 +87,7 @@ export default function FourLevels() {
       (ctx) => {
         const { mobile, reduce } = ctx.conditions as { mobile: boolean; reduce: boolean };
         const P = mobile ? PROJ.mobile : PROJ.desktop;
-        const proj = projection(P.c, P.d, P.sep);
+        const proj = projection(P.c, P.d, P.sep, mobile);
 
         // Geometry for this breakpoint.
         svg.setAttribute("viewBox", proj.viewBox);
@@ -191,7 +197,7 @@ export default function FourLevels() {
     >
       <div className="fl-stage sticky top-0 h-dvh w-full overflow-hidden">
         {/* The drawing */}
-        <div className="fl-drawing absolute inset-x-0 top-[4vh] bottom-[37vh] md:inset-x-auto md:left-[2vw] md:top-[6vh] md:bottom-[6vh] md:w-[84vw]">
+        <div className="fl-drawing absolute inset-x-0 top-[6vh] bottom-[44vh] md:inset-x-auto md:left-[2vw] md:top-[6vh] md:bottom-[6vh] md:w-[84vw]">
           <svg ref={svgRef} className="h-full w-full" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             {LEVELS.map((level) => (
               <g key={level.id} className={`level level-${level.id}`}>
@@ -217,7 +223,7 @@ export default function FourLevels() {
             drawing on desktop, beneath it on phones. No containers. */}
         <div
           ref={captionsRef}
-          className="fl-captions absolute inset-x-[6vw] top-[65vh] md:inset-x-auto md:right-[6vw] md:top-auto md:bottom-[13vh] md:w-[22vw]"
+          className="fl-captions absolute inset-x-[6vw] top-[57vh] md:inset-x-auto md:right-[6vw] md:top-auto md:bottom-[13vh] md:w-[22vw]"
         >
           {LEVELS.map((level) => (
             <div key={level.id} className={`fl-cap cap-${level.id} absolute inset-x-0 top-0 md:top-auto md:bottom-0`} style={{ opacity: 0 }}>

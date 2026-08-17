@@ -73,11 +73,11 @@ textarea:-webkit-autofill {
     display: none;
   }
   .four-levels .fl-drawing {
-    inset: 4vh 0 37vh 0;
+    inset: 6vh 0 44vh 0;
     width: auto;
   }
   .four-levels .fl-captions {
-    inset: 65vh 6vw auto 6vw;
+    inset: 57vh 6vw auto 6vw;
     width: auto;
   }
   .four-levels .fl-cap {

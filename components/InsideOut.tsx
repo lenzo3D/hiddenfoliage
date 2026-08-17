@@ -169,8 +169,10 @@ export default function InsideOut() {
   // On phones the tall crop is centred on the glass line (≈45% across the frame)
   // so the slot shows interior, threshold and water together.
   const mediaCrop = "object-cover object-[45%_50%] md:object-center";
-  // Each door covers 36% of the stage on desktop (28% opening), 32% on phones (36% opening).
-  const door = "absolute inset-y-0 w-[36%] bg-background max-md:w-[32%]";
+  // Each door covers 36% of the stage on desktop (28% opening). Phones get
+  // narrower doors — 25% each, a 50% opening — because on a narrow screen the
+  // old 36% slot read as a letterbox rather than a threshold.
+  const door = "absolute inset-y-0 w-[36%] bg-background max-md:w-[25%]";
 
   return (
     <section
