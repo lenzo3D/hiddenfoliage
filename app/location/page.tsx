@@ -49,8 +49,7 @@ export default function LocationPage() {
           Secluded by nature. Connected to Singapore.
         </h1>
         <p className="mt-8 max-w-[52ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-          A short road of large houses in Dunearn Estate. The Botanic Gardens are a walk away, the schools that
-          families here have used for generations are close, and town is a few minutes when you want it.
+          Berrima Road sits quietly within Dunearn Estate, lined with mature trees and established homes.
         </p>
         <p className={`mt-8 ${label}`}>
           23 Berrima Road <span aria-hidden="true">·</span> Dunearn Estate <span aria-hidden="true">·</span> District 11
