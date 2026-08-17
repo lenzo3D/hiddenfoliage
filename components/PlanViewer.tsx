@@ -384,7 +384,7 @@ export default function PlanViewer() {
       </p>
       <p className="mt-4 max-w-[70ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
         Furniture is the sales plans&rsquo; suggested layout, indicative only. Measured lengths are read off the diagram,
-        calibrated on the 18-metre pool, and are approximate (within a few percent) — please verify on site or with the
+        calibrated on the 18-metre pool, and are approximate. Please check anything that matters on site or with the
         agent.
       </p>
     </div>

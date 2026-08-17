@@ -260,8 +260,8 @@ export default function Signature() {
               {/* PDPA notice: what the details are for, and that they go no further. */}
               <p className="mt-8 max-w-[56ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
                 By sending this enquiry you agree to be contacted by the appointed salespersons about this residence.
-                Your details are used for that purpose only and are held in accordance with Singapore&rsquo;s Personal
-                Data Protection Act.
+                Your details are used for that purpose only, in accordance with Singapore&rsquo;s Personal Data
+                Protection Act.
               </p>
             </form>
           )}

@@ -1,56 +1,51 @@
-// LOCATION — the five chapters. Copy is restrained and every figure quoted is
-// verified (the agency listing, or a public fact); anything unverified is left
-// out rather than estimated. Photographs are CC-licensed (Wikimedia Commons)
-// and credited beneath the plate — replace with commissioned photography when
-// it exists (docs/CONTENT-NEEDED.md). Where no photograph good enough for this
-// site could be sourced, the chapter uses a diagram drawn in the site's own
-// line language instead of weak filler.
-
-export type Visual =
-  | { kind: "photo"; src: string; alt: string; position?: string; credit: string; creditUrl: string }
-  | { kind: "diagram"; diagram: "schools" | "routes"; alt: string };
+// LOCATION — the five chapters. Every figure quoted is verified (the agency
+// listing, or a public transit fact); nothing is estimated. Each chapter carries
+// a real photograph, credited beneath the plate with the exact subject — the
+// captions never imply a photograph is of the house or of Berrima Road itself.
+// Replace any file in public/images/location/ (same name) to swap a picture.
 
 export type Chapter = {
   id: string;
-  n: string; // "01"
-  kicker: string; // the amenity, as an annotation
+  n: string;
+  kicker: string; // annotation: the place
   title: string; // the headline
   body: string;
   fact: string; // verified annotation line
-  visual: Visual;
+  src: string;
+  alt: string;
+  position?: string; // object-position for the plate crop
+  credit: string; // exactly what the photograph shows, and by whom
+  creditUrl: string;
 };
 
 export const CHAPTERS: Chapter[] = [
   {
     id: "estate",
     n: "01",
-    kicker: "Tranquil, exclusive estate",
-    title: "A private world.",
+    kicker: "Dunearn Estate",
+    title: "Off the main road.",
     body:
-      "A rare residential enclave north of Dunearn Road: mature trees over quiet loops of road, low-rise houses set back in their gardens, and the sense — a few minutes from town — of having left it.",
+      "The estate lies north of Dunearn Road. Large houses stand well back under mature trees, the roads are short loops rather than through-routes, and the traffic stays on Dunearn.",
     fact: "Berrima Road · Dunearn Estate · District 11",
-    visual: {
-      kind: "photo",
-      src: "/images/location/estate.jpg",
-      alt: "A quiet, tree-lined residential road in Bukit Timah, houses set back behind their gardens.",
-      position: "50% 55%",
-      credit: "Coronation Road West, Bukit Timah — Wzhkevin · CC BY-SA 4.0",
-      creditUrl: "https://commons.wikimedia.org/wiki/File:Looking_northward_down_Coronation_Road_West_towards_Bukit_Timah_Hill_in_Singapore.jpg",
-    },
+    src: "/images/location/estate-dalvey.jpg",
+    alt: "A colonnaded house on a rise above a lawn, mature trees on either side, in Singapore's Tanglin district.",
+    position: "50% 40%",
+    credit: "Dalvey Hill, Tanglin — Wzhkevin · CC BY-SA 4.0",
+    creditUrl: "https://commons.wikimedia.org/wiki/File:Dalvey_Hill_1_-_2022-11-19.jpg",
   },
   {
     id: "schools",
     n: "02",
-    kicker: "Elite schools",
-    title: "Exceptional education, close to home.",
+    kicker: "The schools",
+    title: "Within two kilometres.",
     body:
-      "Some of Singapore's most respected schools lie within two kilometres, so that schooling folds naturally into the day rather than governing it.",
-    fact: "Within 2 km · Anglo-Chinese School (Primary) · Singapore Chinese Girls' School · Nanyang Primary · Raffles Girls' Primary",
-    visual: {
-      kind: "diagram",
-      diagram: "schools",
-      alt: "Diagram: the four schools within two kilometres of the house — Anglo-Chinese School (Primary), Singapore Chinese Girls' School, Nanyang Primary and Raffles Girls' Primary.",
-    },
+      "Anglo-Chinese School (Primary), Singapore Chinese Girls' School, Nanyang Primary and Raffles Girls' Primary are all within two kilometres of the house. St Joseph's Institution is a short drive north.",
+    fact: "Within 2 km · ACS (Primary) · SCGS · Nanyang Primary · Raffles Girls' Primary",
+    src: "/images/location/schools.jpg",
+    alt: "The white campus buildings of St Joseph's Institution across a playing field.",
+    position: "50% 45%",
+    credit: "St Joseph's Institution (Independent), Thomson Road — Desaccointier · CC BY-SA 4.0",
+    creditUrl: "https://commons.wikimedia.org/wiki/File:SJI_Independent_Campus.jpg",
   },
   {
     id: "gardens",
@@ -58,47 +53,40 @@ export const CHAPTERS: Chapter[] = [
     kicker: "Singapore Botanic Gardens",
     title: "The Gardens, on foot.",
     body:
-      "A UNESCO World Heritage Site fifteen minutes' walk away: early runs beneath heritage trees, quiet afternoons by the lakes, evenings on the lawns — a landscape that becomes part of the week.",
-    fact: "Singapore Botanic Gardens · UNESCO World Heritage · 15 min walk · Botanic Gardens MRT 1 km",
-    visual: {
-      kind: "photo",
-      src: "/images/location/gardens.jpg",
-      alt: "The bandstand at the Singapore Botanic Gardens in low evening light, beneath mature trees.",
-      position: "50% 45%",
-      credit: "Singapore Botanic Gardens — Mokkie · CC BY-SA 4.0",
-      creditUrl: "https://commons.wikimedia.org/wiki/File:Bandstand_at_Singapore_Botanic_Gardens.jpg",
-    },
+      "The Botanic Gardens are a fifteen-minute walk from the door: near enough for a run before breakfast, or an hour under the heritage trees at the end of the day.",
+    fact: "UNESCO World Heritage Site · 15 min walk · Botanic Gardens MRT 1 km",
+    src: "/images/location/gardens.jpg",
+    alt: "The bandstand at the Singapore Botanic Gardens in low evening light, beneath mature trees.",
+    position: "50% 45%",
+    credit: "Singapore Botanic Gardens — Mokkie · CC BY-SA 4.0",
+    creditUrl: "https://commons.wikimedia.org/wiki/File:Bandstand_at_Singapore_Botanic_Gardens.jpg",
   },
   {
     id: "orchard",
     n: "04",
     kicker: "Orchard Road",
-    title: "The city within reach.",
+    title: "Three stops away.",
     body:
-      "Singapore's shopping, dining and hotel district lies to the south-east — down Bukit Timah Road by car, or three stops from Stevens MRT on the Thomson–East Coast Line. The estate's quiet, a short journey from the city's most cosmopolitan street.",
+      "Orchard Road is three stops from Stevens MRT on the Thomson–East Coast Line, or a drive down Bukit Timah Road. ION Orchard, Paragon and Takashimaya are all on it, with the hotels between them.",
     fact: "Stevens MRT · 0.5 km · 7 min walk · Downtown & Thomson–East Coast lines",
-    visual: {
-      kind: "photo",
-      src: "/images/location/orchard.jpg",
-      alt: "A glass façade and shopfronts on Orchard Road, lit at blue hour.",
-      position: "50% 55%",
-      credit: "Orchard Road at blue hour — Basile Morin · CC BY-SA 4.0",
-      creditUrl:
-        "https://commons.wikimedia.org/wiki/File:Glass_facade_of_an_illuminated_shopping_mall_at_blue_hour_with_vertical_symmetry_impression,_Orchard_Road,_Singapore.jpg",
-    },
+    src: "/images/location/orchard-ion.jpg",
+    alt: "The glass and steel canopy of ION Orchard above its luxury shopfronts on Orchard Road.",
+    position: "50% 55%",
+    credit: "ION Orchard — Diego Delso · CC BY-SA 4.0",
+    creditUrl: "https://commons.wikimedia.org/wiki/File:Ion_Orchard_Link,_Singapur,_2023-08-18,_DD_06.jpg",
   },
   {
     id: "connect",
     n: "05",
-    kicker: "Expressway connectivity",
-    title: "Effortlessly connected.",
+    kicker: "The routes out",
+    title: "Adam Road to the PIE.",
     body:
-      "Adam Road leads to the Pan Island Expressway; Bukit Timah and Dunearn Roads run straight into town. The island opens in every direction, and Berrima Road stays what it is — a quiet loop off the main road.",
-    fact: "Pan Island Expressway via Adam Road · Bukit Timah Road · Dunearn Road · Stevens MRT",
-    visual: {
-      kind: "diagram",
-      diagram: "routes",
-      alt: "Diagram: routes from Berrima Road — Adam Road to the Pan Island Expressway, Dunearn and Bukit Timah Roads towards Newton, Orchard Road and the city; Stevens MRT nearby.",
-    },
+      "Adam Road leads to the Pan Island Expressway, which runs west towards Jurong and east towards Changi. Bukit Timah and Dunearn Roads run into town.",
+    fact: "Pan Island Expressway via Adam Road · Bukit Timah Road · Dunearn Road",
+    src: "/images/location/expressway.jpg",
+    alt: "The Pan Island Expressway, several lanes wide and lined with trees.",
+    position: "50% 55%",
+    credit: "Pan Island Expressway — LN9267 · CC BY-SA 4.0",
+    creditUrl: "https://commons.wikimedia.org/wiki/File:Pan_Island_Expressway_05-12-2024(20).jpg",
   },
 ];

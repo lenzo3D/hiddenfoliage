@@ -199,7 +199,7 @@ export default function Close() {
             className="mb-6 max-w-[40ch] font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95 md:mb-8"
             style={{ opacity: 0 }}
           >
-            What conceals by day, glows by&nbsp;night.
+            What conceals by day glows by&nbsp;night.
           </p>
           <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
             06 <span aria-hidden="true">/</span> Close

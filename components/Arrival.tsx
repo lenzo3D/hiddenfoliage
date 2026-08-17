@@ -54,7 +54,7 @@ export default function Arrival() {
               </span>
             </p>
             <p data-fade className="mt-6 max-w-[40ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-              Under a timber ceiling, out of the sun and the rain: four cars, and the door.
+              Four cars stand under a timber ceiling, out of the sun and the rain. The front door is at the end of it.
             </p>
           </div>
         </figcaption>

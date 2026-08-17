@@ -7,7 +7,7 @@ export default function Colophon({ className = "" }: { className?: string }) {
   return (
     <p className={`max-w-[70ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80 ${className}`}>
       Marketed by SRI Pte Ltd (CEA licence L3010738A) and ERA Realty Network Pte Ltd (CEA licence L3002382K).
-      Images are artist&rsquo;s impressions. Plans are diagrammatic and not to scale.
+      Images of the residence are artist&rsquo;s impressions. Plans are diagrammatic and not to scale.
     </p>
   );
 }

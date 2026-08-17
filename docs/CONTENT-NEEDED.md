@@ -51,6 +51,48 @@ until then they are folded into one "available on request" line.
   bottom-left; the site enlarges within the frame to keep it out).
 
 ## Location
+All five chapters now carry real photographs (no diagrams). Files live in
+`public/images/location/`; captions and credits are in
+`components/locationChapters.ts`. To swap any picture: drop a file in, point the
+chapter's `src` at it, and correct the credit line.
+- `estate-dalvey.jpg` — Dalvey Hill, Tanglin (Wzhkevin). **Wanted:** Berrima Road
+  or Dunearn Estate itself, ideally with the canopy over the road.
+- `schools.jpg` — St Joseph's Institution (Independent), Thomson Road. **Wanted:**
+  ACS Barker Road (the clock tower) or SJI Malcolm Road at ≥ 2000 px.
+- `gardens.jpg` — the Botanic Gardens bandstand (Mokkie). Good.
+- `orchard-ion.jpg` — ION Orchard (Diego Delso). Good.
+- `expressway.jpg` — the Pan Island Expressway (LN9267), daylight. **Wanted:** the
+  dusk light-trail expressway photograph Richard picked; save it as
+  `public/images/location/expressway.jpg` and it is used immediately.
+- **The district map was removed.** Reliable map data could not be fetched
+  (all Overpass mirrors were down), so rather than draw an approximate district
+  map the page links Google Maps for 23 Berrima Road. If an accurate reconstruction
+  is wanted later, the inputs are: OSM road geometry for the Dunearn/Bukit Timah
+  area, or a licensed static-map tile.
+- **Drive times** are still not printed anywhere. To add them, take typical
+  off-peak times from Google Maps for 23 Berrima Road → Orchard Road, Raffles
+  Place and Changi Airport, and they will be added with the source and date.
+
+## Sizes (Plans)
+- The sales plans give no room dimensions, only the pool (18 m × 2 m). The
+  Plans page therefore prints only the verified areas and offers a Measure tool
+  calibrated on the pool (approximate). **Room dimensions / a dimensioned plan**
+  from the architect would let us print sizes on the drawing.
+- Furniture shown is the sales plans' suggested layout, redrawn schematically.
+
+## Materials (Residence → "Materials")
+- **Material specification**: timber species, stone, joinery, glazing, screen
+  louvre mechanism (fixed/operable), pool finish, lift model, solar capacity.
+- **Macro photography or material samples** (timber, stone, screen detail) —
+  the section currently uses a crop of the closed-screen render.
+
+## Media quality (already planned)
+- All four films are 720p; regenerate at ≥1080p, same shots (hero must open on
+  the same frame as `hero image.png`), then the single media-swap pass.
+- A native portrait crop of the master bath (the render is 4:5 with the WC at
+  bottom-left; the site enlarges within the frame to keep it out).
+
+## Location
 - **Photography for the five chapters.** Three chapters use CC-licensed
   Wikimedia Commons photographs, credited beneath the plate (attribution +
   licence link, as CC BY-SA requires); two use diagrams because no photograph

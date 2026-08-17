@@ -21,8 +21,8 @@ export default function PlansPage() {
         <p className="mt-8 max-w-[52ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
           Every level is organised around the stair and lift. The first storey stretches the full plot — car porch,
           living, dining, kitchens and the 18-metre pool; the private floors sit above, and the basement holds the
-          household shelter. As drawn, north lies towards the road: the car porch faces it, and the pool runs along
-          the plot&rsquo;s western edge. Choose a level to inspect it; switch the suggested furniture on or off, and
+          household shelter. North lies towards the road as drawn, so the car porch faces it and the pool runs
+          along the western edge. Choose a level to inspect it, switch the suggested furniture on or off, and
           measure between any two points.
         </p>
         {/* The verified sizes — the only dimensions we print. */}

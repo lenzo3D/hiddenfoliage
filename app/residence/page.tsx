@@ -88,9 +88,8 @@ export default function ResidencePage() {
           A freehold house behind a screen of leaves.
         </h1>
         <p className="mt-8 max-w-[52ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-          Berrima Road, Dunearn Estate. Four levels of living organised around a lift and stair core, an
-          18-metre pool along the living floor, and a patterned timber screen that gives every room privacy
-          without sealing it away.
+          Four levels organised around a lift and stair core, an 18-metre pool along the living floor, and a
+          patterned timber screen that keeps every room private from the street without shutting out the air.
         </p>
       </section>
 
@@ -127,9 +126,8 @@ export default function ResidencePage() {
         </p>
         <div className="mt-8 space-y-6 font-sans text-sm leading-relaxed text-stone md:col-span-6 md:col-start-7 md:mt-0 md:text-[0.9375rem]">
           <p>
-            The house sits behind a continuous timber screen whose leaf pattern filters the light of the day and
-            glows at night. It is the residence&rsquo;s defining element: a veil that admits air and view while
-            keeping the interior private from the street.
+            A continuous timber screen wraps the upper floors. Its leaf pattern filters the daylight and glows
+            after dark, and it is what keeps the rooms private from the street while the windows stay open.
           </p>
           <p>
             The first storey is the entertaining floor — living, dining, dry and wet kitchens opening onto decks and
@@ -138,7 +136,7 @@ export default function ResidencePage() {
             a roof deck. A basement contains the household shelter and the base of the lift and stair core.
           </p>
           <p>
-            Materials are few and warm — timber, stone, pale plaster — set against dense planting on every side.
+            The palette is small and warm: timber, stone and pale plaster, with dense planting on every side.
             Solar-ready roof infrastructure and EV-charging provision are built in.
           </p>
         </div>
@@ -175,13 +173,12 @@ export default function ResidencePage() {
           </p>
           <div className="mt-8 space-y-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
             <p>
-              Timber louvres set in a leaf pattern, hung as a continuous veil around the upper floors. They close
-              for privacy and open for the view; by day they filter the light into the rooms, and after dark the
-              house glows through them. It is the material the house is known by.
+              Timber louvres, set in a leaf pattern and hung around the upper floors. They close for privacy and
+              open for the view; by day they filter the light into the rooms, and after dark the house glows
+              through them.
             </p>
             <p>
-              Inside, the palette stays small — timber, stone and pale plaster — so that the planting on every side
-              reads as the colour of the house.
+              Inside, the same three materials carry every room, so the planting outside supplies the colour.
             </p>
           </div>
           <p className="mt-8 max-w-[44ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
@@ -269,9 +266,9 @@ export default function ResidencePage() {
         <div className="mt-8 md:col-span-6 md:col-start-7 md:mt-0">
           <div className="space-y-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
             <p>
-              Hidden Foliage is a brand-new detached house on freehold land in Dunearn Estate, offered ahead of
-              completion. Built in from the start: a home lift serving all four levels, a household shelter in the
-              basement, solar-ready roof infrastructure, and EV-charging provision under the porch.
+              Hidden Foliage is a new detached house on freehold land in Dunearn Estate, offered ahead of
+              completion. A home lift serves all four levels. The basement holds the household shelter, the roof is
+              solar-ready, and there is EV-charging provision under the porch.
             </p>
             <p>
               Every image on this site is an artist&rsquo;s impression of the finished house, and the plans are

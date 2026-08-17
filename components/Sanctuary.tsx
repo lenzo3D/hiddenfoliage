@@ -49,7 +49,7 @@ export default function Sanctuary() {
           </span>
         </h2>
         <p data-fade className="mt-8 max-w-[34ch] font-sans text-sm leading-relaxed text-stone md:ml-[8vw] md:mt-10 md:text-[0.9375rem]">
-          Filtered light. Quiet rooms. Greenery at the edge of every view.
+          The screen filters the light, and there is planting at the edge of every view.
         </p>
       </div>
 
@@ -144,8 +144,8 @@ export default function Sanctuary() {
           </div>
           {/* Hosting: the whole first storey opens for guests. */}
           <p data-fade className="mt-8 max-w-[40ch] font-sans text-sm leading-relaxed text-stone md:col-span-6 md:col-start-7 md:mt-5 md:text-[0.9375rem]">
-            For guests, the whole first storey opens as one: living and dining, the dry and wet kitchens, the
-            decks on either side and the length of the pool, with the garden all round.
+            For guests the first storey opens up as a single floor, taking in living and dining, both kitchens,
+            the decks on either side and the length of the pool.
           </p>
         </figcaption>
       </figure>
