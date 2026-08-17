@@ -1,6 +1,6 @@
 "use client";
 
-// 03 / Four Levels of Living.
+// 04 / Four Levels of Living.
 //
 // No film, no photograph: the plans themselves are the event. Four levels drawn
 // as thin linework on the dark field, presented in a shallow oblique projection.
@@ -18,6 +18,7 @@
 // exploded drawing statically with all four captions.
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LEVELS, PLAN_BOUNDS, type Level } from "./floorPlans";
@@ -69,7 +70,14 @@ export default function FourLevels() {
     const mm = gsap.matchMedia();
 
     mm.add(
-      { desktop: "(min-width: 768px)", mobile: "(max-width: 767px)", reduce: "(prefers-reduced-motion: reduce)" },
+      {
+        // Portrait tablets take the phone drawing: the oblique desktop projection
+        // is too small in a narrow upright frame. (globals.css gives them the
+        // phone layout for the same reason.)
+        desktop: "(min-width: 1024px), ((min-width: 768px) and (orientation: landscape))",
+        mobile: "(max-width: 767px), ((min-width: 768px) and (max-width: 1023px) and (orientation: portrait))",
+        reduce: "(prefers-reduced-motion: reduce)",
+      },
       (ctx) => {
         const { mobile, reduce } = ctx.conditions as { mobile: boolean; reduce: boolean };
         const P = mobile ? PROJ.mobile : PROJ.desktop;
@@ -223,10 +231,18 @@ export default function FourLevels() {
           ))}
         </div>
 
-        {/* Section notation */}
-        <p className="fl-label absolute bottom-[8vh] left-[6vw] font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-          03 <span aria-hidden="true">/</span> Four Levels of Living
-        </p>
+        {/* Section notation, and the way to the full plans */}
+        <div className="fl-label absolute bottom-[8vh] left-[6vw]">
+          <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
+            04 <span aria-hidden="true">/</span> Four Levels of Living
+          </p>
+          <Link
+            href="/plans"
+            className="mt-3 inline-block font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-foreground/90 transition-colors hover:text-foreground md:text-xs"
+          >
+            Inspect the plans <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

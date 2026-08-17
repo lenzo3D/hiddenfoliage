@@ -1,6 +1,6 @@
 "use client";
 
-// 05 — Close.
+// 06 — Close.
 //
 // The last shot of the film: the house at night, the privacy screen lit from
 // within — what conceals by day glows after dark. This act is the quietest and
@@ -202,7 +202,7 @@ export default function Close() {
             What conceals by day, glows by&nbsp;night.
           </p>
           <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-            05 <span aria-hidden="true">/</span> Close
+            06 <span aria-hidden="true">/</span> Close
           </p>
         </div>
       </div>

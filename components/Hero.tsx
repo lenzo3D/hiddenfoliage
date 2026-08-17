@@ -1,6 +1,6 @@
 "use client";
 
-// Act 01 — The Reveal.
+// The Reveal — the title sequence (unnumbered; the acts 01–06 follow).
 //
 // A full-screen visual, driven by scroll. The section is tall (several screens),
 // and the visual stays pinned (CSS position: sticky) while the visitor scrolls

@@ -7,6 +7,8 @@
 // shown; the site boundary always faintly present for context), zoom 1–3× with
 // drag-to-pan, and fullscreen. Phones: the drawing is rotated so the long site
 // runs down the screen at a readable size; labels are counter-rotated upright.
+// The north point is drawn as on the architect's sheets (north = plan left,
+// towards the road), so on phones it points down the screen.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LEVELS, PLAN_BOUNDS, type Level } from "./floorPlans";
@@ -40,6 +42,24 @@ function roomsOf(level: Level) {
   return out;
 }
 
+// The north point, as drawn on the architect's sheets: north lies to the plan's
+// left, towards Berrima Road (the car-porch side). Drawn in the margin above
+// the plot's north-west corner; the letter stays upright when the sheet is
+// rotated on phones, where the arrow then points down the screen.
+function NorthArrow({ labelTransform }: { labelTransform?: string }) {
+  return (
+    <g transform={`translate(${B.x + 40} ${B.y - 8})`}>
+      <line x1={0} y1={0} x2={-46} y2={0} stroke="#b8b2a4" strokeWidth={0.8} strokeOpacity={0.8} vectorEffect="non-scaling-stroke" />
+      <path d="M-46 0 l9 -4.5 v9 z" fill="#b8b2a4" fillOpacity={0.8} />
+      <g transform="translate(-60 0)">
+        <text className="plan-label" transform={labelTransform} textAnchor="middle" dominantBaseline="middle" fontSize={21} fill="#b8b2a4" fillOpacity={0.85}>
+          N
+        </text>
+      </g>
+    </g>
+  );
+}
+
 function Drawing({ active, portrait }: { active: Level["id"]; portrait: boolean }) {
   const g = portrait ? "rotate(-90)" : undefined;
   const label = portrait ? "rotate(90)" : undefined;
@@ -51,6 +71,7 @@ function Drawing({ active, portrait }: { active: Level["id"]; portrait: boolean 
             <ShapeEl key={i} s={s} labelTransform={label} />
           ))}
         </g>
+        <NorthArrow labelTransform={label} />
         {LEVELS.map((level) => (
           <g key={level.id} className="transition-opacity duration-500 ease-out motion-reduce:transition-none" style={{ opacity: level.id === active ? 1 : 0 }} aria-hidden={level.id !== active}>
             {level.shapes.map((s, i) => (
@@ -181,7 +202,9 @@ export default function PlanViewer() {
             <Drawing active={active} portrait={false} />
           </div>
         </div>
-        <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/70">Double-click to zoom · drag to pan · plans are diagrammatic, not to scale</p>
+        <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/70">
+          Double-click to zoom · drag to pan · north point as drawn · plans are diagrammatic, not to scale
+        </p>
       </div>
 
       {/* Phone: rotated sheet, tall in the page flow */}
@@ -196,7 +219,7 @@ export default function PlanViewer() {
             <Drawing active={active} portrait />
           </div>
         </div>
-        <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/70">Plan north is to the left · not to scale</p>
+        <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/70">North point as drawn · not to scale</p>
       </div>
 
       {/* Rooms on this level */}

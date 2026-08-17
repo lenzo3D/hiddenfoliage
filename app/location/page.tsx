@@ -8,7 +8,7 @@ import Reveal from "@/components/Reveal";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Location — Hidden Foliage",
+  title: "Location",
   description:
     "Berrima Road, Dunearn Estate, District 11: a landed enclave north of Dunearn Road, a seven-minute walk from Stevens MRT and twelve from the Botanic Gardens.",
 };
@@ -26,7 +26,7 @@ const SCHOOLS = ["Anglo-Chinese School (Primary)", "Singapore Chinese Girls' Pri
 
 export default function LocationPage() {
   return (
-    <main className="bg-background text-foreground">
+    <main id="content" className="bg-background text-foreground">
       <section className="px-[6vw] pb-[10vh] pt-[22vh] md:pt-[26vh]">
         <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">Location</p>
         <h1 className="mt-8 max-w-[18ch] font-serif text-[clamp(2rem,4.4vw,4.25rem)] uppercase leading-[1.04] tracking-[0.02em] md:mt-10">

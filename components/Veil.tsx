@@ -1,6 +1,6 @@
 "use client";
 
-// Act 02 — The Veil.
+// 01 — The Veil.
 //
 // One idea: the patterned privacy screen gives privacy without sealing the
 // house away. One interaction: a dark architectural panel (the veil) covers most

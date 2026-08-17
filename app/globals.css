@@ -25,6 +25,13 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Keyboard focus: a thin ivory rule, offset from the element, in place of the
+   browser's default ring — visible on the dark field, quiet everywhere else. */
+:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--foreground) 80%, transparent);
+  outline-offset: 4px;
+}
+
 /* Bodoni's hairlines look best with optical sizing left on (the default),
    and rendered with the browser's high-quality text smoothing. */
 .font-serif {
@@ -56,6 +63,25 @@ textarea:-webkit-autofill {
 @media (max-width: 767px) {
   .four-levels .plan-room-label {
     display: none;
+  }
+}
+
+/* Four Levels on portrait tablets: the phone layout (drawing above, caption
+   beneath) to go with the phone projection FourLevels.tsx chooses there. */
+@media (min-width: 768px) and (max-width: 1023px) and (orientation: portrait) {
+  .four-levels .plan-room-label {
+    display: none;
+  }
+  .four-levels .fl-drawing {
+    inset: 4vh 0 37vh 0;
+    width: auto;
+  }
+  .four-levels .fl-captions {
+    inset: 65vh 6vw auto 6vw;
+    width: auto;
+  }
+  .four-levels .fl-cap {
+    inset: 0 0 auto 0;
   }
 }
 

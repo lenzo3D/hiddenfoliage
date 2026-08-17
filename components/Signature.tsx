@@ -6,20 +6,20 @@
 // (large, as the site opened), the address, and the one practical thing a
 // visitor might want to do next — ask to see the house. Then the small print.
 //
-//   1  wordmark: HIDDEN / FOLIAGE, then BERRIMA ROAD · SINGAPORE
-//   2  enquiry: ENQUIRE — "Private viewings by appointment." — WhatsApp link,
-//      and a short form (name, email, telephone, message) that posts to
-//      /api/enquire and is forwarded by email; a PDPA notice beneath it
+//   1  wordmark: HIDDEN / FOLIAGE, then BERRIMA ROAD · SINGAPORE, and the
+//      schedule in one line (the facts a buyer wants beside the enquiry)
+//   2  enquiry (#enquire): ENQUIRE — "Private viewings by appointment." —
+//      WhatsApp link, and a short form (name, email, telephone, message) that
+//      posts to /api/enquire and is forwarded by email; a PDPA notice beneath
 //   3  page links and the agencies' small print (Colophon)
 //
-// Motion is minimal and scroll-linked, as in The Sanctuary: the wordmark lines
-// rise through a clip, the blocks come up gently. Everything is reachable
-// before the very bottom of the page. Reduced motion: no motion, all present.
+// Motion is minimal and scroll-linked (see useReveals): the wordmark lines rise
+// through a clip, the blocks come up gently, the tail is timed to the page's
+// end. Reduced motion: no motion, all present.
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReveals } from "./useReveals";
 import Colophon from "./Colophon";
 
 // The agent's WhatsApp number (digits only, e.g. 6591234567). NEXT_PUBLIC_
@@ -41,63 +41,7 @@ export default function Signature() {
   const rootRef = useRef<HTMLElement>(null);
   const [status, setStatus] = useState<Status>({ state: "idle" });
   const [errors, setErrors] = useState<FieldErrors>({});
-
-  // ── Scroll-linked reveals ─────────────────────────────────────────────────
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    gsap.registerPlugin(ScrollTrigger);
-    const mm = gsap.matchMedia();
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const triggers: ScrollTrigger[] = [];
-      const add = (t: gsap.core.Tween) => t.scrollTrigger && triggers.push(t.scrollTrigger);
-
-      // Wordmark lines rise through their clipping wrappers.
-      root.querySelectorAll<HTMLElement>("[data-line]").forEach((line, i) => {
-        add(
-          gsap.fromTo(
-            line,
-            { yPercent: 105 },
-            {
-              yPercent: 0,
-              ease: "sine.out",
-              scrollTrigger: { trigger: line.parentElement, start: `top ${88 - i * 4}%`, end: `top ${55 - i * 4}%`, scrub: 0.6 },
-            },
-          ),
-        );
-      });
-
-      // Blocks come up gently as they enter.
-      root.querySelectorAll<HTMLElement>("[data-fade]").forEach((el) => {
-        add(
-          gsap.fromTo(
-            el,
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, ease: "sine.out", scrollTrigger: { trigger: el, start: "top 92%", end: "top 66%", scrub: 0.6 } },
-          ),
-        );
-      });
-
-      // The tail (links + small print) sits at the very end of the page, where
-      // "top 66%" might never arrive; it is timed to its own bottom edge instead,
-      // which meets the viewport bottom a little before the page's last pixel.
-      const tail = root.querySelector<HTMLElement>("[data-tail]");
-      if (tail) {
-        add(
-          gsap.fromTo(
-            tail,
-            { opacity: 0, y: 18 },
-            { opacity: 1, y: 0, ease: "sine.out", scrollTrigger: { trigger: tail, start: "top bottom", end: "bottom bottom", scrub: 0.6 } },
-          ),
-        );
-      }
-
-      return () => triggers.forEach((t) => t.kill());
-    });
-
-    return () => mm.revert();
-  }, []);
+  useReveals(rootRef);
 
   // ── The form ──────────────────────────────────────────────────────────────
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -177,10 +121,16 @@ export default function Signature() {
         <p data-fade className={`mt-6 ${label}`}>
           Berrima Road <span aria-hidden="true">·</span> Singapore
         </p>
+        {/* The schedule in one line — the facts a buyer wants beside the enquiry. */}
+        <p data-fade className={`mt-8 max-w-[64ch] leading-loose ${label}`}>
+          Freehold <span aria-hidden="true">·</span> Land 4,821 sq ft <span aria-hidden="true">·</span> Built-up 9,462 sq ft{" "}
+          <span aria-hidden="true">·</span> 5+1 bedrooms <span aria-hidden="true">·</span> 7 bathrooms{" "}
+          <span aria-hidden="true">·</span> Guide price S$23,810,000
+        </p>
       </div>
 
       {/* ── 2  Enquiry ─────────────────────────────────────────────────── */}
-      <div className="px-[6vw] pt-[16vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pt-[18vh]">
+      <div id="enquire" className="scroll-mt-[12vh] px-[6vw] pt-[16vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pt-[18vh]">
         <div data-fade className="md:col-span-5">
           <p className={label}>Enquire</p>
           <p className="mt-6 max-w-[22ch] font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] italic leading-snug text-foreground/95 md:mt-8">

@@ -1,6 +1,6 @@
 "use client";
 
-// Act 03 — Inside Out.
+// 03 — Inside Out.
 //
 // The living room and the lap pool are one continuous space; the glass is just
 // a line in the middle of the frame. One interaction: two dark panels — the
@@ -221,7 +221,7 @@ export default function InsideOut() {
 
         {/* Annotation, top-left — over the dark ceiling timber once the doors open. */}
         <p className="absolute left-[6vw] top-[8vh] font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-          02 <span aria-hidden="true">/</span> Inside Out
+          03 <span aria-hidden="true">/</span> Inside Out
         </p>
       </div>
     </section>
