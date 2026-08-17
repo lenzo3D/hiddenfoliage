@@ -65,11 +65,11 @@ export default function LocationMap() {
           </g>
         ))}
 
-        {/* Direction annotations at the edges */}
-        <T x={1180} y={470} size={11} anchor="end" op={0.7}>NEWTON · CBD 15 MIN →</T>
-        <T x={1180} y={112} size={11} anchor="end" op={0.7}>CHANGI AIRPORT · 20 MIN →</T>
+        {/* Direction annotations at the edges (no drive times: none verified yet) */}
+        <T x={1180} y={470} size={11} anchor="end" op={0.7}>NEWTON · CBD →</T>
+        <T x={1180} y={112} size={11} anchor="end" op={0.7}>CHANGI AIRPORT · PIE →</T>
         <T x={20} y={280} size={11} op={0.7}>← BUKIT TIMAH</T>
-        <T x={840} y={730} size={11} op={0.7}>ORCHARD ROAD · 8 MIN →</T>
+        <T x={840} y={730} size={11} op={0.7}>ORCHARD ROAD →</T>
 
         {/* MRT stations */}
         {MRT.map((m) => {

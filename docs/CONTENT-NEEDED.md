@@ -11,9 +11,8 @@ of how much each would strengthen the site.
 - **Email delivery** for the enquiry form — `RESEND_API_KEY`, `ENQUIRY_TO`
   (and optionally `ENQUIRY_FROM` on a verified domain). See `.env.example`.
 - **Public site URL** — `NEXT_PUBLIC_SITE_URL` (used for share-card links).
-- **Exact address for the Google Maps links** — `NEXT_PUBLIC_MAPS_QUERY`
-  (e.g. "12 Berrima Road, Singapore 299xxx"); until set, the links search for
-  "Berrima Road, Singapore".
+- **Google Maps links** now target "23 Berrima Road, Singapore" (per Richard);
+  `NEXT_PUBLIC_MAPS_QUERY` can refine it with the postal code.
 
 ## Construction confidence (Residence → "The making")
 Rows appear automatically once filled in `app/residence/page.tsx` (`MAKING`);
@@ -52,8 +51,31 @@ until then they are folded into one "available on request" line.
   bottom-left; the site enlarges within the frame to keep it out).
 
 ## Location
-- Verify the approximate drive times (Orchard, CBD, Changi) — labelled
-  "approx." on the page.
+- **Photography for the five chapters.** Three chapters use CC-licensed
+  Wikimedia Commons photographs, credited beneath the plate (attribution +
+  licence link, as CC BY-SA requires); two use diagrams because no photograph
+  good enough could be sourced. All are drop-in replaceable — same file names
+  in `public/images/location/`, credits in `components/locationChapters.ts`:
+  - `estate.jpg` — currently Coronation Road West, Bukit Timah (Wzhkevin,
+    CC BY-SA 4.0). **Wanted:** a photograph of Berrima Road / Dunearn Estate
+    itself (Richard's leafy-road image, if its rights are clear), ≥ 2400 px.
+  - `gardens.jpg` — the Bandstand at golden hour (Mokkie, CC BY-SA 4.0). Good;
+    a commissioned early-morning image would be better still.
+  - `orchard.jpg` — Orchard Road glass façade at blue hour (Basile Morin,
+    CC BY-SA 4.0), cropped. Fine; an ION Orchard / Paragon dusk image with
+    clear rights would be more recognisable.
+  - **Schools (02)** — a diagram today. **Wanted:** a licensed photograph of the
+    ACS Barker Road clock tower or SCGS on Dunearn Road (Richard's ACS image
+    is 659 × 480 — too small; a ≥ 2000 px version, rights cleared, would work).
+  - **Connectivity (05)** — a diagram today (routes to the PIE, town, MRT).
+    **Optional:** licensed cinematic road/aerial photography (Richard's
+    light-trail image is 800 × 533 — too small unless a larger original exists).
+- **Drive times** are no longer printed anywhere (none verified). To restore
+  them, take typical off-peak times from Google Maps for 23 Berrima Road →
+  Orchard Road, Raffles Place and Changi Airport, and I will add them with the
+  source and date.
+- The Google Maps links use "23 Berrima Road, Singapore" (per Richard);
+  `NEXT_PUBLIC_MAPS_QUERY` can add the postal code.
 - Any *specific* private intelligence worth adding (clubs, schools' admission
   notes, the enclave's character) — only if verifiable.
 

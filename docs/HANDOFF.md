@@ -56,9 +56,18 @@ about what's verified vs assumed. Never invent a property fact — see
   `getScreenCTM`, works through zoom/pan/rotation). Only verified sizes are printed (land,
   built-up, pool). North point drawn as on the architect's sheets: north = plan LEFT (towards
   the road); on phones it points down. **Confirm north with the agent** (docs/CONTENT-NEEDED.md).
-- `/location`: schematic SVG map (`LocationMap.tsx`, `MapFrame.tsx` for phone sideways scroll);
-  the house marker and two links beneath open Google Maps (`components/site.ts`:
-  `NEXT_PUBLIC_MAPS_QUERY`, currently "Berrima Road, Singapore" — exact address to be supplied).
+- `/location`: intro ("Secluded by nature. Connected to Singapore.") → `LocationStory.tsx`, five
+  chapters (`locationChapters.ts`: 01 A private world · 02 Exceptional education · 03 The Gardens,
+  on foot · 04 The city within reach · 05 Effortlessly connected). Desktop + motion: pinned
+  h-[640vh] stage — plate left (56vw), copy right (28vw), counter + five ticks bottom-left, photo
+  credit under the plate; one scrubbed timeline crossfades plates (incoming on top, outgoing
+  dropped once covered), drifts each plate 1.08→1, rises copy in/out, draws the diagram plates
+  (`LocationDiagrams.tsx`: schools within 2 km; routes to PIE/town/MRT) line-by-line. Phones and
+  reduced motion: the same chapters stacked (useReveals). Photos are CC BY-SA from Wikimedia
+  Commons (`public/images/location/`), credited + linked — see CONTENT-NEEDED for what to
+  replace. Then the overview: schematic map (`LocationMap.tsx`, `MapFrame.tsx`), Google Maps /
+  Directions links (`components/site.ts`, "23 Berrima Road, Singapore"), verified distances only
+  (no drive times anywhere until verified), schools list.
 - `components/Nav.tsx` (fixed 5 tabs incl. Enquire → `/#enquire`; on phones the HF wordmark
   stands in for Home), `SiteFooter.tsx` (inner pages: "Private viewings by appointment ·
   Enquire →", wordmark, links, `Colophon.tsx`), `Reveal.tsx` (inner-page image reveal),
