@@ -17,9 +17,9 @@
 //   statement in 25% → 45%, out 48% → 58% (gone before the edge reaches it)
 //   label     present throughout
 //
-// The film file: 4 s excerpt of video2 (louvres closed → open → closing). We
-// play from 1.2 s and stop on the half-open frame at 2.6 s — pattern still
-// legible, but you can see through it. Scrolling back reverses the interface;
+// The film file: a 4 s excerpt (louvres closed → open → closing). We play from
+// 1.2 s and stop on the half-open frame at 2.6 s — pattern still legible, but
+// you can see through it. Scrolling back reverses the interface;
 // the film pauses where it is and is only rewound once the section is fully
 // off screen, so re-entering replays it.
 
@@ -28,8 +28,13 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const VEIL_VIDEO = "/videos/video2- veil.mp4";
-const VEIL_STILL = "/images/exterior blinds open.png"; // reduced-motion fallback
+// The film: 1920×1080, 4 s, no audio — encoded from the client's 2560×1440
+// upscale (`upscaled-video (1).mp4`). It is the same trimmed clip, frame-aligned
+// with the old one (0 s closed, 2.6 s half-open), so FILM_FROM and FILM_TO below
+// are unchanged. The still is the film's own 2.6 s frame — the half-open state
+// the act settles on — so reduced motion shows exactly what the film ends on.
+const VEIL_VIDEO = "/videos/video2-veil-1080.mp4";
+const VEIL_STILL = "/images/veil-still.jpg"; // reduced-motion fallback, the half-open frame
 
 // Which part of the film plays: louvres closed → half-open (pattern still legible).
 const FILM_FROM = 1.2;

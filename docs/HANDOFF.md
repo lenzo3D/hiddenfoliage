@@ -104,11 +104,19 @@ about what's verified vs assumed. Never invent a property fact — see
   - 1920x1080, CRF 24, preset veryslow, GOP 24, +faststart, 4.4 MB - and
   `public/images/inside-out-still.jpg` (2560x1440) is frame 0 of that upscale, used for the
   reduced-motion view. The old 1280x720 file was deleted (it stays in git history).
-- **Veil and Close are still 1280x720:** same treatment awaits their re-renders - watermark
-  check, 1080p CRF 24 encode, still from frame 0, harness. Their originals were 1280x720/24fps
-  with ONE keyframe per clip and a generator sparkle watermark at ~x1135-1185/y575-625; the
-  current site files have it removed (per-pixel un-blend + ring cleanup), re-encoded GOP 6, no
-  audio, CRF 27. Originals untouched in the Downloads folder.
+- **Act 01 The Veil (done):** the client supplied a 2560x1440 upscale of the same 4s trimmed
+  clip (`Berrima Road (Dunearn Estate)/upscaled-video (1).mp4`, no watermark, no audio),
+  frame-aligned with the old file - checked at 0s (closed), 1.2s, 2.6s (half-open) and 3.9s -
+  so FILM_FROM 1.2 and FILM_TO 2.6 are unchanged. The site serves
+  `public/videos/video2-veil-1080.mp4` (1920x1080, CRF 24, preset veryslow, GOP 24,
+  +faststart, 3.0 MB) and `public/images/veil-still.jpg` is that film's own 2.6s half-open
+  frame, used for reduced motion in place of the separate `exterior blinds open.png`. The old
+  1280x720 file was deleted (it stays in git history).
+- **Only 06 Close is still 1280x720:** same treatment awaits its re-render - watermark check,
+  1080p CRF 24 encode, still from frame 0, harness. Its original was 1280x720/24fps with ONE
+  keyframe and a generator sparkle watermark at ~x1135-1185/y575-625; the current site file has
+  it removed (per-pixel un-blend + ring cleanup), re-encoded GOP 6, no audio, CRF 27. Originals
+  untouched in the Downloads folder.
 - Veil act uses only 1.2s to 2.6s of video2 (louvres closed to half-open); file trimmed to 4s.
 - A phone-weight hero encode (720p, ~3 MB, via a second <source media=...>) is an easy future
   saving; today every device downloads the 6.7 MB file.
