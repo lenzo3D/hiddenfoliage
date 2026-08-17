@@ -97,7 +97,7 @@ export default function ResidencePage() {
       <figure className="md:ml-[22vw]">
         <Reveal>
           <div className="relative aspect-[4/5] w-full md:aspect-[16/9]">
-            <Image src="/images/2x/hero.jpg" alt="Hidden Foliage from the road: the timber-screened house behind its planting." fill priority sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[30%_50%] md:object-center" />
+            <Image src="/images/hero-still.jpg" alt="Hidden Foliage from the road: the timber-screened house behind its planting." fill priority sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[30%_50%] md:object-center" />
           </div>
         </Reveal>
         <figcaption className="px-[6vw] md:px-0">

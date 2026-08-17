@@ -29,8 +29,12 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const HERO_STILL = "/images/hero image.png"; // 1672×941, the film's opening frame
-const HERO_VIDEO = "/videos/video1-hero.mp4";
+// The still is frame 0 of the film below, exported from the 4K master — so the
+// still→film hand-off is pixel-identical and the opening is as sharp as the
+// source allows. The film: 1920×1080, 4.9 s, no audio (from the client's 4K
+// re-render; the old 1280×720 file is kept in git history).
+const HERO_STILL = "/images/hero-still.jpg"; // 2560×1440, the film's opening frame
+const HERO_VIDEO = "/videos/video1-hero-1080.mp4";
 
 // Veil opacity at the very top of the page (1 = solid). 0.86 keeps the house
 // faintly perceptible — shadowed, not black. Ends at VEIL_END so the final
