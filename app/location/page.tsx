@@ -1,5 +1,5 @@
-// LOCATION — told in five chapters, like the film: the estate · the schools ·
-// the Gardens · Orchard Road · the routes out. A short intro, the sequence
+// LOCATION — told in five chapters, like the film: privacy · education ·
+// nature · the city · connectivity. A short intro, the sequence
 // (LocationStory), then the practical part: the verified distances and Google
 // Maps itself. No schematic map: a drawn map of the district could not be made
 // accurately here, and a real map does the job better.
@@ -40,8 +40,8 @@ export default function LocationPage() {
           Secluded by nature. Connected to Singapore.
         </h1>
         <p className="mt-8 max-w-[52ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-          Berrima Road is a short loop of houses north of Dunearn Road. Stevens MRT is seven minutes on foot and the
-          Botanic Gardens fifteen; four of Singapore&rsquo;s most respected schools are within two kilometres.
+          A short road of large houses in Dunearn Estate. The Botanic Gardens are a walk away, the schools that
+          families here have used for generations are close, and town is a few minutes when you want it.
         </p>
         <p className={`mt-8 ${label}`}>
           23 Berrima Road <span aria-hidden="true">·</span> Dunearn Estate <span aria-hidden="true">·</span> District 11

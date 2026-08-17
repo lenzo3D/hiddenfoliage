@@ -2,8 +2,8 @@
 
 // LOCATION — five chapters, told like the film rather than listed like a page:
 //
-//   01 Off the main road · 02 Within two kilometres · 03 The Gardens, on foot ·
-//   04 Three stops away · 05 Adam Road to the PIE
+//   01 The Estate (privacy) · 02 Education · 03 The Botanic Gardens (nature) ·
+//   04 Orchard Road (the city) · 05 Connectivity
 //
 // Desktop (motion allowed): the stage is pinned for about six screens of scroll.
 // A large photographic plate sits left; the copy sits in a narrow column right;
@@ -40,11 +40,17 @@ function Plate({ c, sizes, priority }: { c: Chapter; sizes: string; priority?: b
   );
 }
 
-const Credit = ({ c, className = "" }: { c: Chapter; className?: string }) => (
-  <a href={c.creditUrl} target="_blank" rel="noopener noreferrer" className={`${className} transition-colors hover:text-stone`}>
-    {c.credit}
-  </a>
-);
+// The line under a plate: a link when attribution is required, plain text when
+// the client supplied the photograph, nothing when there is nothing to say.
+const Credit = ({ c, className = "" }: { c: Chapter; className?: string }) => {
+  if (!c.credit) return null;
+  if (!c.creditUrl) return <span className={className}>{c.credit}</span>;
+  return (
+    <a href={c.creditUrl} target="_blank" rel="noopener noreferrer" className={`${className} transition-colors hover:text-stone`}>
+      {c.credit}
+    </a>
+  );
+};
 
 export default function LocationStory() {
   const rootRef = useRef<HTMLElement>(null);
@@ -138,7 +144,7 @@ export default function LocationStory() {
                   </p>
                   <h2 className="mt-6 font-serif text-[clamp(1.5rem,2.3vw,2.25rem)] uppercase leading-[1.08] tracking-[0.02em] text-foreground">{c.title}</h2>
                   <p className="mt-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">{c.body}</p>
-                  <p className={`mt-8 leading-loose ${label} text-stone/80`}>{c.fact}</p>
+                  {c.fact && <p className={`mt-8 leading-loose ${label} text-stone/80`}>{c.fact}</p>}
                 </div>
               </div>
             ))}
@@ -188,9 +194,11 @@ export default function LocationStory() {
               <p data-fade className="mt-5 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
                 {c.body}
               </p>
-              <p data-fade className={`mt-6 leading-loose ${label} text-stone/80`}>
-                {c.fact}
-              </p>
+              {c.fact && (
+                <p data-fade className={`mt-6 leading-loose ${label} text-stone/80`}>
+                  {c.fact}
+                </p>
+              )}
             </div>
           </article>
         ))}
