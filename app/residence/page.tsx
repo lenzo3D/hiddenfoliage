@@ -46,6 +46,31 @@ const MAKING: [string, string | null][] = [
   ["Builder", null],
 ];
 
+// Material details: enlargements of existing renders (object-position picks the
+// cover crop; scale/origin pick the window within it), named by material and
+// room only — no species or supplier is claimed. Replace with macro photography
+// when it exists (docs/CONTENT-NEEDED.md).
+const DETAILS: { src: string; alt: string; caption: string; crop: string }[] = [
+  {
+    src: "/images/car potch.png",
+    alt: "Vertical timber slats of the porch wall beneath the timber soffit, beside the front door.",
+    caption: "Timber slats · Car porch",
+    crop: "object-[0%_50%] origin-[28%_24%] scale-[2]",
+  },
+  {
+    src: "/images/living area.png",
+    alt: "The living room's timber wall with its lit shelving niches.",
+    caption: "Joinery · Living room",
+    crop: "object-[0%_50%] origin-[68%_38%] scale-[2.34]",
+  },
+  {
+    src: "/images/bathroom.png",
+    alt: "The stone column and basin of the master bath, the lit screen beyond.",
+    caption: "Stone · Master bath",
+    crop: "object-[50%_0%] origin-[100%_65%] scale-[1.72]",
+  },
+];
+
 const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs";
 const Cap = ({ children }: { children: React.ReactNode }) => <p className={`mt-4 ${label}`}>{children}</p>;
 
@@ -163,6 +188,24 @@ export default function ResidencePage() {
             Full material and fittings specification available on request.
           </p>
         </div>
+      </section>
+
+      {/* Three details, seen close: the materials a hand meets every day. Each is
+          an enlargement of an existing render — named by material and room only. */}
+      <section className="px-[6vw] pt-[12vh] md:pt-[14vh]">
+        <ul className="grid grid-cols-1 gap-y-[8vh] md:grid-cols-3 md:gap-x-[3vw]">
+          {DETAILS.map((d) => (
+            <li key={d.caption} className="w-[64vw] md:w-auto">
+              <Reveal>
+                <div className="relative aspect-square w-full overflow-hidden">
+                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 28vw, 64vw" quality={85} className={`object-cover ${d.crop}`} />
+                </div>
+              </Reveal>
+              <Cap>{d.caption}</Cap>
+              <Credit className="mt-1" />
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Stills */}

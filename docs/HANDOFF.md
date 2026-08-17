@@ -1,22 +1,30 @@
-# Hidden Foliage — Handoff (as of commit e98cdf8)
+# Hidden Foliage — Handoff (as of the "digital sales gallery" pass)
 
-Premium cinematic property website for a S$20M+ freehold detached house on Berrima Road,
-Dunearn Estate, District 11, Singapore. Built for a first-time coder client (Richard) who
-reviews visually in the browser; explain as you go, keep layouts simple, be honest about
-what's verified vs assumed.
+Premium cinematic property website — the digital sales gallery — for a S$23.8M
+brand-new freehold detached house (under construction) on Berrima Road, Dunearn
+Estate, District 11, Singapore. Built for a first-time coder client (Richard) who
+reviews visually in the browser; explain as you go, keep layouts simple, be honest
+about what's verified vs assumed. Never invent a property fact — see
+`docs/CONTENT-NEEDED.md` for what is still to be supplied.
 
 ## Stack & workflow
 - Next.js 16.3 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4, GSAP 3.15.
-  No other runtime deps. No Three.js/WebGL/shaders/UI libraries — deliberate.
+  No other runtime deps. No Three.js/WebGL/shaders/UI libraries — deliberate. Email is
+  sent with a plain `fetch` to Resend's HTTP API (no SDK).
 - Repo: `C:\Users\m\hidden-foliage` (git, main). Commit after each approved pass.
 - Dev server: `npm run dev -- -p 3001` (port 3000 is often held by a stale `next start`).
   Preview config lives in `C:\Users\m\.claude\.claude\launch.json` ("hidden-foliage-dev-3001").
+- Env: copy `.env.example` → `.env.local` (git-ignored). Locally `.env.local` holds a
+  PLACEHOLDER WhatsApp number (6500000000) so the link can be reviewed; email is
+  unconfigured on purpose, so `/api/enquire` prints each enquiry to the dev-server
+  console (`[enquiry] …`) and the form still shows its thank-you.
 - Checks before every commit: `npx tsc --noEmit`, `npm run lint`, `npm run build`.
-- Verification harness (puppeteer-core + local Chrome, ffmpeg-static) lives in the session
-  scratchpad `…\scratchpad\harness\` (hero-test/veil-test/act3-test/act4-test/levels-test/
-  sanct-test/pages-test/frames-test/scrub-audit .mjs). It drives http://localhost:3001,
-  reads GSAP state, and screenshots desktop 1440×900 / mobile 390×844 / reduced-motion.
-  If the scratchpad is gone, recreate: `npm i puppeteer-core ffmpeg-static` in a temp dir.
+- Verification harness (puppeteer-core + local Chrome; ffmpeg from an older scratchpad
+  for contact sheets) lives in the session scratchpad `…\scratchpad\harness\`
+  (signature-test / audit-shots / home-check / verify-all / details-check .mjs).
+  It drives http://localhost:3001, reads GSAP state, and screenshots desktop 1440×900,
+  tablet 768×1024, phone 390×844 (and 360), plus reduced-motion. If the scratchpad is
+  gone: `npm i puppeteer-core` in a temp dir and re-create from this description.
 - The in-app Browser pane cannot render GSAP (hidden tab, rAF never fires) — use the harness.
 
 ## Design system (do not drift)
@@ -26,15 +34,36 @@ what's verified vs assumed.
   (11–12px uppercase, tracking 0.18em). Section labels: `01 / THE VEIL` etc.
 - Concept: REVEAL / CONCEAL. Restraint over effects. Motion is scroll-linked and reversible.
 - Reduced motion always handled (static still + text, no pin).
+- Every render carries a quiet credit (`components/Credit.tsx`: "Artist's impression").
+- Keyboard: skip link ("Skip to content" → `#content` on every page), ivory
+  `:focus-visible` rule in `globals.css`.
 
 ## Pages
-- `/` (Home): Hero (Reveal) → Veil (01) → InsideOut (02) → FourLevels (03) → Sanctuary (04)
-  → Close (label still reads `03 / Close`; should become `05` — awaiting Richard's OK).
-- `/residence`: verified facts schedule + narrative + stills.
+- `/` (Home) — the film: Reveal (Hero) → 01 The Veil → 02 Arrival (car porch, "The porch
+  is the first room.") → 03 Inside Out → 04 Four Levels of Living (+ "Inspect the plans →")
+  → 05 The Sanctuary (moments of a day: Morning / Retreat / Afternoon / Evening + hosting
+  line) → 06 Close → Signature (`#enquire`: wordmark, address, schedule line, enquiry).
+- `/residence`: header, schedule (13 verified rows), narrative, Materials (the closed
+  screen close-up + three material details: timber slats / joinery / stone — all crops of
+  existing renders), stills, The Making (status, built-in spec, the honest "all images
+  are impressions" note; team/completion fold into one "available on request" line via
+  the `MAKING` array until supplied), footer.
 - `/plans`: PlanViewer (tabs, true plan view, zoom/pan/fullscreen desktop; rotated sheet on
   phones) — same data as Four Levels (`components/floorPlans.ts`, renderer `PlanSvg.tsx`).
+  North point drawn as on the architect's sheets: north = plan LEFT (towards the road);
+  on phones it points down. **Confirm north with the agent** (docs/CONTENT-NEEDED.md).
 - `/location`: schematic SVG map (`LocationMap.tsx`, `MapFrame.tsx` for phone sideways scroll).
-- `components/Nav.tsx` (fixed 4-tab, hides on scroll-down), `SiteFooter.tsx`, `Reveal.tsx`.
+- `components/Nav.tsx` (fixed 5 tabs incl. Enquire → `/#enquire`; on phones the HF wordmark
+  stands in for Home), `SiteFooter.tsx` (inner pages: "Private viewings by appointment ·
+  Enquire →", wordmark, links, `Colophon.tsx`), `Reveal.tsx` (inner-page image reveal),
+  `useReveals.ts` (data-line / data-reveal+data-img / data-fade / data-tail / data-dusk —
+  shared by Arrival, Sanctuary, Signature).
+- `app/api/enquire/route.ts`: validates, honeypot, per-address rate limit (5/10 min),
+  Resend HTTP API; dev without keys → console log + ok; prod without keys → 503 (form
+  then points to WhatsApp). Accepts an optional `ref` (reserved for by-invitation links).
+- Metadata: `app/layout.tsx` (title template, description, OG/Twitter, `metadataBase` from
+  `NEXT_PUBLIC_SITE_URL`), `app/opengraph-image.jpg` (1200×630 hero crop),
+  `app/icon.png` + `app/apple-icon.png` (Bodoni "H" on the dark field).
 
 ## Video model (important)
 - Films are NOT scrubbed by scroll (24fps source stepped badly). Each act plays its film once
@@ -54,17 +83,18 @@ what's verified vs assumed.
 ## Verified facts (from the agency listing; use these, don't invent)
 Freehold · land 4,821 sq ft · built-up 9,462 sq ft · 5+1 bedrooms · 7 bathrooms · guide price
 S$23,810,000 · four levels (basement w/ household shelter, 1st, 2nd, attic) · 18 m × 2 m pool ·
-home lift · 4-car porch, EV provision · solar-ready · D11 Dunearn Estate · Stevens MRT 0.48 km
-/ 7 min walk · Botanic Gardens MRT ~1 km / 12 min · schools within 2 km: ACS (Primary), SCGS,
-Nanyang Primary, RGPS · agencies SRI (L3010738A), ERA (L3002382K). Drive times on Location are
-labelled "approx." — unverified.
+home lift · 4-car porch, EV provision · solar-ready · detached, brand new (under construction,
+per client) · D11 Dunearn Estate · Stevens MRT 0.48 km / 7 min walk · Botanic Gardens MRT
+~1 km / 12 min · schools within 2 km: ACS (Primary), SCGS, Nanyang Primary, RGPS · agencies
+SRI (L3010738A), ERA (L3002382K). Drive times on Location are labelled "approx." — unverified.
+North point: from the plan sheets (north = plan left) — to be confirmed.
 
-## Open items / next steps (agreed roadmap)
-1. Signature/ending after Close: wordmark, address, "Private viewings by appointment" enquiry
-   (WhatsApp deep link + email API route, PDPA line). Relabel Close to 05.
-2. Optional: "Inspect the plans →" line under Four Levels on Home; facts panel on Home.
-3. Premium tier ideas (approved in principle): by-invitation personal links + viewing report,
-   presentation mode (iPad/TV), generated PDF brochure, Mandarin toggle, OG share cards,
-   analytics events, hooks for Matterport/photography.
-4. Media regeneration swap; real-iPhone Safari test; performance/LCP pass; favicon/metadata/OG.
-5. Bathroom still shows the WC in any portrait crop (flagged); Close label; drive-time verify.
+## Open items / next steps
+1. Richard to review the sales-gallery pass (this handoff's commit) and supply the items in
+   `docs/CONTENT-NEEDED.md` (WhatsApp number, email keys, site URL; team/completion; north).
+2. Premium tier (approved in principle, one at a time): by-invitation personal links + viewing
+   report (the API already accepts `ref`), presentation mode (iPad/TV), generated PDF
+   "Residence Book", Mandarin toggle, analytics events, hooks for Matterport/photography.
+3. Media regeneration swap; real-iPhone Safari test; Lighthouse/LCP pass.
+4. Optional polish: an "Arrival" crop nudge (door vs car balance), Location "private
+   intelligence" once verifiable facts exist.
