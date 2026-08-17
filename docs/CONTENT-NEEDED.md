@@ -73,54 +73,6 @@ chapter's `src` at it, and correct the credit line.
   off-peak times from Google Maps for 23 Berrima Road → Orchard Road, Raffles
   Place and Changi Airport, and they will be added with the source and date.
 
-## Sizes (Plans)
-- The sales plans give no room dimensions, only the pool (18 m × 2 m). The
-  Plans page therefore prints only the verified areas and offers a Measure tool
-  calibrated on the pool (approximate). **Room dimensions / a dimensioned plan**
-  from the architect would let us print sizes on the drawing.
-- Furniture shown is the sales plans' suggested layout, redrawn schematically.
-
-## Materials (Residence → "Materials")
-- **Material specification**: timber species, stone, joinery, glazing, screen
-  louvre mechanism (fixed/operable), pool finish, lift model, solar capacity.
-- **Macro photography or material samples** (timber, stone, screen detail) —
-  the section currently uses a crop of the closed-screen render.
-
-## Media quality (already planned)
-- All four films are 720p; regenerate at ≥1080p, same shots (hero must open on
-  the same frame as `hero image.png`), then the single media-swap pass.
-- A native portrait crop of the master bath (the render is 4:5 with the WC at
-  bottom-left; the site enlarges within the frame to keep it out).
-
-## Location
-- **Photography for the five chapters.** Three chapters use CC-licensed
-  Wikimedia Commons photographs, credited beneath the plate (attribution +
-  licence link, as CC BY-SA requires); two use diagrams because no photograph
-  good enough could be sourced. All are drop-in replaceable — same file names
-  in `public/images/location/`, credits in `components/locationChapters.ts`:
-  - `estate.jpg` — currently Coronation Road West, Bukit Timah (Wzhkevin,
-    CC BY-SA 4.0). **Wanted:** a photograph of Berrima Road / Dunearn Estate
-    itself (Richard's leafy-road image, if its rights are clear), ≥ 2400 px.
-  - `gardens.jpg` — the Bandstand at golden hour (Mokkie, CC BY-SA 4.0). Good;
-    a commissioned early-morning image would be better still.
-  - `orchard.jpg` — Orchard Road glass façade at blue hour (Basile Morin,
-    CC BY-SA 4.0), cropped. Fine; an ION Orchard / Paragon dusk image with
-    clear rights would be more recognisable.
-  - **Schools (02)** — a diagram today. **Wanted:** a licensed photograph of the
-    ACS Barker Road clock tower or SCGS on Dunearn Road (Richard's ACS image
-    is 659 × 480 — too small; a ≥ 2000 px version, rights cleared, would work).
-  - **Connectivity (05)** — a diagram today (routes to the PIE, town, MRT).
-    **Optional:** licensed cinematic road/aerial photography (Richard's
-    light-trail image is 800 × 533 — too small unless a larger original exists).
-- **Drive times** are no longer printed anywhere (none verified). To restore
-  them, take typical off-peak times from Google Maps for 23 Berrima Road →
-  Orchard Road, Raffles Place and Changi Airport, and I will add them with the
-  source and date.
-- The Google Maps links use "23 Berrima Road, Singapore" (per Richard);
-  `NEXT_PUBLIC_MAPS_QUERY` can add the postal code.
-- Any *specific* private intelligence worth adding (clubs, schools' admission
-  notes, the enclave's character) — only if verifiable.
-
 ## Later features (roadmap, from docs/HANDOFF.md)
 By-invitation links + viewing report, presentation mode, generated PDF
 "Residence Book", Mandarin toggle, analytics events, hooks for Matterport /
