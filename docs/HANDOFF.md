@@ -98,12 +98,17 @@ about what's verified vs assumed. Never invent a property fact — see
   10s - the same camera move at roughly twice the speed - so the reveal completes earlier in
   the scroll and then holds. Ask Richard if he wants it slowed (retiming needs frame
   interpolation, which risks artefacts on the herringbone screen).
-- **The other three acts are still 1280x720** (Veil, Inside Out, Close): same treatment awaits
-  their 4K re-renders - watermark check, 1080p CRF 24 encode, still from frame 0, harness.
-  Their originals were 1280x720/24fps with ONE keyframe per clip and a generator sparkle
-  watermark at ~x1135-1185/y575-625; the current site files have it removed (per-pixel
-  un-blend + ring cleanup), re-encoded GOP 6, no audio, CRF 27. Originals untouched in the
-  Downloads folder.
+- **Act 03 Inside Out (done):** the client supplied a 2560x1440 upscale of the same shot at the
+  same 10s length (`Berrima Road (Dunearn Estate)/upscaled-video.mp4`, no watermark, no audio),
+  so the act's pacing is unchanged. The site serves `public/videos/video3-inside-out-1080.mp4`
+  - 1920x1080, CRF 24, preset veryslow, GOP 24, +faststart, 4.4 MB - and
+  `public/images/inside-out-still.jpg` (2560x1440) is frame 0 of that upscale, used for the
+  reduced-motion view. The old 1280x720 file was deleted (it stays in git history).
+- **Veil and Close are still 1280x720:** same treatment awaits their re-renders - watermark
+  check, 1080p CRF 24 encode, still from frame 0, harness. Their originals were 1280x720/24fps
+  with ONE keyframe per clip and a generator sparkle watermark at ~x1135-1185/y575-625; the
+  current site files have it removed (per-pixel un-blend + ring cleanup), re-encoded GOP 6, no
+  audio, CRF 27. Originals untouched in the Downloads folder.
 - Veil act uses only 1.2s to 2.6s of video2 (louvres closed to half-open); file trimmed to 4s.
 - A phone-weight hero encode (720p, ~3 MB, via a second <source media=...>) is an easy future
   saving; today every device downloads the 6.7 MB file.

@@ -21,8 +21,12 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const FILM = "/videos/video3- inside out.mp4";
-const STILL = "/images/pool (night).png"; // reduced-motion fallback, same framing
+// The film: 1920×1080, 10 s, no audio — encoded from the client's 2560×1440
+// upscale (`upscaled-video.mp4`), which is the same shot at the same length, so
+// the act's pacing is unchanged. The still is frame 0 of that upscale, so the
+// reduced-motion view matches the film's opening frame exactly.
+const FILM = "/videos/video3-inside-out-1080.mp4";
+const STILL = "/images/inside-out-still.jpg"; // reduced-motion fallback, same framing
 
 const TINT_START = 0.55;
 const TINT_END = 0.18;
