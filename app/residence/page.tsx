@@ -52,19 +52,19 @@ const MAKING: [string, string | null][] = [
 // when it exists (docs/CONTENT-NEEDED.md).
 const DETAILS: { src: string; alt: string; caption: string; crop: string }[] = [
   {
-    src: "/images/car potch.png",
+    src: "/images/2x/porch.jpg",
     alt: "Vertical timber slats of the porch wall beneath the timber soffit, beside the front door.",
     caption: "Timber slats · Car porch",
     crop: "object-[0%_50%] origin-[28%_24%] scale-[2]",
   },
   {
-    src: "/images/living area.png",
+    src: "/images/2x/living.jpg",
     alt: "The living room's timber wall with its lit shelving niches.",
     caption: "Joinery · Living room",
     crop: "object-[0%_50%] origin-[68%_38%] scale-[2.34]",
   },
   {
-    src: "/images/bathroom.png",
+    src: "/images/2x/bath.jpg",
     alt: "The stone column and basin of the master bath, the lit screen beyond.",
     caption: "Stone · Master bath",
     crop: "object-[50%_0%] origin-[100%_65%] scale-[1.72]",
@@ -98,7 +98,7 @@ export default function ResidencePage() {
       <figure className="md:ml-[22vw]">
         <Reveal>
           <div className="relative aspect-[4/5] w-full md:aspect-[16/9]">
-            <Image src="/images/hero image.png" alt="Hidden Foliage from the road: the timber-screened house behind its planting." fill priority sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[30%_50%] md:object-center" />
+            <Image src="/images/2x/hero.jpg" alt="Hidden Foliage from the road: the timber-screened house behind its planting." fill priority sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[30%_50%] md:object-center" />
           </div>
         </Reveal>
         <figcaption className="px-[6vw] md:px-0">
@@ -152,7 +152,7 @@ export default function ResidencePage() {
               {/* Enlarged within the frame: the middle band of the closed screen and
                   the planting along the roof above it. */}
               <Image
-                src="/images/exterior blinds closed.png"
+                src="/images/2x/screen-closed.jpg"
                 alt="The screen, closed: timber louvres in a leaf pattern, with the roof-garden planting above."
                 fill
                 sizes="(min-width: 768px) 40vw, 100vw"
@@ -214,7 +214,7 @@ export default function ResidencePage() {
           <figure className="md:col-span-7">
             <Reveal>
               <div className="relative aspect-[4/3] w-full">
-                <Image src="/images/living area.png" alt="The living room, open to the garden." fill sizes="(min-width: 768px) 52vw, 100vw" quality={85} className="object-cover" />
+                <Image src="/images/2x/living.jpg" alt="The living room, open to the garden." fill sizes="(min-width: 768px) 52vw, 100vw" quality={85} className="object-cover" />
               </div>
             </Reveal>
             <figcaption className="px-[6vw] md:px-0">
@@ -225,7 +225,7 @@ export default function ResidencePage() {
           <figure className="mt-[10vh] md:col-span-4 md:col-start-9 md:mt-[18vh]">
             <Reveal>
               <div className="relative aspect-[4/5] w-full">
-                <Image src="/images/bedroom.png" alt="The master bedroom, the screen's pattern cast across the floor." fill sizes="(min-width: 768px) 30vw, 100vw" quality={85} className="object-cover object-[56%_50%]" />
+                <Image src="/images/2x/bedroom.jpg" alt="The master bedroom, the screen's pattern cast across the floor." fill sizes="(min-width: 768px) 30vw, 100vw" quality={85} className="object-cover object-[56%_50%]" />
               </div>
             </Reveal>
             <figcaption className="px-[6vw] md:px-0">
@@ -237,7 +237,7 @@ export default function ResidencePage() {
         <figure className="mt-[10vh] md:mt-[14vh] md:mr-[22vw]">
           <Reveal>
             <div className="relative aspect-[3/4] w-full md:aspect-[16/9]">
-              <Image src="/images/pool (day).png" alt="The lap pool alongside the living room." fill sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[35%_50%] md:object-center" />
+              <Image src="/images/2x/pool-day.jpg" alt="The lap pool alongside the living room." fill sizes="(min-width: 768px) 78vw, 100vw" quality={85} className="object-cover object-[35%_50%] md:object-center" />
             </div>
           </Reveal>
           <figcaption className="px-[6vw]">
@@ -248,7 +248,7 @@ export default function ResidencePage() {
         <figure className="mt-[10vh] md:mt-[14vh]">
           <Reveal>
             <div className="relative aspect-[3/4] w-full md:aspect-[21/9]">
-              <Image src="/images/exterior (night).png" alt="The house at night, the screen lit from within." fill sizes="100vw" quality={85} className="object-cover object-[42%_50%] md:object-center" />
+              <Image src="/images/2x/exterior-night.jpg" alt="The house at night, the screen lit from within." fill sizes="100vw" quality={85} className="object-cover object-[42%_50%] md:object-center" />
             </div>
           </Reveal>
           <figcaption className="px-[6vw]">

@@ -58,7 +58,7 @@ export default function Sanctuary() {
         <div data-reveal className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[16/9]">
           <div data-img className="absolute inset-0 will-change-transform">
             <Image
-              src="/images/bedroom.png"
+              src="/images/2x/bedroom.jpg"
               alt="Master bedroom: a low bed on a timber floor, the privacy screen's pattern cast across it in morning sunlight."
               fill
               sizes="(min-width: 768px) 72vw, 100vw"
@@ -82,7 +82,7 @@ export default function Sanctuary() {
                   rain shower and the vanity carry the picture (the WC, bottom-left
                   of the render, stays outside the frame). */}
               <Image
-                src="/images/bathroom.png"
+                src="/images/2x/bath.jpg"
                 alt="Master bath: a freestanding tub before the timber screen, lit from behind."
                 fill
                 sizes="(min-width: 768px) 48vw, 125vw"
@@ -107,7 +107,7 @@ export default function Sanctuary() {
         <div data-reveal className="relative aspect-[4/3] w-full overflow-hidden md:aspect-[16/9]">
           <div data-img className="absolute inset-0 will-change-transform">
             <Image
-              src="/images/pool (day).png"
+              src="/images/2x/pool-day.jpg"
               alt="The living room open to the lap pool and dense planting beyond."
               fill
               sizes="(min-width: 768px) 74vw, 100vw"
@@ -127,7 +127,7 @@ export default function Sanctuary() {
         <div data-reveal className="relative aspect-[3/4] w-full overflow-hidden md:aspect-[21/9]">
           <div data-img className="absolute inset-0 will-change-transform">
             <Image
-              src="/images/dining area.png"
+              src="/images/2x/dining.jpg"
               alt="The dining room at dusk, a long table set beside the glass, the lap pool running alongside."
               fill
               sizes="100vw"

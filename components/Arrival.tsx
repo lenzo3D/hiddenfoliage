@@ -31,7 +31,7 @@ export default function Arrival() {
         <div data-reveal className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[21/9]">
           <div data-img className="absolute inset-0 will-change-transform">
             <Image
-              src="/images/car potch.png"
+              src="/images/2x/porch.jpg"
               alt="The car porch: a timber-lined ceiling over the drive, slatted timber walls and the front door beneath it."
               fill
               sizes="100vw"

@@ -95,6 +95,16 @@ about what's verified vs assumed. Never invent a property fact — see
   (prep pipeline exists: watermark check → un-blend → GOP-6 encode → harness).
 - Veil act uses only 1.2s→2.6s of video2 (louvres closed→half-open); file trimmed to 4s.
 
+## Stills at 2× (`public/images/2x/`)
+- The renders are 1672 px wide; anywhere the site enlarges them (Arrival full-bleed, the Sanctuary
+  and Residence figures, the three material details, the closed-screen square, Close's
+  reduced-motion still) now uses a 2× JPEG made with Real-ESRGAN (realesrgan-x4plus at 4×,
+  downscaled to 2×; binary in the old scratchpad `…/8791c3b1…/scratchpad/esrgan/bin`). Checked
+  crop by crop: crisper edges/grain, no invented structure — on STILLS. (The earlier FAIL was the
+  video: temporal shimmer on the herringbone.) NOT applied to the Home hero still (it must match
+  the 720p film's first frame), nor to the Veil / Inside Out reduced-motion stills. Originals
+  untouched. Redo from source when the client re-exports renders at 4K.
+
 ## Verified facts (from the agency listing; use these, don't invent)
 Freehold · land 4,821 sq ft · built-up 9,462 sq ft · 5+1 bedrooms · 7 bathrooms · guide price
 S$23,810,000 · four levels (basement w/ household shelter, 1st, 2nd, attic) · 18 m × 2 m pool ·

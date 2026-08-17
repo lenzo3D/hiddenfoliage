@@ -20,7 +20,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const FILM = "/videos/video4- close.mp4";
-const STILL = "/images/exterior (night).png"; // reduced-motion fallback, same framing
+const STILL = "/images/2x/exterior-night.jpg"; // reduced-motion fallback, same framing
 
 const TINT_START = 0.35;
 const TINT_OPEN = 0.12;
