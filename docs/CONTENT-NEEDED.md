@@ -68,25 +68,6 @@ connectivity. Copy and credits live in `components/locationChapters.ts`; files i
   off-peak times from Google Maps for 23 Berrima Road and they will be added with
   the source and date.
 
-## Sizes (Plans)
-- The sales plans give no room dimensions, only the pool (18 m × 2 m). The
-  Plans page therefore prints only the verified areas and offers a Measure tool
-  calibrated on the pool (approximate). **Room dimensions / a dimensioned plan**
-  from the architect would let us print sizes on the drawing.
-- Furniture shown is the sales plans' suggested layout, redrawn schematically.
-
-## Materials (Residence → "Materials")
-- **Material specification**: timber species, stone, joinery, glazing, screen
-  louvre mechanism (fixed/operable), pool finish, lift model, solar capacity.
-- **Macro photography or material samples** (timber, stone, screen detail) —
-  the section currently uses a crop of the closed-screen render.
-
-## Media quality (already planned)
-- All four films are 720p; regenerate at ≥1080p, same shots (hero must open on
-  the same frame as `hero image.png`), then the single media-swap pass.
-- A native portrait crop of the master bath (the render is 4:5 with the WC at
-  bottom-left; the site enlarges within the frame to keep it out).
-
 ## Location
 All five chapters now carry real photographs (no diagrams). Files live in
 `public/images/location/`; captions and credits are in
