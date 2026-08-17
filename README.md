@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hidden Foliage
 
-## Getting Started
+A cinematic digital sales gallery for a brand-new freehold detached house at
+23 Berrima Road, Dunearn Estate, District 11, Singapore.
 
-First, run the development server:
+The homepage is a film in seven parts — Reveal, 01 The Veil, 02 Arrival,
+03 Inside Out, 04 Four Levels of Living, 05 The Sanctuary, 06 Close, and the
+Signature that carries the enquiry. Three further pages hold the detail:
+`/residence` (schedule, materials, the making), `/plans` (an interactive plan
+viewer) and `/location` (five chapters, then the practical distances).
+
+## Stack
+
+Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS 4 ·
+GSAP 3 with ScrollTrigger. No other runtime dependencies: no UI library, no
+WebGL, no email SDK. Type is Bodoni Moda and Instrument Sans, self-hosted by
+Next.js.
+
+## Running it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev -- -p 3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3001. Port 3001 is used because 3000 is often held by
+a stale `next start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Before committing:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-## Learn More
+## Configuration
 
-To learn more about Next.js, take a look at the following resources:
+Copy `.env.example` to `.env.local` (git-ignored) and fill in what you have:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Public origin, used for share-card links |
+| `NEXT_PUBLIC_MAPS_QUERY` | Address the Google Maps links resolve to |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Agent's WhatsApp number for the enquiry link |
+| `RESEND_API_KEY`, `ENQUIRY_TO`, `ENQUIRY_FROM` | Email delivery for `/api/enquire` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Without the Resend variables the enquiry form still works in development: each
+submission is printed to the dev-server console and the form shows its
+thank-you. In production the route answers 503 and the form points the visitor
+to WhatsApp, so an enquiry is never silently dropped.
 
-## Deploy on Vercel
+## How the films work
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The four films are not scrubbed by scroll — 24 fps footage dragged through wheel
+notches looks stepped. Scroll drives the interface (veils, panels, typography);
+each film simply plays once at natural speed when its act becomes active, holds
+its last frame, and rewinds only once it is hidden. Every act has a still for
+`prefers-reduced-motion`, taken from the film's own opening frame so the two
+match exactly.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Honesty rules for content
+
+The house is under construction, so every interior and exterior image is an
+artist's impression and is captioned as one. Plans are diagrammatic redraws of
+the architect's sheets, not surveys. Nothing unverified is printed: where a fact
+is not yet known the design carries a place for it and says "available on
+request". See `docs/CONTENT-NEEDED.md` for what is still outstanding, and
+`docs/HANDOFF.md` for the full state of the build, the design rules and the
+media pipeline.
+
+## Rights
+
+Renders, films and plan drawings belong to the owner and the appointed marketing
+agencies (SRI, ERA). Two photographs on the Location page are Creative Commons
+(CC BY-SA) from Wikimedia Commons and are credited in place, with links, inside
+`components/locationChapters.ts`. This repository is private and not licensed
+for reuse.
