@@ -21,10 +21,11 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// The film: 1920×1080, 10 s, no audio — encoded from the client's 2560×1440
-// upscale (`upscaled-video.mp4`), which is the same shot at the same length, so
-// the act's pacing is unchanged. The still is frame 0 of that upscale, so the
-// reduced-motion view matches the film's opening frame exactly.
+// The film: 1920×1080, 8.5 s, no audio — encoded from the client’s 2560×1440
+// upscale (`upscaled-video.mp4`) and trimmed there: the source drifts in its
+// final half-second (the glazing mullions double and the geometry smears), so
+// the last 1.5 s is cut and the act holds a clean frame. The still is frame 0
+// of the same upscale, so the reduced-motion view matches the opening frame.
 const FILM = "/videos/video3-inside-out-1080.mp4";
 const STILL = "/images/inside-out-still.jpg"; // reduced-motion fallback, same framing
 
