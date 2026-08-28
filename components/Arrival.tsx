@@ -42,19 +42,16 @@ export default function Arrival() {
         </div>
         <figcaption className="px-[6vw] pb-[14vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pb-[18vh]">
           <div data-fade className={`mt-4 md:col-span-5 md:mt-5 ${caption}`}>
-            Car porch <span aria-hidden="true">·</span> Four cars, EV-charging provision
+            Car porch
             <Credit className="mt-1" />
           </div>
           <div className="mt-10 md:col-span-6 md:col-start-7 md:mt-5">
             <p className="max-w-[22ch] font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] italic leading-snug text-foreground/95">
               <span className="block overflow-hidden">
                 <span data-line className="block">
-                  The porch is the first room.
+                  A quiet threshold between street and home.
                 </span>
               </span>
-            </p>
-            <p data-fade className="mt-6 max-w-[40ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-              Four cars stand under a timber ceiling, out of the sun and the rain. The front door is at the end of it.
             </p>
           </div>
         </figcaption>

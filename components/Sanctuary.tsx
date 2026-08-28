@@ -34,22 +34,22 @@ export default function Sanctuary() {
       {/* ── Moment 1: entry ─────────────────────────────────────────────── */}
       <div className="px-[6vw] pb-[14vh] pt-[22vh] md:pb-[14vh] md:pt-[24vh]">
         <p className={caption}>
-          05 <span aria-hidden="true">/</span> The Sanctuary
+          05 <span aria-hidden="true">/</span> Materials
         </p>
         <h2 className="mt-[10vh] font-serif text-[clamp(2rem,4.4vw,4.25rem)] uppercase leading-[1.04] tracking-[0.02em] md:ml-[8vw] md:mt-[12vh]">
           <span className="block overflow-hidden">
             <span data-line className="block">
-              A home built
+              Considered
             </span>
           </span>
           <span className="block overflow-hidden">
             <span data-line className="block">
-              around privacy.
+              throughout.
             </span>
           </span>
         </h2>
         <p data-fade className="mt-8 max-w-[34ch] font-sans text-sm leading-relaxed text-stone md:ml-[8vw] md:mt-10 md:text-[0.9375rem]">
-          The screen filters the light, and there is planting at the edge of every view.
+          Natural stone. Timber. Soft light. Greenery held close.
         </p>
       </div>
 
@@ -59,7 +59,7 @@ export default function Sanctuary() {
           <div data-img className="absolute inset-0 will-change-transform">
             <Image
               src="/images/2x/bedroom.jpg"
-              alt="Master bedroom: a low bed on a timber floor, the privacy screen's pattern cast across it in morning sunlight."
+              alt="Principal bedroom: a low bed on a timber floor, the privacy screen's pattern cast across it in morning sunlight."
               fill
               sizes="(min-width: 768px) 72vw, 100vw"
               quality={85}
@@ -68,7 +68,7 @@ export default function Sanctuary() {
           </div>
         </div>
         <figcaption data-fade className={`mt-4 px-[6vw] md:mt-5 md:px-0 ${caption}`}>
-          Morning <span aria-hidden="true">·</span> Master bedroom, second storey
+          Principal bedroom
           <Credit className="mt-1" />
         </figcaption>
       </figure>
@@ -83,7 +83,7 @@ export default function Sanctuary() {
                   of the render, stays outside the frame). */}
               <Image
                 src="/images/2x/bath.jpg"
-                alt="Master bath: a freestanding tub before the timber screen, lit from behind."
+                alt="Principal bathroom: a freestanding tub before the timber screen, lit from behind."
                 fill
                 sizes="(min-width: 768px) 48vw, 125vw"
                 quality={85}
@@ -92,14 +92,10 @@ export default function Sanctuary() {
             </div>
           </div>
           <figcaption data-fade className={`mt-4 md:mt-5 ${caption}`}>
-            Retreat <span aria-hidden="true">·</span> Master bath
+            Principal bathroom
             <Credit className="mt-1" />
           </figcaption>
         </figure>
-        <div data-fade className="mt-[10vh] md:mt-0">
-          <p className="font-serif text-[clamp(6rem,14vw,12.5rem)] leading-[0.85] text-foreground">5</p>
-          <p className={`mt-4 md:mt-6 ${caption}`}>Ensuite bedrooms</p>
-        </div>
       </div>
 
       {/* ── Moment 4: Afternoon — living room to pool and planting ─────────── */}
@@ -117,7 +113,7 @@ export default function Sanctuary() {
           </div>
         </div>
         <figcaption data-fade className={`mt-4 px-[6vw] md:mt-5 ${caption}`}>
-          Afternoon <span aria-hidden="true">·</span> Living room to the pool deck
+          Pool deck
           <Credit className="mt-1" />
         </figcaption>
       </figure>
@@ -139,14 +135,9 @@ export default function Sanctuary() {
         </div>
         <figcaption className="px-[6vw] pb-[14vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pb-[18vh]">
           <div data-fade className={`mt-4 md:col-span-5 md:mt-5 ${caption}`}>
-            Evening <span aria-hidden="true">·</span> Dining room
+            Dining room
             <Credit className="mt-1" />
           </div>
-          {/* Hosting: the whole first storey opens for guests. */}
-          <p data-fade className="mt-8 max-w-[40ch] font-sans text-sm leading-relaxed text-stone md:col-span-6 md:col-start-7 md:mt-5 md:text-[0.9375rem]">
-            For guests the first storey opens up as a single floor, taking in living and dining, both kitchens,
-            the decks on either side and the length of the pool.
-          </p>
         </figcaption>
       </figure>
     </section>

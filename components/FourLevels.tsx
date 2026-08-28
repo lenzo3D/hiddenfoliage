@@ -240,11 +240,14 @@ export default function FourLevels() {
         {/* Section notation, and the way to the full plans */}
         <div className="fl-label absolute bottom-[8vh] left-[6vw]">
           <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-            04 <span aria-hidden="true">/</span> Four Levels of Living
+            04 <span aria-hidden="true">/</span> Private Quarters
+          </p>
+          <p className="mt-3 max-w-[30ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
+            Five ensuite bedrooms, held above the living spaces in greater privacy.
           </p>
           <Link
             href="/plans"
-            className="mt-3 inline-block font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-foreground/90 transition-colors hover:text-foreground md:text-xs"
+            className="mt-4 inline-block font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-foreground/90 transition-colors hover:text-foreground md:text-xs"
           >
             Inspect the plans <span aria-hidden="true">→</span>
           </Link>

@@ -21,16 +21,18 @@ export default function SiteFooter() {
       </div>
       <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="font-serif text-lg uppercase tracking-[0.12em] text-foreground">Hidden Foliage</p>
+          {/* The wordmark is the way home, as in the header. */}
+          <Link href="/" className="font-serif text-lg uppercase tracking-[0.12em] text-foreground transition-colors hover:text-foreground/80">
+            Hidden Foliage
+          </Link>
           <p className={`mt-2 text-stone ${label}`}>
             Berrima Road <span aria-hidden="true">·</span> Dunearn Estate <span aria-hidden="true">·</span> Singapore
           </p>
         </div>
         <nav aria-label="Pages" className="flex flex-wrap gap-6">
           {[
-            ["/", "Home"],
-            ["/residence", "Residence"],
-            ["/plans", "Plans"],
+            ["/residence", "The Residence"],
+            ["/plans", "Floor Plans"],
             ["/location", "Location"],
           ].map(([href, text]) => (
             <Link key={href} href={href} className={`${label} text-stone transition-colors hover:text-foreground`}>

@@ -30,7 +30,7 @@ const sans = Instrument_Sans({
 // to the dev server.
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3001";
 const DESCRIPTION =
-  "A brand-new freehold house behind a screen of leaves — Berrima Road, Dunearn Estate, District 11, Singapore. Private viewings by appointment.";
+  "A private expression of tropical living. A new freehold detached residence on Berrima Road, Dunearn Estate, District 11, Singapore. Private viewings by appointment.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

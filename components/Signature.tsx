@@ -121,15 +121,9 @@ export default function Signature() {
         <p data-fade className={`mt-6 ${label}`}>
           Berrima Road <span aria-hidden="true">·</span> Singapore
         </p>
-        {/* The schedule, on two quiet lines. */}
-        <div data-fade className={`mt-12 leading-loose md:mt-14 ${label}`}>
-          <p>
-            Freehold <span aria-hidden="true">·</span> Land 4,821 sq ft <span aria-hidden="true">·</span> Built-up 9,462 sq ft
-          </p>
-          <p>
-            5+1 bedrooms <span aria-hidden="true">·</span> 7 bathrooms
-          </p>
-        </div>
+        <p data-fade className={`mt-12 md:mt-14 ${label}`}>
+          A new freehold detached residence.
+        </p>
 
         {/* The price: given room of its own, in the serif — larger than the
             schedule, well below the wordmark. A hairline above it, as the plan

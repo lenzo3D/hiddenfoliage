@@ -54,7 +54,7 @@ export default function Veil() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const tintRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
-  const statementRef = useRef<HTMLHeadingElement>(null);
+  const statementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -271,17 +271,20 @@ export default function Veil() {
 
         {/* Statement: left, vertically centred on the veil (desktop). On phones it
             sits lower, over the dark ground storey, so it never crosses the screen. */}
-        <h2
+        <div
           ref={statementRef}
-          className="absolute left-[6vw] top-1/2 -translate-y-1/2 max-md:top-auto max-md:bottom-[15vh] max-md:translate-y-0 font-serif text-[clamp(2rem,3.9vw,3.75rem)] uppercase leading-[1.02] tracking-[0.02em] text-foreground"
+          className="absolute left-[6vw] top-1/2 -translate-y-1/2 max-md:top-auto max-md:bottom-[15vh] max-md:translate-y-0"
           style={{ opacity: 0 }}
         >
-          Privacy
-          <br />
-          Without
-          <br />
-          Separation
-        </h2>
+          <h2 className="font-serif text-[clamp(2rem,3.9vw,3.75rem)] uppercase leading-[1.02] tracking-[0.02em] text-foreground">
+            Conceived
+            <br />
+            for privacy.
+          </h2>
+          <p className="mt-6 max-w-[30ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
+            Screened from the street. Open to light, landscape and water.
+          </p>
+        </div>
 
         {/* Annotation, bottom-left, like a drawing notation. */}
         <p className="absolute bottom-[8vh] left-[6vw] font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">

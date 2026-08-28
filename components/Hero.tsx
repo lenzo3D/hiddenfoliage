@@ -261,7 +261,7 @@ export default function Hero() {
               Foliage
             </h1>
             <p className="mt-4 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:absolute md:right-[6vw] md:bottom-[8vh] md:mt-0">
-              Berrima Road <span aria-hidden="true">·</span> Singapore
+              Berrima Road <span aria-hidden="true">·</span> Dunearn Estate
             </p>
           </div>
 
@@ -270,7 +270,7 @@ export default function Hero() {
             className="[grid-area:1/1] max-w-[26ch] self-end font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95 motion-reduce:mt-8"
             style={{ opacity: 0 }}
           >
-            Architecture, concealed by nature.
+            A private expression of tropical living.
           </p>
         </div>
       </div>

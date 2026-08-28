@@ -51,7 +51,7 @@ const L = (x: number, y: number, text: string, size: "s" | "m" = "s", anchor: "s
 const first: Level = {
   id: "first",
   name: "First Storey",
-  caption: "Living · Dining · Kitchens · Pool",
+  caption: "Living · Dining · Dry kitchen · Wet kitchen · Garden · Pool · Car porch",
   note: "18 m swimming pool",
   shapes: [
     { kind: "poly", pts: [[282, 517], [1500, 517], [1428, 909], [170, 912]], close: true, weight: "hair", dashed: true }, // plot line
@@ -99,7 +99,7 @@ const first: Level = {
 const basement: Level = {
   id: "basement",
   name: "Basement",
-  caption: "Lift · Stair · Household Shelter",
+  caption: "Household shelter · Lift · Stair core",
   shapes: [
     { kind: "poly", pts: [[820, 592], [1060, 592], [1060, 770], [950, 770], [950, 687], [820, 687]], close: true, weight: "principal", draw: true },
     { kind: "stair", x: 820, y: 592, w: 130, h: 95, treads: 9, dir: "h" },
@@ -114,7 +114,7 @@ const basement: Level = {
 const second: Level = {
   id: "second",
   name: "Second Storey",
-  caption: "Master Suite · Bedrooms 1–2 · Family / Study",
+  caption: "Principal suite · Bedrooms 1–2 · Family / Study",
   note: "Green roof",
   shapes: [
     R2(405, 157, 1207, 427, "hair"), // roof / eave outline
@@ -124,9 +124,9 @@ const second: Level = {
     L(X2(526), Y2(290), "Outdoor\ndeck"),
     R2(587, 170, 1130, 400, "principal", { draw: true }), // enclosed floor
     R2(587, 170, 715, 255, "secondary"), // master bath
-    L(X2(651), Y2(215), "Master bath"),
+    L(X2(651), Y2(215), "Principal bath"),
     R2(587, 255, 765, 400, "secondary"), // master bedroom
-    L(X2(676), Y2(350), "Master\nbedroom", "m"),
+    L(X2(676), Y2(350), "Principal\nbedroom", "m"),
     R2(760, 300, 795, 400, "hair"), // wardrobe
     { kind: "label", x: X2(777), y: Y2(350), text: "Wardrobe", size: "s", anchor: "middle", rotate: -90 },
     { kind: "stair", x: X2(750), y: Y2(170), w: X2(837) - X2(750), h: Y2(255) - Y2(170), treads: 9, dir: "h" },
@@ -148,7 +148,7 @@ const second: Level = {
 const attic: Level = {
   id: "attic",
   name: "Attic",
-  caption: "Bedrooms 3–4 · Outdoor Deck",
+  caption: "Bedrooms 3–4 · Outdoor deck",
   shapes: [
     RA(495, 627, 1152, 900, "hair"), // roof outline
     RA(500, 627, 567, 900, "secondary"), // void

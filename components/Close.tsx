@@ -31,7 +31,7 @@ export default function Close() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const tintRef = useRef<HTMLDivElement>(null);
-  const statementRef = useRef<HTMLParagraphElement>(null);
+  const statementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -194,13 +194,20 @@ export default function Close() {
 
         {/* Text lower-left over the dark planting — the same corner the site opened in. */}
         <div className="absolute inset-x-0 bottom-0 px-[6vw] pb-[8vh] max-md:pb-[13vh]">
-          <p
-            ref={statementRef}
-            className="mb-6 max-w-[40ch] font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95 md:mb-8"
-            style={{ opacity: 0 }}
-          >
-            What conceals by day glows by&nbsp;night.
-          </p>
+          <div ref={statementRef} className="mb-6 md:mb-8" style={{ opacity: 0 }}>
+            <p className="max-w-[40ch] font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95">
+              Substantial. Yet discreet.
+            </p>
+            <p className="mt-5 font-sans text-[0.6875rem] uppercase leading-loose tracking-[0.18em] text-stone md:text-xs">
+              4,821 sq ft freehold land
+              <br />
+              9,462 sq ft built-up
+              <br />
+              18-metre pool
+              <br />
+              Private lift
+            </p>
+          </div>
           <p className="font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
             06 <span aria-hidden="true">/</span> Close
           </p>

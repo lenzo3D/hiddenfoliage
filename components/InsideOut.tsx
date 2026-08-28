@@ -224,12 +224,12 @@ export default function InsideOut() {
           className="absolute left-[6vw] top-[13vh] max-w-[24ch] font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95 md:left-auto md:right-[6vw] md:top-[8vh] md:text-right"
           style={{ opacity: 0 }}
         >
-          Rooms that end in water.
+          Generous spaces opening directly to garden and pool.
         </p>
 
         {/* Annotation, top-left — over the dark ceiling timber once the doors open. */}
         <p className="absolute left-[6vw] top-[8vh] font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-          03 <span aria-hidden="true">/</span> Inside Out
+          03 <span aria-hidden="true">/</span> Living
         </p>
       </div>
     </section>
