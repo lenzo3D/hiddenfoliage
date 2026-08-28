@@ -1,17 +1,17 @@
 "use client";
 
-// Site navigation: four quiet tabs in the annotation register, the way to the
-// enquiry, plus the wordmark. Fixed to the top; hides while scrolling down and
-// returns on the first upward scroll, so it never sits on the film for long.
+// Site navigation: the wordmark (which is the way home, as on any gallery
+// site) and four quiet tabs in the annotation register, ending at the enquiry.
+// Fixed to the top; hides while scrolling down and returns on the first upward
+// scroll, so it never sits on the film for long.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const TABS = [
-  { href: "/", label: "Home" },
-  { href: "/residence", label: "Residence" },
-  { href: "/plans", label: "Plans" },
+  { href: "/residence", label: "The Residence" },
+  { href: "/plans", label: "Floor Plans" },
   { href: "/location", label: "Location" },
   { href: "/#enquire", label: "Enquire" }, // the Signature at the end of the film
 ];
@@ -52,17 +52,16 @@ export default function Nav() {
         <span className="sm:hidden">HF</span>
       </Link>
       <nav aria-label="Site">
-        {/* On phones the wordmark stands in for Home, and the labels are a
-            step smaller so all five fit on one line. */}
-        <ul className="flex items-center gap-4 sm:gap-5 md:gap-8">
+        {/* On phones the labels are a step smaller so all four fit on one line. */}
+        <ul className="flex items-center gap-2 sm:gap-5 md:gap-8">
           {TABS.map((t) => {
             const active = pathname === t.href;
             return (
-              <li key={t.href} className={t.href === "/" ? "max-sm:hidden" : undefined}>
+              <li key={t.href}>
                 <Link
                   href={t.href}
                   aria-current={active ? "page" : undefined}
-                  className={`font-sans text-[0.625rem] uppercase tracking-[0.16em] transition-colors sm:text-[0.6875rem] sm:tracking-[0.18em] md:text-xs ${
+                  className={`whitespace-nowrap font-sans text-[0.5625rem] uppercase tracking-[0.12em] transition-colors sm:text-[0.6875rem] sm:tracking-[0.18em] md:text-xs ${
                     active ? "text-foreground" : "text-stone hover:text-foreground"
                   }`}
                 >
