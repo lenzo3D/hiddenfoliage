@@ -39,13 +39,15 @@ export default function Home() {
           body="A screened façade and layered landscape create privacy while preserving light, openness and views throughout the house."
           fact="Freehold · 4,821 sq ft land · District 11"
         />
-        <Fig
+        <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/images/veil-still.jpg"
-          alt="The façade from the road: operable timber louvres in a leaf pattern, planting above and below."
+          src="/videos/video5-screen-1080.mp4"
+          still="/images/screen-still.jpg"
+          alt="The façade from the road: operable timber louvres in a leaf pattern rotating open."
           caption="The screen"
           offset="left"
           aspect="aspect-[4/5] md:aspect-[21/9]"
+          crop="object-center"
         />
       </section>
 
@@ -137,15 +139,15 @@ export default function Home() {
       </section>
 
       {/* Evening — a visual pause before the enquiry */}
-      <Fig
+      <FilmFig
         className="mt-[16vh] md:mt-[22vh]"
-        src="/images/2x/exterior-night.jpg"
-        alt="The house at night, the screen lit from within."
+        src="/videos/video4-close-1080.mp4"
+        still="/images/close-still.jpg"
+        alt="The house at dusk, the screen lit from within."
         caption="Berrima Road · Evening"
         offset="full"
         aspect="aspect-[3/4] md:aspect-[21/9]"
-        sizes="100vw"
-        position="42% 50%"
+        crop="object-[42%_50%] md:object-center"
       />
 
       {/* Enquiry */}
