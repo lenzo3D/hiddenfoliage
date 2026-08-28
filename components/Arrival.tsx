@@ -36,7 +36,7 @@ export default function Arrival() {
               fill
               sizes="100vw"
               quality={85}
-              className="object-cover object-[30%_50%] md:object-[40%_50%]"
+              className="object-cover object-[75%_50%] md:object-[40%_50%]"
             />
           </div>
         </div>

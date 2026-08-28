@@ -167,9 +167,10 @@ export default function InsideOut() {
     return () => mm.revert();
   }, []);
 
-  // On phones the tall crop is centred on the glass line (≈45% across the frame)
-  // so the slot shows interior, threshold and water together.
-  const mediaCrop = "object-cover object-[45%_50%] md:object-center";
+  // On phones the tall crop sits at 52% across the frame — the glass line with a
+  // slice of the bar interior left and the pool right, so the slot the doors
+  // leave shows the room actually ending in water.
+  const mediaCrop = "object-cover object-[52%_50%] md:object-center";
   // Each door covers 36% of the stage on desktop (28% opening). Phones get
   // narrower doors — 25% each, a 50% opening — because on a narrow screen the
   // old 36% slot read as a letterbox rather than a threshold.
