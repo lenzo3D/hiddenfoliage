@@ -1,226 +1,70 @@
 "use client";
 
-// The Reveal — the title sequence (unnumbered; the acts 01–06 follow).
-//
-// A full-screen visual, driven by scroll. The section is tall (several screens),
-// and the visual stays pinned (CSS position: sticky) while the visitor scrolls
-// through it. GSAP's ScrollTrigger turns "how far through the section am I"
-// into a 0 → 1 number, and that number drives the sequence.
-//
-// The visual stack, bottom to top:
-//   • the high-resolution still  — gives the opening its photographic sharpness
-//   • the film                   — same framing; it takes over and supplies the motion
-//   • the veil                   — a dark forest overlay that slowly recedes
-//   • the typography
-//
-// Only three things happen for the visitor: darkness recedes, the title
-// disappears, the statement appears. The still→film hand-off is invisible: the
-// film's first frame is the still, so it sits on that frame while it fades in.
-//
-// The film is NOT scrubbed frame-by-frame by scroll (24 fps footage dragged
-// through wheel notches looks stepped). Scroll drives the interface — veil,
-// typography, the hand-off — and once the film is in front it simply PLAYS,
-// once, at its natural speed, and holds on its final frame. Scrolling back
-// reverses the interface; the film pauses, and is reset only once it is hidden
-// again behind the still, so a second pass replays it from the top.
+// HOME hero — one viewport. The film plays once on arrival and holds its
+// last frame; a dark veil lifts as it begins, and the title fades up once.
+// No pin, no scrubbing: the page scrolls straight past into the next section.
+// Reduced motion: the still, the veil at rest, all text visible.
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// The still is frame 0 of the film below, exported from the 4K master — so the
-// still→film hand-off is pixel-identical and the opening is as sharp as the
-// source allows. The film: 1920×1080, 4.9 s, no audio (from the client's 4K
-// re-render; the old 1280×720 file is kept in git history).
-const HERO_STILL = "/images/hero-still.jpg"; // 2560×1440, the film's opening frame
+// The film: 1920×1080, 4.9 s, no audio — from the client's 4K master
+// (`video1-hero (1).mp4`). The still is frame 0 of the same master, so the
+// hand-off from still to film is invisible while the film loads.
+const HERO_STILL = "/images/hero-still.jpg";
 const HERO_VIDEO = "/videos/video1-hero-1080.mp4";
 
-// Veil opacity at the very top of the page (1 = solid). 0.86 keeps the house
-// faintly perceptible — shadowed, not black. Ends at VEIL_END so the final
-// frame stays slightly moody rather than a bright listing photo.
-const VEIL_START = 0.86;
-const VEIL_END = 0.14;
-
-// Where the film starts playing (as a fraction of the hero's scroll). Before this
-// it sits on its first frame while it fades in over the still.
-const FILM_STARTS_MOVING = 0.2;
-// Below this fraction the film is fully hidden behind the still, so it can be
-// reset to its first frame without anyone seeing a cut.
-const FILM_HIDDEN_BELOW = 0.08;
+// Where the veil rests once the film is playing — dark enough to hold the
+// title, light enough to let the architecture carry the frame.
+const TINT_REST = 0.24;
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const statementRef = useRef<HTMLParagraphElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
     const video = videoRef.current;
     const veil = veilRef.current;
-    const title = titleRef.current;
-    const statement = statementRef.current;
-    if (!section || !video || !veil || !title || !statement) return;
+    const copy = copyRef.current;
+    if (!video || !veil || !copy) return;
 
-    gsap.registerPlugin(ScrollTrigger);
-    // Phone browsers resize the viewport when the address bar hides/shows.
-    // Ignoring those keeps the scrub from jumping mid-scroll.
-    ScrollTrigger.config({ ignoreMobileResize: true });
-
-    // matchMedia lets us give reduced-motion visitors a different, static setup,
-    // and it re-evaluates automatically if the preference changes.
     const mm = gsap.matchMedia();
 
-    // ── Full experience: scroll drives the sequence ────────────────────────
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // ── Film playback lifecycle (not scrubbed) ──────────────────────────
-      let active = false; // true while scroll is past FILM_STARTS_MOVING
-      let onScreen = true; // false once the whole hero has scrolled away
-      const play = () => {
-        if (!video.paused || video.ended) return; // never stack play() calls; hold on the last frame
-        const p = video.play();
-        if (p) p.catch(() => {}); // autoplay refused (e.g. iOS Low Power Mode) → stays on frame 0
-      };
-      const pause = () => {
-        if (!video.paused) video.pause();
-      };
-      const onProgress = (progress: number) => {
-        if (progress >= FILM_STARTS_MOVING && !active) {
-          active = true;
-          if (onScreen) play();
-        } else if (progress < FILM_STARTS_MOVING && active) {
-          active = false;
-          pause();
-        }
-        // Hidden behind the still again → quietly rewind for a possible second pass.
-        if (progress < FILM_HIDDEN_BELOW && video.currentTime > 0 && !video.seeking) {
-          video.currentTime = 0;
-        }
-      };
-
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: section,
-          start: "top top", // when the top of the hero reaches the top of the screen
-          end: "bottom bottom", // until the bottom of the hero reaches the bottom of the screen
-          scrub: 0.6, // small lag (seconds) that smooths wheel steps into motion
-          onUpdate: (self) => onProgress(self.progress),
-          onLeave: () => {
-            onScreen = false;
-            pause();
-          },
-          onEnterBack: () => {
-            onScreen = true;
-            if (active) play();
-          },
-        },
-      });
-
-      {
-        // Positions below are fractions of the hero's scroll distance (0 → 1).
-        // Every tween declares its own start and end value, so nothing depends
-        // on what happened to be on screen when the tween was first rendered.
-        tl
-          // Still → film hand-off: 8% → 22%. The film is on its first frame
-          // (identical to the still), so this reads as nothing more than the
-          // image quietly gaining life.
-          .fromTo(video, { opacity: 0 }, { opacity: 1, duration: 0.14, ease: "sine.inOut" }, 0.08)
-
-          // (The film's playhead is not tweened — see the lifecycle above.)
-
-          // 1. Darkness recedes — in three tempos, then it rests.
-          //    0–15%  deeply shadowed, barely changing
-          //    15–45% the slow reveal: form, screening and foliage gain definition
-          //    45–70% fully legible, settling into its final (still slightly moody) level
-          .fromTo(veil, { opacity: VEIL_START }, { opacity: 0.8, duration: 0.15 }, 0)
-          .fromTo(veil, { opacity: 0.8 }, { opacity: 0.4, duration: 0.3, immediateRender: false }, 0.15)
-          .fromTo(
-            veil,
-            { opacity: 0.4 },
-            { opacity: VEIL_END, duration: 0.25, ease: "sine.out", immediateRender: false },
-            0.45,
-          )
-
-          // 2. Title dissolves out: 18% → 42%
-          .fromTo(
-            title,
-            { opacity: 1, y: 0 },
-            { opacity: 0, y: -6, duration: 0.24, ease: "sine.inOut" },
-            0.18,
-          )
-
-          // 3. Statement arrives once the house has revealed itself: 72% → 84%,
-          //    then leaves quietly: 90% → 96%. (Nothing essential sits in the last
-          //    few percent, which some phone browsers cannot quite reach.)
-          .fromTo(
-            statement,
-            { opacity: 0, y: 6 },
-            { opacity: 1, y: 0, duration: 0.12, ease: "sine.out" },
-            0.72,
-          )
-          .fromTo(
-            statement,
-            { opacity: 1 },
-            { opacity: 0, duration: 0.06, ease: "sine.in", immediateRender: false },
-            0.9,
-          )
-
-          // Keeps the timeline exactly 1.0 long, so scroll fractions map 1:1.
-          .to({}, { duration: 1 }, 0);
-      }
-
-      // Cleanup: runs when the component unmounts or the media query stops matching.
+      const tl = gsap.timeline();
+      tl.fromTo(veil, { opacity: 1 }, { opacity: TINT_REST, duration: 1.8, ease: "power2.out", delay: 0.2 });
+      tl.fromTo(copy, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1.1, ease: "sine.out" }, 0.7);
+      const p = video.play(); // plays once; no loop — the last frame holds
+      if (p) p.catch(() => {}); // autoplay refused → the still carries the frame
       return () => {
-        pause();
-        tl.scrollTrigger?.kill();
         tl.kill();
+        if (!video.paused) video.pause();
       };
     });
 
-    // ── Reduced motion: no scrubbing. The still, a light veil, all the text. ──
     mm.add("(prefers-reduced-motion: reduce)", () => {
-      gsap.set(video, { opacity: 0 });
-      gsap.set(veil, { opacity: 0.3 });
-      gsap.set(title, { opacity: 1, y: 0 });
-      gsap.set(statement, { opacity: 1, y: 0 });
+      gsap.set(veil, { opacity: TINT_REST });
+      gsap.set(copy, { opacity: 1, y: 0 });
     });
 
     return () => mm.revert();
   }, []);
 
-  // The still and the film share this crop so the hand-off has no composition
-  // jump. On phones the landscape image is cropped to a tall slice; 30% keeps the
-  // near corner of the timber volume and a strip of sky in view.
-  const mediaCrop = "object-cover object-[30%_50%] md:object-center";
-
   return (
-    <section
-      ref={sectionRef}
-      // Total scroll distance. The visual is pinned for all but the first screen,
-      // so the sequence plays over ~200vh on desktop and ~150vh on phones.
-      // With reduced motion there is nothing to play, so the hero is one screen.
-      className="relative h-[300vh] bg-background max-md:h-[250vh] motion-reduce:h-dvh motion-reduce:max-md:h-dvh"
-    >
-      <div className="sticky top-0 h-dvh w-full overflow-hidden">
-        {/* Media boxes use the *large* viewport height (h-lvh) so their scale never
-            changes when a phone's address bar slides away — the wrapper clips them. */}
+    <section className="relative h-dvh bg-background">
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Media sized to the large viewport so a phone's address bar never rescales it. */}
         <div className="absolute inset-x-0 top-0 h-lvh w-full">
           <Image
             src={HERO_STILL}
-            alt=""
+            alt="Hidden Foliage from Berrima Road: the timber-screened house behind its planting."
             fill
             priority
             quality={85}
-            // How wide the browser should assume the image is drawn. With
-            // object-cover, a 16:9 image filling a portrait screen is scaled to
-            // the screen's HEIGHT, so its drawn width is ~1.78 × the viewport
-            // height — far wider than the viewport. Landscape screens are
-            // covered by 100vw (16:10 laptops are within ~10% of it).
             sizes="(orientation: portrait) 178vh, 100vw"
-            className={mediaCrop}
+            className="object-cover object-[30%_50%] md:object-center"
           />
           <video
             ref={videoRef}
@@ -232,45 +76,28 @@ export default function Hero() {
             disableRemotePlayback
             aria-hidden="true"
             tabIndex={-1}
-            className={`absolute inset-0 h-full w-full ${mediaCrop}`}
-            style={{ opacity: 0 }}
+            className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-reduce:hidden md:object-center"
           />
         </div>
 
-        {/* The veil: darkness that recedes as you scroll. Starts dark via inline
-            style so the very first paint (before JavaScript) is already dark. */}
-        <div
-          ref={veilRef}
-          aria-hidden="true"
-          className="absolute inset-0 bg-background"
-          style={{ opacity: VEIL_START }}
-        />
+        {/* The veil: dark on first paint (inline style, before JavaScript), lifting once. */}
+        <div ref={veilRef} aria-hidden="true" className="absolute inset-0 bg-background" style={{ opacity: 1 }} />
 
-        {/* Typography. Title lower-left over the planting, never over the house.
-            The location line sits as a small caption in the opposite corner on
-            desktop (an annotation, not a subtitle) and under the title on phones.
-            The title block and the statement share the same corner (one grid
-            cell) because they are never visible together; with reduced motion
-            both show, so the grid becomes a plain vertical stack. Phones sit the
-            block higher so it stays on the dark planting, clear of the road. */}
-        <div className="hero-copy absolute inset-x-0 bottom-0 grid px-[6vw] pb-[8vh] max-md:pb-[13vh] motion-reduce:block">
-          <div ref={titleRef} className="[grid-area:1/1] self-end">
-            <h1 className="font-serif text-[clamp(2.75rem,5.5vw,5.5rem)] uppercase leading-[0.94] tracking-[0.02em] text-foreground">
-              Hidden
-              <br />
-              Foliage
-            </h1>
-            <p className="mt-4 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:absolute md:right-[6vw] md:bottom-[8vh] md:mt-0">
-              Berrima Road <span aria-hidden="true">·</span> Dunearn Estate
-            </p>
-          </div>
-
-          <p
-            ref={statementRef}
-            className="[grid-area:1/1] max-w-[26ch] self-end font-serif text-[clamp(1.25rem,1.7vw,1.625rem)] italic leading-snug text-foreground/95 motion-reduce:mt-8"
-            style={{ opacity: 0 }}
-          >
+        {/* Title lower-left over the planting. Name, one line, two facts — nothing else. */}
+        <div ref={copyRef} className="absolute inset-x-0 bottom-0 px-[6vw] pb-[8vh] max-md:pb-[12vh]" style={{ opacity: 0 }}>
+          <h1 className="font-serif text-[clamp(2.75rem,5.5vw,5.5rem)] uppercase leading-[0.94] tracking-[0.02em] text-foreground">
+            Hidden
+            <br />
+            Foliage
+          </h1>
+          <p className="mt-5 font-serif text-[clamp(1.125rem,1.5vw,1.5rem)] italic leading-snug text-foreground/95">
             A private expression of tropical living.
+          </p>
+          <p className="mt-6 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
+            Berrima Road <span aria-hidden="true">·</span> Dunearn Estate
+          </p>
+          <p className="mt-2 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/80 md:text-xs">
+            Freehold detached residence
           </p>
         </div>
       </div>

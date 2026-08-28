@@ -22,9 +22,8 @@ export default function PlansPage() {
           A central lift and stair connect the residence from basement to attic.
         </p>
         {/* The verified sizes — the only dimensions we print. */}
-        <p className="mt-8 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs">
-          Land 4,821 sq ft <span className="normal-case tracking-normal">(448 m²)</span> <span aria-hidden="true">·</span> Built-up 9,462 sq ft{" "}
-          <span className="normal-case tracking-normal">(879 m²)</span> <span aria-hidden="true">·</span> Pool 18 m × 2 m
+        <p className="mt-8 font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/80 md:text-xs">
+          4,821 sq ft land <span aria-hidden="true">·</span> 9,462 sq ft built-up <span aria-hidden="true">·</span> 18 m pool
         </p>
         <p className="mt-3 font-sans text-[0.6875rem] leading-relaxed text-stone/80">
           North lies towards the road as drawn.

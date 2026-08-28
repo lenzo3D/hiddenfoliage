@@ -119,22 +119,8 @@ export default function Signature() {
           </span>
         </h2>
         <p data-fade className={`mt-6 ${label}`}>
-          Berrima Road <span aria-hidden="true">·</span> Singapore
+          Berrima Road <span aria-hidden="true">·</span> Dunearn Estate <span aria-hidden="true">·</span> Singapore
         </p>
-        <p data-fade className={`mt-12 md:mt-14 ${label}`}>
-          A new freehold detached residence.
-        </p>
-
-        {/* The price: given room of its own, in the serif — larger than the
-            schedule, well below the wordmark. A hairline above it, as the plan
-            captions do; no box, no badge. */}
-        <div data-fade className="mt-12 md:mt-16">
-          <div aria-hidden="true" className="h-px w-12 bg-stone/40" />
-          <p className={`mt-6 ${label}`}>Guide price</p>
-          <p className="mt-3 font-serif text-[clamp(1.75rem,3.2vw,3.25rem)] leading-none tracking-[0.01em] text-foreground">
-            S$23.81M
-          </p>
-        </div>
       </div>
 
       {/* ── 2  Enquiry ─────────────────────────────────────────────────── */}
@@ -280,8 +266,8 @@ export default function Signature() {
       <footer data-tail className="px-[6vw] pb-[8vh] pt-[18vh] md:pt-[22vh]">
         <nav aria-label="Pages" className="flex flex-wrap gap-6 md:gap-8">
           {[
-            ["/residence", "Residence"],
-            ["/plans", "Plans"],
+            ["/residence", "The Residence"],
+            ["/plans", "Floor Plans"],
             ["/location", "Location"],
           ].map(([href, text]) => (
             <Link key={href} href={href} className={`${label} transition-colors hover:text-foreground`}>
