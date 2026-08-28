@@ -58,12 +58,6 @@ const DETAILS: { src: string; alt: string; caption: string; crop: string }[] = [
     crop: "object-[0%_50%] origin-[28%_24%] scale-[2]",
   },
   {
-    src: "/images/2x/living.jpg",
-    alt: "The living room's timber wall with its lit shelving niches.",
-    caption: "Joinery · Living room",
-    crop: "object-[0%_50%] origin-[68%_38%] scale-[2.34]",
-  },
-  {
     src: "/images/2x/bath.jpg",
     alt: "The stone column and basin of the master bath, the lit screen beyond.",
     caption: "Stone · Master bath",
@@ -187,15 +181,15 @@ export default function ResidencePage() {
         </div>
       </section>
 
-      {/* Three details, seen close: the materials a hand meets every day. Each is
+      {/* Two details, seen close: the materials a hand meets every day. Each is
           an enlargement of an existing render — named by material and room only. */}
       <section className="px-[6vw] pt-[12vh] md:pt-[14vh]">
-        <ul className="grid grid-cols-1 gap-y-[8vh] md:grid-cols-3 md:gap-x-[3vw]">
+        <ul className="grid grid-cols-1 gap-y-[8vh] md:grid-cols-2 md:gap-x-[3vw]">
           {DETAILS.map((d) => (
             <li key={d.caption} className="w-[64vw] md:w-auto">
               <Reveal>
                 <div className="relative aspect-square w-full overflow-hidden">
-                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 28vw, 64vw" quality={85} className={`object-cover ${d.crop}`} />
+                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 42vw, 64vw" quality={85} className={`object-cover ${d.crop}`} />
                 </div>
               </Reveal>
               <Cap>{d.caption}</Cap>
