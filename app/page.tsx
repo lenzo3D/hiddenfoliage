@@ -8,6 +8,7 @@
 // /plans (the drawings), /location (the neighbourhood).
 
 import Hero from "@/components/Hero";
+import FilmFig from "@/components/FilmFig";
 import Signature from "@/components/Signature";
 import { Fig, SectionIntro, factCls, label } from "@/components/Editorial";
 import Link from "next/link";
@@ -56,14 +57,15 @@ export default function Home() {
           body="Living, dining and kitchen spaces open along the length of the pool, with the garden held close to the interior."
           fact="18 m pool · First storey"
         />
-        <Fig
+        <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/images/2x/pool-day.jpg"
-          alt="The living room open to the lap pool and dense planting beyond."
+          src="/videos/video3-inside-out-1080.mp4"
+          still="/images/inside-out-still.jpg"
+          alt="The living room open to the lap pool at dusk, dense planting beyond."
           caption="Pool deck"
           offset="right"
           aspect="aspect-[4/3] md:aspect-[16/9]"
-          position="35% 50%"
+          crop="object-[52%_50%] md:object-center"
         />
         <Fig
           className="mt-[8vh] w-[78vw] md:mt-[10vh] md:w-[44vw]"
