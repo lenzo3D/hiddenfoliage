@@ -79,11 +79,11 @@ export default function ResidencePage() {
       <section className="px-[6vw] pb-[10vh] pt-[22vh] md:pt-[26vh]">
         <p className={label}>The Residence</p>
         <h1 className="mt-8 max-w-[18ch] font-serif text-[clamp(2rem,4.4vw,4.25rem)] uppercase leading-[1.04] tracking-[0.02em] md:mt-10">
-          A freehold house behind a screen of leaves.
+          A new freehold house in Dunearn Estate.
         </h1>
         <p className="mt-8 max-w-[52ch] font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
-          Four levels organised around a lift and stair core, an 18-metre pool along the living floor, and a
-          patterned timber screen that keeps every room private from the street without shutting out the air.
+          Four levels between basement and attic, an 18-metre lap pool along the living floor, and a timber
+          screen around the upper storeys.
         </p>
       </section>
 
@@ -116,22 +116,17 @@ export default function ResidencePage() {
       {/* Narrative */}
       <section className="px-[6vw] pt-[16vh] md:grid md:grid-cols-12 md:gap-[4vw] md:pt-[20vh]">
         <p className="font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] italic leading-snug text-foreground/95 md:col-span-5">
-          Architecture, concealed by nature.
+          Floor by floor.
         </p>
         <div className="mt-8 space-y-6 font-sans text-sm leading-relaxed text-stone md:col-span-6 md:col-start-7 md:mt-0 md:text-[0.9375rem]">
           <p>
-            A continuous timber screen wraps the upper floors. Its leaf pattern filters the daylight and glows
-            after dark, and it is what keeps the rooms private from the street while the windows stay open.
+            The first storey is the entertaining floor: living and dining rooms and the dry and wet kitchens,
+            opening onto decks and the length of the lap pool.
           </p>
           <p>
-            The first storey is the entertaining floor — living, dining, dry and wet kitchens opening onto decks and
-            the length of the lap pool. Above, the second storey holds the master suite with its own bath, wardrobe
-            and deck, two further ensuite bedrooms and a family study; the attic adds two more ensuite bedrooms and
-            a roof deck. A basement contains the household shelter and the base of the lift and stair core.
-          </p>
-          <p>
-            The palette is small and warm: timber, stone and pale plaster, with dense planting on every side.
-            Solar-ready roof infrastructure and EV-charging provision are built in.
+            The second storey holds the master suite with its own bath, wardrobe and deck, two further ensuite
+            bedrooms and a family study. The attic adds two more ensuite bedrooms and a roof deck; the basement
+            holds the household shelter. A lift serves all four levels.
           </p>
         </div>
       </section>
@@ -163,16 +158,15 @@ export default function ResidencePage() {
         <div className="mt-[10vh] md:col-span-6 md:col-start-7 md:mt-0">
           <p className={label}>Materials</p>
           <p className="mt-6 max-w-[20ch] font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] italic leading-snug text-foreground/95 md:mt-8">
-            A veil of timber, drawn or open.
+            Timber, stone, plaster.
           </p>
           <div className="mt-8 space-y-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
             <p>
-              Timber louvres, set in a leaf pattern and hung around the upper floors. They close for privacy and
-              open for the view; by day they filter the light into the rooms, and after dark the house glows
-              through them.
+              The upper storeys are wrapped in operable timber louvres, cut in a leaf pattern. Closed, they give
+              the bedrooms their privacy; open, the rooms look into the trees.
             </p>
             <p>
-              Inside, the same three materials carry every room, so the planting outside supplies the colour.
+              Inside, the same palette runs through every room. The colour comes from the garden.
             </p>
           </div>
           <p className="mt-8 max-w-[44ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
@@ -254,15 +248,14 @@ export default function ResidencePage() {
         <div className="md:col-span-5">
           <p className={label}>The making</p>
           <p className="mt-6 max-w-[18ch] font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] italic leading-snug text-foreground/95 md:mt-8">
-            New, freehold, and under construction.
+            Under construction.
           </p>
         </div>
         <div className="mt-8 md:col-span-6 md:col-start-7 md:mt-0">
           <div className="space-y-6 font-sans text-sm leading-relaxed text-stone md:text-[0.9375rem]">
             <p>
-              Hidden Foliage is a new detached house on freehold land in Dunearn Estate, offered ahead of
-              completion. A home lift serves all four levels. The basement holds the household shelter, the roof is
-              solar-ready, and there is EV-charging provision under the porch.
+              Hidden Foliage is a new detached house on freehold land in Dunearn Estate, offered for sale ahead
+              of completion.
             </p>
             <p>
               Every image on this site is an artist&rsquo;s impression of the finished house, and the plans are
@@ -280,7 +273,7 @@ export default function ResidencePage() {
           </dl>
           {pending.length > 0 && (
             <p className="mt-6 max-w-[52ch] font-sans text-[0.6875rem] leading-relaxed text-stone/80">
-              {pendingLine.charAt(0).toUpperCase() + pendingLine.slice(1)}: available on request — ask when you enquire.
+              {pendingLine.charAt(0).toUpperCase() + pendingLine.slice(1)}: available on request.
             </p>
           )}
         </div>
