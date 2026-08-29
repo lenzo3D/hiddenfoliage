@@ -114,7 +114,7 @@ const basement: Level = {
 const second: Level = {
   id: "second",
   name: "Second Storey",
-  caption: "Principal suite · Bedrooms 1–2 · Family / Study",
+  caption: "Master suite · Bedrooms 1–2 · Family / Study",
   note: "Green roof",
   shapes: [
     R2(405, 157, 1207, 427, "hair"), // roof / eave outline
@@ -124,9 +124,9 @@ const second: Level = {
     L(X2(526), Y2(290), "Outdoor\ndeck"),
     R2(587, 170, 1130, 400, "principal", { draw: true }), // enclosed floor
     R2(587, 170, 715, 255, "secondary"), // master bath
-    L(X2(651), Y2(215), "Principal bath"),
+    L(X2(651), Y2(215), "Master bath"),
     R2(587, 255, 765, 400, "secondary"), // master bedroom
-    L(X2(676), Y2(350), "Principal\nbedroom", "m"),
+    L(X2(676), Y2(350), "Master\nbedroom", "m"),
     R2(760, 300, 795, 400, "hair"), // wardrobe
     { kind: "label", x: X2(777), y: Y2(350), text: "Wardrobe", size: "s", anchor: "middle", rotate: -90 },
     { kind: "stair", x: X2(750), y: Y2(170), w: X2(837) - X2(750), h: Y2(255) - Y2(170), treads: 9, dir: "h" },

@@ -91,8 +91,8 @@ export default function Home() {
         <Fig
           className="mt-[8vh] md:mt-[10vh]"
           src="/images/2x/bedroom.jpg"
-          alt="The principal bedroom, the screen's pattern cast across the floor."
-          caption="Principal bedroom"
+          alt="The master bedroom, the screen's pattern cast across the floor."
+          caption="Master bedroom"
           offset="left"
           aspect="aspect-[4/5] md:aspect-[16/9]"
           position="56% 50%"
@@ -100,8 +100,8 @@ export default function Home() {
         <Fig
           className="ml-auto mt-[8vh] w-[78vw] md:mt-[10vh] md:mr-[6vw] md:w-[34vw]"
           src="/images/2x/bath.jpg"
-          alt="The principal bathroom: a freestanding tub before the timber screen, lit from behind."
-          caption="Principal bathroom"
+          alt="The master bathroom: a freestanding tub before the timber screen, lit from behind."
+          caption="Master bathroom"
           offset="none"
           aspect="aspect-[3/4]"
           sizes="(min-width: 768px) 34vw, 175vw"

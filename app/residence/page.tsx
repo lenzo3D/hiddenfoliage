@@ -42,16 +42,16 @@ const FACTS: [string, string][] = [
 // the cover crop; scale/origin pick the window within it), named by room only.
 const DETAILS: { src: string; alt: string; caption: string; crop: string }[] = [
   {
-    src: "/images/2x/porch.jpg",
+    src: "/images/2x/porch-detail.jpg",
     alt: "Vertical timber slats of the porch wall beneath the timber soffit, beside the front door.",
     caption: "Car porch",
-    crop: "object-[0%_50%] origin-[28%_24%] scale-[2]",
+    crop: "",
   },
   {
-    src: "/images/2x/bath.jpg",
-    alt: "The stone column and basin of the principal bathroom, the lit screen beyond.",
-    caption: "Principal bathroom",
-    crop: "object-[50%_0%] origin-[100%_65%] scale-[1.72]",
+    src: "/images/2x/bath-detail.jpg",
+    alt: "The stone vanity and basin of the master bathroom, the lit screen beyond.",
+    caption: "Master bathroom",
+    crop: "",
   },
 ];
 
@@ -128,14 +128,14 @@ export default function ResidencePage() {
         <SectionIntro
           eyebrow="03 / Private Levels"
           title="A quieter world above."
-          body="The principal suite, family study and four additional ensuite bedrooms occupy the upper two levels."
+          body="The master suite, family study and four additional ensuite bedrooms occupy the upper two levels."
           fact="5 ensuite bedrooms · Family / study"
         />
         <Fig
           className="mt-[8vh] md:mt-[10vh]"
           src="/images/2x/bedroom.jpg"
-          alt="The principal bedroom, the screen's pattern cast across the floor."
-          caption="Principal bedroom"
+          alt="The master bedroom, the screen's pattern cast across the floor."
+          caption="Master bedroom"
           offset="left"
           aspect="aspect-[4/5] md:aspect-[16/9]"
           position="56% 50%"
@@ -143,8 +143,8 @@ export default function ResidencePage() {
         <Fig
           className="ml-auto mt-[8vh] w-[78vw] md:mt-[10vh] md:mr-[6vw] md:w-[34vw]"
           src="/images/2x/bath.jpg"
-          alt="The principal bathroom: a freestanding tub before the timber screen, lit from behind."
-          caption="Principal bathroom"
+          alt="The master bathroom: a freestanding tub before the timber screen, lit from behind."
+          caption="Master bathroom"
           offset="none"
           aspect="aspect-[3/4]"
           sizes="(min-width: 768px) 34vw, 175vw"
