@@ -41,8 +41,8 @@ export default function Home() {
         />
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/videos/video5-screen-1080.mp4"
-          still="/images/screen-still.jpg"
+          src="/videos/video5-screen-1440.mp4"
+          still="/images/screen-still-1440.jpg"
           alt="The façade from the road: operable timber louvres in a leaf pattern rotating open."
           caption="The screen"
           offset="left"
@@ -61,8 +61,8 @@ export default function Home() {
         />
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/videos/video3-inside-out-1080.mp4"
-          still="/images/inside-out-still.jpg"
+          src="/videos/video3-inside-out-1440.mp4"
+          still="/images/inside-out-still-1440.jpg"
           alt="The living room open to the lap pool at dusk, dense planting beyond."
           caption="Pool deck"
           offset="right"
@@ -141,8 +141,8 @@ export default function Home() {
       {/* Evening — a visual pause before the enquiry */}
       <FilmFig
         className="mt-[16vh] md:mt-[22vh]"
-        src="/videos/video4-close-1080.mp4"
-        still="/images/close-still.jpg"
+        src="/videos/video4-close-1440.mp4"
+        still="/images/close-still-1440.jpg"
         alt="The house at dusk, the screen lit from within."
         caption="Berrima Road · Evening"
         offset="full"

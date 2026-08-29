@@ -9,11 +9,11 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 
-// The film: 1920×1080, 4.9 s, no audio — from the client's 4K master
+// The film: 2560×1440, 4.9 s, no audio — from the client's 4K master
 // (`video1-hero (1).mp4`). The still is frame 0 of the same master, so the
 // hand-off from still to film is invisible while the film loads.
 const HERO_STILL = "/images/hero-still.jpg";
-const HERO_VIDEO = "/videos/video1-hero-1080.mp4";
+const HERO_VIDEO = "/videos/video1-hero-1440.mp4";
 
 // Where the veil rests once the film is playing — dark enough to hold the
 // title, light enough to let the architecture carry the frame.
