@@ -44,7 +44,10 @@ export function Fig({
   caption,
   offset = "right",
   aspect = "aspect-[4/5] md:aspect-[16/9]",
-  sizes = "(min-width: 768px) 78vw, 100vw",
+  // Cover-crop aware: on phones the box is taller than the image, so the
+  // drawn width is ~1.75x the viewport; 175vw makes the optimizer serve the
+  // 2048w variant on a 3x screen instead of a soft 1200w one.
+  sizes = "(min-width: 768px) 78vw, 175vw",
   position,
   imgClassName = "",
   priority,

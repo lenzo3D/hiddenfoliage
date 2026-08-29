@@ -76,7 +76,7 @@ export default function Home() {
           caption="Living room"
           offset="none"
           aspect="aspect-[4/3]"
-          sizes="(min-width: 768px) 44vw, 78vw"
+          sizes="(min-width: 768px) 44vw, 110vw"
         />
       </section>
 
@@ -104,7 +104,7 @@ export default function Home() {
           caption="Principal bathroom"
           offset="none"
           aspect="aspect-[3/4]"
-          sizes="(min-width: 768px) 48vw, 100vw"
+          sizes="(min-width: 768px) 34vw, 175vw"
           imgClassName="origin-[98%_15%] scale-[1.52] object-[100%_50%]"
         />
       </section>

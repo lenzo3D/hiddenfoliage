@@ -87,8 +87,8 @@ export default function ResidencePage() {
         />
         <Fig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/images/veil-still.jpg"
-          alt="The façade from the road: operable timber louvres in a leaf pattern, planting above and below."
+          src="/images/2x/screen-facade.jpg"
+          alt="The façade from the road: operable timber louvres in a leaf pattern, closed, planting above and below."
           caption="The screen"
           offset="left"
           aspect="aspect-[4/5] md:aspect-[21/9]"
@@ -118,7 +118,7 @@ export default function ResidencePage() {
           caption="Pool deck"
           offset="none"
           aspect="aspect-[4/3]"
-          sizes="(min-width: 768px) 44vw, 78vw"
+          sizes="(min-width: 768px) 44vw, 110vw"
           position="35% 50%"
         />
       </section>
@@ -147,7 +147,7 @@ export default function ResidencePage() {
           caption="Principal bathroom"
           offset="none"
           aspect="aspect-[3/4]"
-          sizes="(min-width: 768px) 48vw, 100vw"
+          sizes="(min-width: 768px) 34vw, 175vw"
           imgClassName="origin-[98%_15%] scale-[1.52] object-[100%_50%]"
         />
       </section>
@@ -165,7 +165,7 @@ export default function ResidencePage() {
             <li key={d.caption} className="w-[64vw] md:w-auto">
               <Reveal>
                 <div className="relative aspect-square w-full overflow-hidden">
-                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 42vw, 64vw" quality={85} className={`object-cover ${d.crop}`} />
+                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 42vw, 115vw" quality={85} className={`object-cover ${d.crop}`} />
                 </div>
               </Reveal>
               <p className={`mt-4 ${label}`}>{d.caption}</p>
