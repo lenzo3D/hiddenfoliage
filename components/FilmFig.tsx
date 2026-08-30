@@ -11,6 +11,7 @@ import Image from "next/image";
 import Reveal from "./Reveal";
 import Credit from "./Credit";
 import { label } from "./Editorial";
+import { asset } from "./asset";
 
 export default function FilmFig({
   src,
@@ -42,7 +43,7 @@ export default function FilmFig({
     if (!video) return;
     if (phoneSrc && window.matchMedia("(max-width: 767px)").matches) {
       // The pre-cropped file bakes the framing in, so it plays centred.
-      video.src = phoneSrc;
+      video.src = asset(phoneSrc);
       video.classList.remove(...video.classList);
       video.className = "absolute inset-0 h-full w-full object-cover object-center motion-reduce:hidden";
     }
@@ -89,8 +90,8 @@ export default function FilmFig({
         <div className={`relative w-full overflow-hidden ${aspect}`}>
           <video
             ref={videoRef}
-            src={src}
-            poster={still}
+            src={asset(src)}
+            poster={asset(still)}
             muted
             playsInline
             preload="metadata"
@@ -100,7 +101,7 @@ export default function FilmFig({
             tabIndex={-1}
             className={`absolute inset-0 h-full w-full object-cover motion-reduce:hidden ${crop}`}
           />
-          <Image src={still} alt={alt} fill sizes="(min-width: 768px) 78vw, 100vw" quality={85} className={`hidden object-cover motion-reduce:block ${crop}`} />
+          <Image src={asset(still)} alt={alt} fill sizes="(min-width: 768px) 78vw, 100vw" quality={85} className={`hidden object-cover motion-reduce:block ${crop}`} />
         </div>
       </Reveal>
       <figcaption className={`mt-4 ${capPad}`}>

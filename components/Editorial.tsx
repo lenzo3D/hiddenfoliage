@@ -11,6 +11,7 @@
 import Image from "next/image";
 import Reveal from "./Reveal";
 import Credit from "./Credit";
+import { asset } from "./asset";
 
 export const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone md:text-xs";
 export const factCls = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] text-stone/80 md:text-xs";
@@ -73,7 +74,7 @@ export function Fig({
       <Reveal>
         <div className={`relative w-full overflow-hidden ${aspect}`}>
           <Image
-            src={src}
+            src={asset(src)}
             alt={alt}
             fill
             sizes={sizes}

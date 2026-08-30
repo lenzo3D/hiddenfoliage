@@ -14,6 +14,7 @@ import Reveal from "@/components/Reveal";
 import Credit from "@/components/Credit";
 import SiteFooter from "@/components/SiteFooter";
 import { Fig, SectionIntro, bodyCls, factCls, label } from "@/components/Editorial";
+import { asset } from "@/components/asset";
 
 export const metadata: Metadata = {
   title: "The Residence",
@@ -165,7 +166,7 @@ export default function ResidencePage() {
             <li key={d.caption} className="w-[64vw] md:w-auto">
               <Reveal>
                 <div className="relative aspect-square w-full overflow-hidden">
-                  <Image src={d.src} alt={d.alt} fill sizes="(min-width: 768px) 42vw, 115vw" quality={85} className={`object-cover ${d.crop}`} />
+                  <Image src={asset(d.src)} alt={d.alt} fill sizes="(min-width: 768px) 42vw, 115vw" quality={85} className={`object-cover ${d.crop}`} />
                 </div>
               </Reveal>
               <p className={`mt-4 ${label}`}>{d.caption}</p>

@@ -21,6 +21,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CHAPTERS, type Chapter } from "./locationChapters";
 import { useReveals } from "./useReveals";
+import { asset } from "./asset";
 
 const N = CHAPTERS.length;
 const S = 1 / N; // each chapter's share of the pinned scroll
@@ -33,7 +34,7 @@ const pad = (i: number) => String(i + 1).padStart(2, "0");
 function Plate({ c, sizes, priority }: { c: Chapter; sizes: string; priority?: boolean }) {
   return (
     <>
-      <Image src={c.src} alt={c.alt} fill sizes={sizes} quality={85} priority={priority} className="object-cover" style={{ objectPosition: c.position ?? "50% 50%" }} />
+      <Image src={asset(c.src)} alt={c.alt} fill sizes={sizes} quality={85} priority={priority} className="object-cover" style={{ objectPosition: c.position ?? "50% 50%" }} />
       {/* A light veil so photographs sit in the site's dark field. */}
       <div aria-hidden="true" className="absolute inset-0 bg-background/25" />
     </>

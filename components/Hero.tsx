@@ -8,15 +8,16 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import { asset } from "./asset";
 
 // The film: 2560×1440, 4.9 s, no audio — from the client's 4K master
 // (`video1-hero (1).mp4`). The still is frame 0 of the same master, so the
 // hand-off from still to film is invisible while the film loads.
-const HERO_STILL = "/images/hero-still.jpg";
-const HERO_VIDEO = "/videos/video1-hero-1440.mp4";
+const HERO_STILL = asset("/images/hero-still.jpg");
+const HERO_VIDEO = asset("/videos/video1-hero-1440.mp4");
 // Portrait crop straight from the 4K master (1000x2160, the 30% window a
 // phone actually shows) — near-1:1 on a 3x screen instead of a 1.76x stretch.
-const HERO_VIDEO_PHONE = "/videos/video1-hero-phone.mp4";
+const HERO_VIDEO_PHONE = asset("/videos/video1-hero-phone.mp4");
 
 // Where the veil rests once the film is playing — dark enough to hold the
 // title, light enough to let the architecture carry the frame.
