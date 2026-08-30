@@ -6,7 +6,7 @@ import type { NextConfig } from "next";
 const pages = process.env.PAGES === "1";
 
 const nextConfig: NextConfig = {
-  ...(pages ? { output: "export" as const, basePath: "/hiddenfoliage", trailingSlash: true } : {}),
+  ...(pages ? { output: "export" as const, basePath: "/hiddenfoliage", trailingSlash: true, env: { NEXT_PUBLIC_BASE_PATH: "/hiddenfoliage" } } : {}),
   images: {
     // Quality levels the image optimizer is allowed to serve.
     // 75 is the default; 85 is used for the hero still.
