@@ -14,6 +14,7 @@ import { label } from "./Editorial";
 
 export default function FilmFig({
   src,
+  phoneSrc,
   still,
   alt,
   caption,
@@ -23,6 +24,9 @@ export default function FilmFig({
   className = "",
 }: {
   src: string;
+  /** Portrait crop of the same film, pre-cut to the phone's visible window so
+      a narrow screen decodes full resolution instead of cropping a wide frame. */
+  phoneSrc?: string;
   still: string;
   alt: string;
   caption: string;
@@ -36,6 +40,12 @@ export default function FilmFig({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    if (phoneSrc && window.matchMedia("(max-width: 767px)").matches) {
+      // The pre-cropped file bakes the framing in, so it plays centred.
+      video.src = phoneSrc;
+      video.classList.remove(...video.classList);
+      video.className = "absolute inset-0 h-full w-full object-cover object-center motion-reduce:hidden";
+    }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     // Load in full when one screen away; play once at a third visible; pause
@@ -68,7 +78,7 @@ export default function FilmFig({
       view.disconnect();
       if (!video.paused) video.pause();
     };
-  }, []);
+  }, [phoneSrc]);
 
   const off = offset === "right" ? "md:ml-[22vw]" : offset === "left" ? "md:mr-[22vw]" : "";
   const capPad = offset === "right" ? "px-[6vw] md:px-0" : "px-[6vw]";

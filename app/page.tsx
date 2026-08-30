@@ -42,6 +42,7 @@ export default function Home() {
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
           src="/videos/video5-screen-1440.mp4"
+          phoneSrc="/videos/video5-screen-phone.mp4"
           still="/images/screen-still-1440.jpg"
           alt="The façade from the road: operable timber louvres in a leaf pattern rotating open."
           caption="The screen"
@@ -62,6 +63,7 @@ export default function Home() {
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
           src="/videos/video3-inside-out-1440.mp4"
+          phoneSrc="/videos/video3-inside-out-phone.mp4"
           still="/images/inside-out-still-1440.jpg"
           alt="The living room open to the lap pool at dusk, dense planting beyond."
           caption="Pool deck"
@@ -142,6 +144,7 @@ export default function Home() {
       <FilmFig
         className="mt-[16vh] md:mt-[22vh]"
         src="/videos/video4-close-1440.mp4"
+        phoneSrc="/videos/video4-close-phone.mp4"
         still="/images/close-still-1440.jpg"
         alt="The house at dusk, the screen lit from within."
         caption="Berrima Road · Evening"

@@ -14,6 +14,9 @@ import gsap from "gsap";
 // hand-off from still to film is invisible while the film loads.
 const HERO_STILL = "/images/hero-still.jpg";
 const HERO_VIDEO = "/videos/video1-hero-1440.mp4";
+// Portrait crop straight from the 4K master (1000x2160, the 30% window a
+// phone actually shows) — near-1:1 on a 3x screen instead of a 1.76x stretch.
+const HERO_VIDEO_PHONE = "/videos/video1-hero-phone.mp4";
 
 // Where the veil rests once the film is playing — dark enough to hold the
 // title, light enough to let the architecture carry the frame.
@@ -29,6 +32,12 @@ export default function Hero() {
     const veil = veilRef.current;
     const copy = copyRef.current;
     if (!video || !veil || !copy) return;
+
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      video.src = HERO_VIDEO_PHONE; // pre-cropped: plays centred
+      video.className = "absolute inset-0 h-full w-full object-cover object-center motion-reduce:hidden";
+      video.load();
+    }
 
     const mm = gsap.matchMedia();
 
