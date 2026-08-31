@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 const TABS = [
   { href: "/residence", label: "The Residence" },
   { href: "/plans", label: "Floor Plans" },
+  { href: "/tour", label: "Virtual Tour" },
   { href: "/location", label: "Location" },
   { href: "/#enquire", label: "Enquire" }, // the Signature at the end of the film
 ];

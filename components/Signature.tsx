@@ -268,6 +268,7 @@ export default function Signature() {
           {[
             ["/residence", "The Residence"],
             ["/plans", "Floor Plans"],
+            ["/tour", "Virtual Tour"],
             ["/location", "Location"],
           ].map(([href, text]) => (
             <Link key={href} href={href} className={`${label} transition-colors hover:text-foreground`}>
