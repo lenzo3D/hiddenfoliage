@@ -25,6 +25,22 @@ type PannellumViewer = {
 
 const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] md:text-xs";
 
+// The panoramas ship at 7096×3548, which many phone GPUs cannot hold as a
+// single texture. Ask WebGL once for the real limit and fall back to the
+// 4096-wide companion file where it is under 8192.
+let maxTex: number | null = null;
+function panoFor(src: string): string {
+  if (maxTex === null) {
+    try {
+      const gl = document.createElement("canvas").getContext("webgl");
+      maxTex = gl ? (gl.getParameter(gl.MAX_TEXTURE_SIZE) as number) : 4096;
+    } catch {
+      maxTex = 4096;
+    }
+  }
+  return maxTex >= 8192 ? src : src.replace(/\.jpg$/, "-phone.jpg");
+}
+
 export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: string; onNavigate: (id: string) => void; onClose: () => void }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<PannellumViewer | null>(null);
@@ -48,7 +64,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       setReady(false);
       viewerRef.current = window.pannellum.viewer(box, {
         type: "equirectangular",
-        panorama: asset(style.src),
+        panorama: asset(panoFor(style.src)),
         autoLoad: true,
         showControls: false,
         compass: false,
