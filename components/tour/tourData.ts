@@ -32,9 +32,10 @@ export const TOUR_ROOMS: TourRoom[] = [
     name: "Car porch",
     level: "first",
     marker: { x: 400, y: 660 },
-    yaw0: -8,
+    // Opens facing the drive and the gate; the front door is behind the camera.
+    yaw0: 0,
     styles: [{ id: "day", label: "Daytime", src: "/images/360/porch.jpg" }],
-    links: [{ to: "living", yaw: -8, pitch: -2, label: "Living area" }],
+    links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area" }],
   },
   {
     id: "living",
