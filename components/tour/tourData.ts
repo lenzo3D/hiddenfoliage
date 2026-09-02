@@ -46,7 +46,19 @@ export const TOUR_ROOMS: TourRoom[] = [
       { id: "day", label: "Daytime", src: "/images/360/living-day.jpg" },
       { id: "evening", label: "Evening", src: "/images/360/living.jpg" },
     ],
-    links: [{ to: "porch", yaw: -29, pitch: -2, label: "Car porch" }],
+    links: [
+      { to: "porch", yaw: -29, pitch: -2, label: "Car porch" },
+      { to: "dining", yaw: 100, pitch: -3, label: "Dining area" },
+    ],
+  },
+  {
+    id: "dining",
+    name: "Dining area",
+    level: "first",
+    marker: { x: 1180, y: 720 },
+    yaw0: 0,
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining.jpg" }],
+    links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area" }],
   },
   {
     id: "bedroom",

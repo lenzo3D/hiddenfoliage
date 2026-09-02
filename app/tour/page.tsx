@@ -10,7 +10,7 @@ import { bodyCls, factCls, label } from "@/components/Editorial";
 export const metadata: Metadata = {
   title: "Virtual Tour",
   description:
-    "Stand inside Hidden Foliage before it is built: 360-degree views of the living area, car porch, master bedroom and master bathroom, reached from the floor plans.",
+    "Stand inside Hidden Foliage before it is built: 360-degree views of the living area, dining area, car porch, master bedroom and master bathroom, reached from the floor plans.",
 };
 
 export default function TourPage() {
