@@ -25,6 +25,9 @@ type PannellumViewer = {
 
 const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] md:text-xs";
 
+// Vertical angle the panoramas actually cover (degrees). See spawn().
+const VAOV = 110;
+
 // The panoramas ship at 7096×3548, which many phone GPUs cannot hold as a
 // single texture. Ask WebGL once for the real limit and fall back to the
 // 4096-wide companion file where it is under 8192.
@@ -59,7 +62,15 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // Pannellum attaches itself to window on import (client only).
       await import("pannellum/build/pannellum.js" as string);
       const prev = viewerRef.current;
-      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: 85 };
+      // The panoramas are 2:1 files but their content spans only ~110° of the
+      // vertical (measured by re-projection: horizontals straighten at 110,
+      // bow at 180). Declaring the true coverage stops the viewer stretching
+      // them vertically — most of the "curved room" came from that stretch.
+      // Portrait phones would look past the top and bottom at 85°, so they
+      // open narrower and are capped so the view always stays on the image.
+      const portrait = box.clientHeight > box.clientWidth;
+      const hfov0 = portrait ? 62 : 85;
+      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
       viewerRef.current = window.pannellum.viewer(box, {
@@ -71,7 +82,12 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         keyboardZoom: true,
         mouseZoom: true,
         friction: 0.12, // a touch more glide than default
-        minHfov: 45,        maxHfov: 100,
+        vaov: VAOV,
+        vOffset: 0,
+        minPitch: -22,
+        maxPitch: 22,
+        minHfov: 45,
+        maxHfov: portrait ? 66 : 100,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
         hotSpots: room.links.map((l) => ({
