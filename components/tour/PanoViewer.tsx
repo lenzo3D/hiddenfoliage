@@ -43,7 +43,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // Pannellum attaches itself to window on import (client only).
       await import("pannellum/build/pannellum.js" as string);
       const prev = viewerRef.current;
-      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: 100 };
+      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: 85 };
       prev?.destroy();
       setReady(false);
       viewerRef.current = window.pannellum.viewer(box, {
@@ -55,8 +55,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         keyboardZoom: true,
         mouseZoom: true,
         friction: 0.12, // a touch more glide than default
-        minHfov: 45,
-        maxHfov: 110,
+        minHfov: 45,        maxHfov: 100,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
         hotSpots: room.links.map((l) => ({
