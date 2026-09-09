@@ -25,8 +25,11 @@ type PannellumViewer = {
 
 const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] md:text-xs";
 
-// Vertical angle the panoramas actually cover (degrees). See spawn().
-const VAOV = 110;
+// Vertical angle the panoramas cover (degrees). The site files are true
+// equirectangular strips re-projected from the client's cylindrical drawings
+// (see tourData.ts): a cylinder of radius W/2pi with a 2:1 image reaches
+// +-57.5 degrees, so the strip covers 115.
+const VAOV = 115;
 
 // The panoramas ship at 7096×3548, which many phone GPUs cannot hold as a
 // single texture. Ask WebGL once for the real limit and fall back to the
@@ -61,21 +64,17 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // Pannellum attaches itself to window on import (client only).
       await import("pannellum/build/pannellum.js" as string);
       const prev = viewerRef.current;
-      // The panoramas are 2:1 files but their content spans only ~110° of the
-      // vertical (measured by re-projection: horizontals straighten at 110,
-      // bow at 180). Declaring the true coverage stops the viewer stretching
-      // them vertically — most of the "curved room" came from that stretch.
-      //
-      // The rest of it was the field of view. Re-projecting every room at
-      // eye level shows walls, shelving and glazing straight and square at
-      // 62° across, while at 85° (and the old 100° zoom-out) the same views
-      // bow like a wide-angle lens, and tilting up brings in the ceiling
-      // cove, which the drawings themselves arch. So: open at 62°, never
-      // wider than 70°, and allow only a small tilt upward. Portrait phones
-      // see far more vertically for the same width, so they open narrower
-      // still and are capped so the view always stays on the image.
+      // The drawings were cylindrical panoramas, not equirectangular ones:
+      // rendered as a sphere every straight line bowed, whatever the field
+      // of view. The site files are now re-projected to true equirectangular
+      // strips (VAOV above), so the viewer's sphere is correct and walls,
+      // shelving and ceilings stay straight from 45° to 85° across. Open at
+      // 68° (a normal lens); portrait phones see far more vertically for the
+      // same width, so they open narrower. Tilt is limited to keep the view
+      // on the strip (the source reaches +-57.5°), and the upward tilt a
+      // little more, because the drawn ceiling coves still arch slightly.
       const portrait = box.clientHeight > box.clientWidth;
-      const hfov0 = portrait ? 48 : 62;
+      const hfov0 = portrait ? 50 : 68;
       const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
@@ -90,10 +89,10 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         friction: 0.12, // a touch more glide than default
         vaov: VAOV,
         vOffset: 0,
-        minPitch: portrait ? -14 : -18,
-        maxPitch: 8,
-        minHfov: 40,
-        maxHfov: portrait ? 55 : 70,
+        minPitch: portrait ? -15 : -30,
+        maxPitch: portrait ? 8 : 14,
+        minHfov: 45,
+        maxHfov: portrait ? 60 : 85,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
         hotSpots: room.links.map((l) => ({
