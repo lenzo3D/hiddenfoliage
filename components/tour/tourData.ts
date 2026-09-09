@@ -2,16 +2,18 @@
 // floor plans (drawing coordinates from floorPlans.ts), how they link to each
 // other inside the viewer, and which style variants exist per room.
 //
-// Panoramas are 7096×2267 equirectangular strips covering ±57.5° of
-// latitude (`*-v3.jpg`, with a 4096-wide `-phone` copy). The client's 360
-// drawings are CYLINDRICAL panoramas (vertical = R·tan(latitude), R = W/2π),
-// not equirectangular — rendered on a sphere every straight line bowed. Each
-// one is seam-inpainted across its wrap join (LaMa), upscaled 4x, then
-// re-projected to a true equirectangular strip (scratchpad `sr/cyl2equi.py`,
-// recipe in docs/HANDOFF.md). Yaw convention: the image centre is 0°, left
-// edge −180°, right edge +180°. `yaw0` is the opening view; each link's yaw
-// points at the doorway or opening that leads to the target, checked against
-// the floor plan by re-projecting each room (see the "Tour:" commits).
+// Each panorama is a Pannellum multires tile set in `public/images/360/<room>-v4/`
+// (`src` is that directory): six cube faces of 4512 px cut into 512 px JPEG
+// tiles over five levels, from a 14192×4536 equirectangular strip covering
+// ±57.5° of latitude. The client's 360 drawings are CYLINDRICAL panoramas
+// (vertical = R·tan(latitude), R = W/2π), not equirectangular — rendered on a
+// sphere every straight line bowed. Each one is seam-inpainted across its wrap
+// join (LaMa), upscaled 4x (4xNomos8kDAT) and 2x again on the GPU, re-projected
+// to a true equirectangular strip (cyl2equi), then cut into cube tiles
+// (equi2tiles); recipe in docs/HANDOFF.md. Yaw convention: the image centre is
+// 0°, left edge −180°, right edge +180°. `yaw0` is the opening view; each
+// link's yaw points at the doorway or opening that leads to the target, checked
+// against the floor plan by re-projecting each room (see the "Tour:" commits).
 //
 // Adding a style later = one line in `styles`. Adding a room = one entry here
 // (marker coordinates from the level's drawing in floorPlans.ts).
@@ -40,7 +42,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 400, y: 660 },
     // Opens facing the drive and the gate; the front door is behind the camera.
     yaw0: 0,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v3.jpg" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v4" }],
     links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area" }],
   },
   {
@@ -50,8 +52,8 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 770, y: 730 },
     yaw0: 0,
     styles: [
-      { id: "day", label: "Daytime", src: "/images/360/living-day-v3.jpg" },
-      { id: "evening", label: "Evening", src: "/images/360/living-v3.jpg" },
+      { id: "day", label: "Daytime", src: "/images/360/living-day-v4" },
+      { id: "evening", label: "Evening", src: "/images/360/living-v4" },
     ],
     links: [
       // The porch is on the plan's road side, left of the shelving wall; the
@@ -66,7 +68,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "first",
     marker: { x: 1180, y: 720 },
     yaw0: 0,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining-v3.jpg" }],
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining-v4" }],
     links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area" }],
   },
   {
@@ -75,7 +77,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(676), y: Y2(330) },
     yaw0: 10,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v3.jpg" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v4" }],
     links: [{ to: "bathroom", yaw: -173, pitch: -2, label: "Master bathroom" }],
   },
   {
@@ -84,7 +86,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(651), y: Y2(200) },
     yaw0: 25,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v3.jpg" }],
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v4" }],
     links: [{ to: "bedroom", yaw: -169, pitch: -2, label: "Master bedroom" }],
   },
 ];

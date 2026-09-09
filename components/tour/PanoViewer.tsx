@@ -1,10 +1,11 @@
 "use client";
 
-// The 360 viewer overlay. Pannellum (self-hosted, no CDN) maps the
-// equirectangular render inside a sphere: drag to look, pinch or scroll to
-// zoom, inertia built in. The chrome is the site's annotation register —
-// room name and credit top-left, Close top-right, style tabs and the room
-// links along the bottom. Escape closes. The page behind is scroll-locked.
+// The 360 viewer overlay. Pannellum (self-hosted, no CDN) draws each room as
+// a cube of image tiles at several resolutions (its "multires" mode): drag to
+// look, pinch or scroll to zoom, inertia built in. The chrome is the site's
+// annotation register — room name and credit top-left, Close top-right, style
+// tabs and the room links along the bottom. Escape closes. The page behind is
+// scroll-locked.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import "pannellum/build/pannellum.css";
@@ -25,27 +26,14 @@ type PannellumViewer = {
 
 const label = "font-sans text-[0.6875rem] uppercase tracking-[0.18em] md:text-xs";
 
-// Vertical angle the panoramas cover (degrees). The site files are true
-// equirectangular strips re-projected from the client's cylindrical drawings
-// (see tourData.ts): a cylinder of radius W/2pi with a 2:1 image reaches
-// +-57.5 degrees, so the strip covers 115.
-const VAOV = 115;
-
-// The panoramas ship at 7096×3548, which many phone GPUs cannot hold as a
-// single texture. Ask WebGL once for the real limit and fall back to the
-// 4096-wide companion file where it is under 8192.
-let maxTex: number | null = null;
-function panoFor(src: string): string {
-  if (maxTex === null) {
-    try {
-      const gl = document.createElement("canvas").getContext("webgl");
-      maxTex = gl ? (gl.getParameter(gl.MAX_TEXTURE_SIZE) as number) : 4096;
-    } catch {
-      maxTex = 4096;
-    }
-  }
-  return maxTex >= 8192 ? src : src.replace(/\.jpg$/, "-phone.jpg");
-}
+// How every room's tile set is cut (scripts in docs/HANDOFF.md): a 14192-wide
+// equirectangular strip becomes six 4512 px cube faces, each split into 512 px
+// JPEG tiles over five levels (4512 → 2256 → 1128 → 564 → 282). The viewer
+// fetches only the tiles in view at the level that matches the screen's own
+// pixel density, so a Retina display sees the full resolution and a phone
+// never downloads more than it can show. No single texture is ever larger
+// than 512 px, which is why the old 4096-wide "phone" copies are gone.
+const TILES = { path: "/%l/%s%y_%x", extension: "jpg", tileResolution: 512, maxLevel: 5, cubeResolution: 4512 };
 
 export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: string; onNavigate: (id: string) => void; onClose: () => void }) {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -66,29 +54,28 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       const prev = viewerRef.current;
       // The drawings were cylindrical panoramas, not equirectangular ones:
       // rendered as a sphere every straight line bowed, whatever the field
-      // of view. The site files are now re-projected to true equirectangular
-      // strips (VAOV above), so the viewer's sphere is correct and walls,
-      // shelving and ceilings stay straight from 45° to 85° across. Open at
-      // 68° (a normal lens); portrait phones see far more vertically for the
-      // same width, so they open narrower. Tilt is limited to keep the view
-      // on the strip (the source reaches +-57.5°), and the upward tilt a
-      // little more, because the drawn ceiling coves still arch slightly.
+      // of view. The tile sets are cut from true equirectangular strips
+      // (tourData.ts), so the cube is correct and walls, shelving and
+      // ceilings stay straight from 45° to 85° across. Open at 68° (a normal
+      // lens); portrait phones see far more vertically for the same width,
+      // so they open narrower. Tilt is limited to keep the view on the strip
+      // (the source reaches ±57.5°; beyond it the tiles hold the page's dark
+      // ground), and the upward tilt a little more, because the drawn
+      // ceiling coves still arch slightly.
       const portrait = box.clientHeight > box.clientWidth;
       const hfov0 = portrait ? 50 : 68;
       const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
       viewerRef.current = window.pannellum.viewer(box, {
-        type: "equirectangular",
-        panorama: asset(panoFor(style.src)),
+        type: "multires",
+        multiRes: { basePath: asset(style.src), ...TILES },
         autoLoad: true,
         showControls: false,
         compass: false,
         keyboardZoom: true,
         mouseZoom: true,
         friction: 0.12, // a touch more glide than default
-        vaov: VAOV,
-        vOffset: 0,
         minPitch: portrait ? -15 : -30,
         maxPitch: portrait ? 8 : 14,
         minHfov: 45,
