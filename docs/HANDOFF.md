@@ -111,11 +111,36 @@ about what's verified vs assumed. Never invent a property fact — see
   join with LaMa (`simple-lama-inpainting`, big-lama, band 88 px for the two living views
   where the garden wall needed rebuilding, 56 px elsewhere) in the rolled orientation, then
   rolled back 180° to the site's yaw frame.
-- Site files `*-v3.jpg` (7096×2268, q90) and `*-v3-phone.jpg` (4096×1309, for GPUs with
-  MAX_TEXTURE_SIZE < 8192): seam-fixed source → upscale 4x → cyl2equi. Pipeline in the
-  scratchpad `pano3/pipeline.py`; if it is gone, the steps above recreate it.
+- **Site files are Pannellum multires tile sets** (`public/images/360/<room>-v4/`, Sept 2026):
+  six 4512 px cube faces cut into 512 px JPEG (q90) tiles over five levels (4512 → 2256 →
+  1128 → 564 → 282), from a 14192×4535 equirectangular strip; 720 tiles and 16–21 MB per room
+  (110 MB for the six), of which an opening view fetches about 3 MB. The viewer loads only the
+  tiles in view, at the level that matches the canvas's device pixels (`checkZoom` in
+  libpannellum uses `drawingBufferWidth`, so Retina screens get the top level), and no
+  texture is ever larger than 512 px — the old `-phone` copies and the MAX_TEXTURE_SIZE
+  check are gone. Why 14192 wide: on a Retina MacBook the 68° opening view is 3024 device
+  pixels across, i.e. a 16k panorama for 1:1; the old 7096 single file was being stretched
+  2.3× by the GPU's bilinear filter. Face orientation (f b u d l r, up/down faces touching
+  the front face) was proven against `libpannellum.js` `createCube()` with a labelled
+  synthetic panorama screenshotted in headless Chrome before any room was cut.
+- **Recipe** (`scripts/tour/`, run on the M5 Pro GPU; ~2 min per room for the 4x pass,
+  ~3 min for the 2x pass — if it crawls, look for something else holding memory: a stray
+  14 GB diffusion job made the same passes take 8–15 min): seam-fixed source (1774×887, site yaw frame) → `sr.py` 4x with
+  **4xNomos8kDAT** (chosen on crops over RealPLKSR, RealPLKSR-dysample, Nomos2 ATD/DAT2/
+  MoSR, HAT-L sharp, RealWebPhoto DAT2 and BHI multiblur: the crispest vase edges, shelf
+  lines, glassware and foliage without halos; the "real-degradation" models smear this clean
+  source, ATD/HAT come out softer) → `sr.py` 2x with **2xBHI_small_realplksr_large_pretrain**
+  (a fidelity model: at Retina scale it gives cleaner edges than the browser's bilinear
+  stretch of the 4x output without adding texture; the sharper "real" 2x models add
+  crunch) → `cyl2equi.py` (cylindrical → true equirectangular, the cylinder's own ±57.5°)
+  → `equi2tiles.py` (cube faces + pyramid + tiles, pure OpenCV, no nona/Hugin). Both SR
+  passes are `--wrap` padded so the 360 join stays continuous. `pipeline.sh` chains it;
+  the seam-fixed sources are the LaMa outputs described above (recreate from the client's
+  files if the scratchpad is gone). Weights: Phhofm/models releases on GitHub.
 - Viewer (`PanoViewer.tsx`): opens at 68° (50° portrait), zoom 45–85° (60° portrait), tilt
-  −30…+14° (−15…+8° portrait) so the view stays on the strip and the drawn coves stay out.
+  −30…+14° (−15…+8° portrait). Pannellum applies min/maxPitch to the *edges* of the view
+  (`config.minPitch + vfov/2`), so the strip's ±57.5° limit is never reached on any screen
+  shape; outside the strip the tiles hold the page's dark ground anyway.
 - Checked against the floor plan (Sept 2026) by re-projecting each room in every direction:
   porch opens on the drive with the front door behind (link on the door); living faces its
   shelving wall with dry kitchen and dining to the right (+100), the pool behind and along
@@ -125,9 +150,11 @@ about what's verified vs assumed. Never invent a property fact — see
   corridor runs out the back where the plan has the master bath (−173). One known mismatch
   that only a re-render fixes: the bathroom drawing's only door is behind the viewer (−169)
   while the plan puts the bedroom to the left of the tub wall.
-- The honest ceiling: sources are 1774×887 drawings, so a 68° view stretches ~335 source
-  pixels across the screen. True 360 renders from the 3D model (equirectangular, ≥8192×4096,
-  eye height) remain the real fix and drop in with `vaov` back to 180 and no other change.
+- The honest ceiling: sources are 1774×887 drawings, so a 68° view still rests on ~335
+  source pixels across the screen; the 8x pass makes edges clean at Retina scale, it does
+  not add information. True 360 renders from the 3D model (equirectangular, ≥8192×4096, eye
+  height) remain the real fix: run them through `equi2tiles.py --vaov 180` and lift the tilt
+  caps, nothing else changes.
 
 ## Films — current pipeline (Sept 2026, on the Mac)
 - The hero is the only film with a genuine master (the client's 3840×2160 render); it

@@ -1,0 +1,11 @@
+{
+ "type": "multires",
+ "multiRes": {
+  "basePath": "<BASE>",
+  "path": "/%l/%s%y_%x",
+  "extension": "jpg",
+  "tileResolution": 512,
+  "maxLevel": 5,
+  "cubeResolution": 4512
+ }
+}
