@@ -122,6 +122,10 @@ about what's verified vs assumed. Never invent a property fact — see
 - Pool (`video3-inside-out-*-v2`): original frames 0–131 (5.5 s), 9.7 MB / 4.3 MB phone.
   Flicker check (mean frame-to-frame luma change, 720p): source 3.75, old encode 3.80,
   new 3.42 — no shimmer introduced.
+- Dusk (`video4-close-*-v2`): all 240 frames of the 720p original. CRF 17 gave 39 MB
+  (PSNR 44.6 dB against the rendered frames); CRF 20 gives 24.5 MB at 42.7 dB, visually
+  transparent, so dusk (and anything long) ships at CRF 20: 24.5 MB wide, 13.6 MB phone.
+  Flicker: source 2.67, old encode 2.48, new 2.78 — the source's own motion.
 - Tooling lives in the session scratchpad (`sr/upscale.py`, `sr/film.sh`, `sr/flicker.py`,
   a uv venv with torch/spandrel, model weights from the Real-ESRGAN and Phhofm GitHub
   releases). If the scratchpad is gone, recreate from this description; a frame takes

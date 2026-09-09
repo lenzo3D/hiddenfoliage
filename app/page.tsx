@@ -143,9 +143,9 @@ export default function Home() {
       {/* Evening — a visual pause before the enquiry */}
       <FilmFig
         className="mt-[16vh] md:mt-[22vh]"
-        src="/videos/video4-close-1440.mp4"
-        phoneSrc="/videos/video4-close-phone.mp4"
-        still="/images/close-still-1440.jpg"
+        src="/videos/video4-close-1440-v2.mp4"
+        phoneSrc="/videos/video4-close-phone-v2.mp4"
+        still="/images/close-still-1440-v2.jpg"
         alt="The house at dusk, the screen lit from within."
         caption="Berrima Road · Evening"
         offset="full"
