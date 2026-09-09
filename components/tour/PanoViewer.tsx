@@ -47,13 +47,12 @@ function panoFor(src: string): string {
 export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: string; onNavigate: (id: string) => void; onClose: () => void }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<PannellumViewer | null>(null);
+  // The overlay is keyed by room (TourClient), so a new room mounts fresh:
+  // its own opening style and view, with no effect resetting state.
   const [styleIdx, setStyleIdx] = useState(0);
   const [ready, setReady] = useState(false);
   const room = roomById(roomId)!;
   const style = room.styles[Math.min(styleIdx, room.styles.length - 1)];
-
-  // A new room starts in its own opening style and view.
-  useEffect(() => setStyleIdx(0), [roomId]);
 
   const spawn = useCallback(
     async (keepView: boolean) => {
@@ -66,10 +65,17 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // vertical (measured by re-projection: horizontals straighten at 110,
       // bow at 180). Declaring the true coverage stops the viewer stretching
       // them vertically — most of the "curved room" came from that stretch.
-      // Portrait phones would look past the top and bottom at 85°, so they
-      // open narrower and are capped so the view always stays on the image.
+      //
+      // The rest of it was the field of view. Re-projecting every room at
+      // eye level shows walls, shelving and glazing straight and square at
+      // 62° across, while at 85° (and the old 100° zoom-out) the same views
+      // bow like a wide-angle lens, and tilting up brings in the ceiling
+      // cove, which the drawings themselves arch. So: open at 62°, never
+      // wider than 70°, and allow only a small tilt upward. Portrait phones
+      // see far more vertically for the same width, so they open narrower
+      // still and are capped so the view always stays on the image.
       const portrait = box.clientHeight > box.clientWidth;
-      const hfov0 = portrait ? 62 : 85;
+      const hfov0 = portrait ? 48 : 62;
       const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
@@ -84,10 +90,10 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         friction: 0.12, // a touch more glide than default
         vaov: VAOV,
         vOffset: 0,
-        minPitch: -22,
-        maxPitch: 22,
-        minHfov: 45,
-        maxHfov: portrait ? 66 : 100,
+        minPitch: portrait ? -14 : -18,
+        maxPitch: 8,
+        minHfov: 40,
+        maxHfov: portrait ? 55 : 70,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
         hotSpots: room.links.map((l) => ({
