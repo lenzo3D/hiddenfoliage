@@ -62,9 +62,9 @@ export default function Home() {
         />
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/videos/video3-inside-out-1440.mp4"
-          phoneSrc="/videos/video3-inside-out-phone.mp4"
-          still="/images/inside-out-still-1440.jpg"
+          src="/videos/video3-inside-out-1440-v2.mp4"
+          phoneSrc="/videos/video3-inside-out-phone-v2.mp4"
+          still="/images/inside-out-still-1440-v2.jpg"
           alt="The living room open to the lap pool at dusk, dense planting beyond."
           caption="Pool deck"
           offset="right"
