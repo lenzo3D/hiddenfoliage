@@ -2,10 +2,13 @@
 // floor plans (drawing coordinates from floorPlans.ts), how they link to each
 // other inside the viewer, and which style variants exist per room.
 //
-// Panoramas are 3548×1774 equirectangular JPEGs (the client's 360 renders
-// through the same Real-ESRGAN pass as the films). Yaw convention: the image
-// centre is 0°, left edge −180°, right edge +180°. `yaw0` is the opening view;
-// each link's yaw points at the doorway or opening that leads to the target.
+// Panoramas are 7096×3548 equirectangular JPEGs: the client's seam-fixed 360
+// drawings (`seam-fix/* ROLLED.png`, rolled back 180°) through the same
+// RealPLKSR 4x pass as the films, with a 4096-wide `-phone` copy. Yaw
+// convention: the image centre is 0°, left edge −180°, right edge +180°.
+// `yaw0` is the opening view; each link's yaw points at the doorway or opening
+// that leads to the target, checked against the floor plan by re-projecting
+// each room (see the "Tour:" commits).
 //
 // Adding a style later = one line in `styles`. Adding a room = one entry here
 // (marker coordinates from the level's drawing in floorPlans.ts).
@@ -34,7 +37,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 400, y: 660 },
     // Opens facing the drive and the gate; the front door is behind the camera.
     yaw0: 0,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch.jpg" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v2.jpg" }],
     links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area" }],
   },
   {
@@ -44,11 +47,13 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 770, y: 730 },
     yaw0: 0,
     styles: [
-      { id: "day", label: "Daytime", src: "/images/360/living-day.jpg" },
-      { id: "evening", label: "Evening", src: "/images/360/living.jpg" },
+      { id: "day", label: "Daytime", src: "/images/360/living-day-v2.jpg" },
+      { id: "evening", label: "Evening", src: "/images/360/living-v2.jpg" },
     ],
     links: [
-      { to: "porch", yaw: -29, pitch: -2, label: "Car porch" },
+      // The porch is on the plan's road side, left of the shelving wall; the
+      // opening between the timber wall and the pillar (yaw −80) leads that way.
+      { to: "porch", yaw: -80, pitch: -2, label: "Car porch" },
       { to: "dining", yaw: 100, pitch: -3, label: "Dining area" },
     ],
   },
@@ -58,7 +63,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "first",
     marker: { x: 1180, y: 720 },
     yaw0: 0,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining.jpg" }],
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining-v2.jpg" }],
     links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area" }],
   },
   {
@@ -67,7 +72,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(676), y: Y2(330) },
     yaw0: 10,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom.jpg" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v2.jpg" }],
     links: [{ to: "bathroom", yaw: -173, pitch: -2, label: "Master bathroom" }],
   },
   {
@@ -76,7 +81,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(651), y: Y2(200) },
     yaw0: 25,
-    styles: [{ id: "day", label: "Evening", src: "/images/360/bathroom.jpg" }],
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v2.jpg" }],
     links: [{ to: "bedroom", yaw: -169, pitch: -2, label: "Master bedroom" }],
   },
 ];

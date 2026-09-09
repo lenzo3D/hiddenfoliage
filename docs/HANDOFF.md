@@ -103,6 +103,20 @@ about what's verified vs assumed. Never invent a property fact — see
   This is the limit of what settings can do — a true 360 render from the 3D model (2:1,
   full 360×180, ≥8192×4096, eye height) per room is the real fix; drop it in with no code
   change. See the "Tour:" commits for the measurements.
+- Checked against the floor plan (Sept 2026) by re-projecting each room at 62° in every
+  direction: porch opens on the drive with the front door behind (link on the door);
+  living faces its shelving wall with dry kitchen and dining to the right (+100), the
+  pool behind and along the right, the screened glazing on the road/porch side to the
+  left — the porch link now sits on the opening between the timber wall and the pillar
+  at yaw −80 (it used to point at a bookshelf at −29); dining's link points back at the
+  living shelving through the dry kitchen (−145); the bedroom's dressing corridor runs
+  out the back where the plan has the master bath (−173). One known mismatch that only a
+  re-render fixes: the bathroom drawing's only door is behind the viewer (−169) while the
+  plan puts the bedroom to the left of the tub wall.
+- Panoramas regenerated Sept 2026 as `*-v2.jpg` (7096×3548, q90) and `*-v2-phone.jpg`
+  (4096×2048): the client's `seam-fix/* ROLLED.png` (1774×887, rolled back 180° to the
+  site orientation) through RealPLKSR 4x instead of Real-ESRGAN x4plus — cleaner vase and
+  shelf edges, leaves instead of smears. Same yaw frame as before (alignment checked).
 
 ## Films — current pipeline (Sept 2026, on the Mac)
 - The hero is the only film with a genuine master (the client's 3840×2160 render); it
@@ -126,6 +140,11 @@ about what's verified vs assumed. Never invent a property fact — see
   (PSNR 44.6 dB against the rendered frames); CRF 20 gives 24.5 MB at 42.7 dB, visually
   transparent, so dusk (and anything long) ships at CRF 20: 24.5 MB wide, 13.6 MB phone.
   Flicker: source 2.67, old encode 2.48, new 2.78 — the source's own motion.
+- Screen (`video5-screen-*-v2`): no original on disk, so the previous 1440 site file
+  (one Real-ESRGAN pass from the Gemini clip) is the input; RealPLKSR at 4x, back to
+  2560×1440, CRF 17: 7.1 MB wide, 2.8 MB phone (x=704, w=1152). Flicker: old 0.80,
+  new 0.76. Louvre edges and the planter foliage resolve a touch more; this one is the
+  smallest gain of the three because its input was already processed once.
 - Tooling lives in the session scratchpad (`sr/upscale.py`, `sr/film.sh`, `sr/flicker.py`,
   a uv venv with torch/spandrel, model weights from the Real-ESRGAN and Phhofm GitHub
   releases). If the scratchpad is gone, recreate from this description; a frame takes
