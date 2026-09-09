@@ -41,9 +41,9 @@ export default function Home() {
         />
         <FilmFig
           className="mt-[8vh] md:mt-[10vh]"
-          src="/videos/video5-screen-1440.mp4"
-          phoneSrc="/videos/video5-screen-phone.mp4"
-          still="/images/screen-still-1440.jpg"
+          src="/videos/video5-screen-1440-v2.mp4"
+          phoneSrc="/videos/video5-screen-phone-v2.mp4"
+          still="/images/screen-still-1440-v2.jpg"
           alt="The façade from the road: operable timber louvres in a leaf pattern rotating open."
           caption="The screen"
           offset="left"
