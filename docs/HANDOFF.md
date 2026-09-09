@@ -11,9 +11,15 @@ about what's verified vs assumed. Never invent a property fact — see
 - Next.js 16.3 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4, GSAP 3.15.
   No other runtime deps. No Three.js/WebGL/shaders/UI libraries — deliberate. Email is
   sent with a plain `fetch` to Resend's HTTP API (no SDK).
-- Repo: `C:\Users\m\hidden-foliage` (git, main). Commit after each approved pass.
-- Dev server: `npm run dev -- -p 3001` (port 3000 is often held by a stale `next start`).
-  Preview config lives in `C:\Users\m\.claude\.claude\launch.json` ("hidden-foliage-dev-3001").
+- Repo: `~/Desktop/hidden-foliage` on Richard's MacBook (Apple M5 Pro) since Sept 2026; the
+  old Windows copy at `C:\Users\m\hidden-foliage` is retired. GitHub: lenzo3D/hiddenfoliage
+  (`main`; the live site is the static export on the `gh-pages` branch; Vercel builds a
+  preview per branch/PR). Commit after each approved pass; push through `gh` (signed in).
+- Toolchain via Homebrew (`/opt/homebrew/bin`): Node 26, ffmpeg 9, gh, python@3.12. That
+  path is not on the launcher's PATH, so `.claude/launch.json` calls `/opt/homebrew/bin/npm`.
+- Dev server: `npm run dev` (port 3000) — the "hidden-foliage-dev" preview. `scripts/
+  serve-static.py` serves the last `PAGES=1` export from `out/` at
+  http://localhost:3001/hiddenfoliage/ without Node (the "hidden-foliage-static" preview).
 - Env: copy `.env.example` → `.env.local` (git-ignored). Locally `.env.local` holds a
   PLACEHOLDER WhatsApp number (6500000000) so the link can be reviewed; email is
   unconfigured on purpose, so `/api/enquire` prints each enquiry to the dev-server
@@ -84,7 +90,46 @@ about what's verified vs assumed. Never invent a property fact — see
   `NEXT_PUBLIC_SITE_URL`), `app/opengraph-image.jpg` (1200×630 hero crop),
   `app/icon.png` + `app/apple-icon.png` (Bodoni "H" on the dark field).
 
-## Video model (important)
+## Virtual tour (`/tour`, `components/tour/`)
+- Pannellum maps each room's panorama (`public/images/360/*.jpg`, 7096×3548, with a
+  4096-wide `-phone` copy for small GPUs) inside a sphere; markers on the floor plans open
+  it, doorway hotspots move between rooms (`tourData.ts`).
+- The panoramas are AI-generated, not true equirectangular renders: their content spans
+  only ~110° vertically (declared as `vaov`), and their ceiling coves are drawn as arches.
+  Re-projecting every room shows walls, shelving, glazing and the porch columns straight
+  and square at 62° across, but bowing like a wide-angle lens at 85°+, and the ceiling arch
+  appearing as soon as you tilt up. Hence the viewer opens at 62° (48° portrait), zooms
+  between 40° and 70° (55° portrait), and tilts up at most 8°, down 18° (14° portrait).
+  This is the limit of what settings can do — a true 360 render from the 3D model (2:1,
+  full 360×180, ≥8192×4096, eye height) per room is the real fix; drop it in with no code
+  change. See the "Tour:" commits for the measurements.
+
+## Films — current pipeline (Sept 2026, on the Mac)
+- The hero is the only film with a genuine master (the client's 3840×2160 render); it
+  stays as encoded. Pool / dusk / screen were AI-generated at 1280×720 and can only be
+  upscaled. The Sept 2026 pass re-renders each one frame by frame through
+  4xNomosWebPhoto_RealPLKSR (chosen over Real-ESRGAN x4plus / general-x4v3 / 4xNomos8kSC
+  on crops: crispest marble, herringbone and foliage without invented texture) on the
+  M5 Pro GPU (PyTorch MPS via spandrel), downscaled to 2560×1440, and encoded with
+  libx264 CRF 17 preset slower, GOP 24, +faststart, no audio — roughly double the old
+  bitrate, so the upscaled detail survives motion. Portrait phone companions are cut from
+  the same frames at the measured offsets (pool x=790 w=1080, dusk x=534 w=1080, screen
+  x=704 w=1152). Every replaced asset gets a `-v2` filename so no cache serves the old one.
+- Sources (the only ones on the Mac): the 720p originals live in git history at
+  `df5a16c:public/videos/`; the client's 2560×1440 upscales of the pool and veil shots
+  are in `~/Desktop/Berrima Road (Dunearn Estate)/`. The screen film has no original on
+  disk — its re-render used the previous 1440 site file as input.
+- Pool (`video3-inside-out-*-v2`): original frames 0–131 (5.5 s), 9.7 MB / 4.3 MB phone.
+  Flicker check (mean frame-to-frame luma change, 720p): source 3.75, old encode 3.80,
+  new 3.42 — no shimmer introduced.
+- Tooling lives in the session scratchpad (`sr/upscale.py`, `sr/film.sh`, `sr/flicker.py`,
+  a uv venv with torch/spandrel, model weights from the Real-ESRGAN and Phhofm GitHub
+  releases). If the scratchpad is gone, recreate from this description; a frame takes
+  ~3 s (720p in) to ~11 s (1440p in) on the GPU.
+- The honest ceiling: these are 720p AI clips. Regenerating them at ≥1080p from the
+  generator (docs/CONTENT-NEEDED.md) remains the only step that adds real detail.
+
+## Video model (older notes, pre-Sept 2026)
 - Films are NOT scrubbed by scroll (24fps source stepped badly). Each act plays its film once
   at natural speed when its portion becomes active, pauses off-screen, holds last frame,
   rewinds only when hidden. Overlays/typography remain scroll-scrubbed.
