@@ -91,32 +91,43 @@ about what's verified vs assumed. Never invent a property fact — see
   `app/icon.png` + `app/apple-icon.png` (Bodoni "H" on the dark field).
 
 ## Virtual tour (`/tour`, `components/tour/`)
-- Pannellum maps each room's panorama (`public/images/360/*.jpg`, 7096×3548, with a
-  4096-wide `-phone` copy for small GPUs) inside a sphere; markers on the floor plans open
-  it, doorway hotspots move between rooms (`tourData.ts`).
-- The panoramas are AI-generated, not true equirectangular renders: their content spans
-  only ~110° vertically (declared as `vaov`), and their ceiling coves are drawn as arches.
-  Re-projecting every room shows walls, shelving, glazing and the porch columns straight
-  and square at 62° across, but bowing like a wide-angle lens at 85°+, and the ceiling arch
-  appearing as soon as you tilt up. Hence the viewer opens at 62° (48° portrait), zooms
-  between 40° and 70° (55° portrait), and tilts up at most 8°, down 18° (14° portrait).
-  This is the limit of what settings can do — a true 360 render from the 3D model (2:1,
-  full 360×180, ≥8192×4096, eye height) per room is the real fix; drop it in with no code
-  change. See the "Tour:" commits for the measurements.
-- Checked against the floor plan (Sept 2026) by re-projecting each room at 62° in every
-  direction: porch opens on the drive with the front door behind (link on the door);
-  living faces its shelving wall with dry kitchen and dining to the right (+100), the
-  pool behind and along the right, the screened glazing on the road/porch side to the
-  left — the porch link now sits on the opening between the timber wall and the pillar
-  at yaw −80 (it used to point at a bookshelf at −29); dining's link points back at the
-  living shelving through the dry kitchen (−145); the bedroom's dressing corridor runs
-  out the back where the plan has the master bath (−173). One known mismatch that only a
-  re-render fixes: the bathroom drawing's only door is behind the viewer (−169) while the
-  plan puts the bedroom to the left of the tub wall.
-- Panoramas regenerated Sept 2026 as `*-v2.jpg` (7096×3548, q90) and `*-v2-phone.jpg`
-  (4096×2048): the client's `seam-fix/* ROLLED.png` (1774×887, rolled back 180° to the
-  site orientation) through RealPLKSR 4x instead of Real-ESRGAN x4plus — cleaner vase and
-  shelf edges, leaves instead of smears. Same yaw frame as before (alignment checked).
+- Pannellum maps each room's panorama inside a sphere; markers on the floor plans open it,
+  doorway hotspots move between rooms (`tourData.ts`).
+- **The client's 360 drawings are cylindrical panoramas, not equirectangular.** Vertical
+  position is R·tan(latitude) with R = W/2π (matched horizontal/vertical scale), so a 2:1
+  image reaches ±57.5°. Rendered on a sphere as if equirectangular (even with `vaov` 110)
+  every straight line bowed — the "round house". Found 2026-09-10 by re-projecting the
+  living room under both models: cylindrical straightens the shelving, ceiling cove,
+  glazing and the garden wall at every field of view (scratchpad `tour/projection-test.jpg`).
+  Fix: convert each drawing to a true equirectangular strip (`sr/cyl2equi.py`: rows linear
+  in latitude, covering exactly the cylinder's ±57.5°), declare `vaov: 115`, and the viewer's
+  sphere is correct from 45° to 85° across. Straightness of a cylindrical source does not
+  depend on R (any R renders lines straight; R only sets the vertical scale), so R = W/2π is
+  used as drawn. What remains curved is drawn that way (the ceiling coves arch slightly when
+  tilting far up), hence the tilt caps.
+- **Wrap seam.** None of the drawings joins at its left/right edge (the client's
+  `seam-fix/* ROLLED.png` are the originals rolled 180°, not fixed — measured: the
+  discontinuity just moves from the edge to the centre). Each is now inpainted across the
+  join with LaMa (`simple-lama-inpainting`, big-lama, band 88 px for the two living views
+  where the garden wall needed rebuilding, 56 px elsewhere) in the rolled orientation, then
+  rolled back 180° to the site's yaw frame.
+- Site files `*-v3.jpg` (7096×2268, q90) and `*-v3-phone.jpg` (4096×1309, for GPUs with
+  MAX_TEXTURE_SIZE < 8192): seam-fixed source → upscale 4x → cyl2equi. Pipeline in the
+  scratchpad `pano3/pipeline.py`; if it is gone, the steps above recreate it.
+- Viewer (`PanoViewer.tsx`): opens at 68° (50° portrait), zoom 45–85° (60° portrait), tilt
+  −30…+14° (−15…+8° portrait) so the view stays on the strip and the drawn coves stay out.
+- Checked against the floor plan (Sept 2026) by re-projecting each room in every direction:
+  porch opens on the drive with the front door behind (link on the door); living faces its
+  shelving wall with dry kitchen and dining to the right (+100), the pool behind and along
+  the right, the screened glazing on the road/porch side to the left — the porch link sits
+  on the opening between the timber wall and the pillar at yaw −80; dining's link points
+  back at the living shelving through the dry kitchen (−145); the bedroom's dressing
+  corridor runs out the back where the plan has the master bath (−173). One known mismatch
+  that only a re-render fixes: the bathroom drawing's only door is behind the viewer (−169)
+  while the plan puts the bedroom to the left of the tub wall.
+- The honest ceiling: sources are 1774×887 drawings, so a 68° view stretches ~335 source
+  pixels across the screen. True 360 renders from the 3D model (equirectangular, ≥8192×4096,
+  eye height) remain the real fix and drop in with `vaov` back to 180 and no other change.
 
 ## Films — current pipeline (Sept 2026, on the Mac)
 - The hero is the only film with a genuine master (the client's 3840×2160 render); it
