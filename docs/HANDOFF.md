@@ -137,6 +137,27 @@ about what's verified vs assumed. Never invent a property fact — see
   passes are `--wrap` padded so the 360 join stays continuous. `pipeline.sh` chains it;
   the seam-fixed sources are the LaMa outputs described above (recreate from the client's
   files if the scratchpad is gone). Weights: Phhofm/models releases on GitHub.
+- **Straightening the living room (Sept 2026, `scripts/tour/straighten/`).** With the projection
+  right, the living room still had a "round section": the pool wall behind the viewer. Cause: the two
+  ends of each drawing do not agree with each other — the pool edges meet the wrap seam at
+  different slopes (a kink, plus a small step), and the seam sits exactly on the pool wall, so the
+  earlier LaMa band blended it into a bowl. Each side on its own fits a horizontal-line model
+  within a few px, so the fix is a warp, not a projection. NOTE the live tiles come from the
+  client's `seam-fix/living-* ROLLED.png` files rolled 180° (`np.roll(img, 887)` = the site's yaw
+  frame, seam at x = 0), NOT from `living area 360.png`, which is a different render of the same
+  room — trace the ROLLED files. `trace.py` follows hand-set waypoints (`lines-living-*.json`, `lines-walltop.json`) along the
+  soffit head, lattice base and garden-wall top; `trace_water.py` finds the pool's near/far edges
+  and the glass rail by colour (the gradient tracer hops between reflections there); `warp.py` solves a smooth vertical
+  displacement mesh (91×45, `--nowrap` so the two ends may move independently; λ 0.4 for the daytime drawing, λ 4.0 for
+  the evening one — the stiffer mesh keeps the pool wall's top flat at the seam, which λ 0.4 sheared
+  into a corner; `warpview.py` renders the seam views to judge this before spending GPU time) that puts
+  every merged left+right line on one cosine (the shape of a horizontal 3D line in a cylindrical
+  panorama with the horizon at H/2); then `seamfix.py` inpaints a 32 px band across the seam with
+  LaMa on the CPU (the cached big-lama.pt; the pip wrapper insists on CUDA) and (roll 0: the ROLLED files rolled 180° already are the site frame; `cube.py`/`recut.py` rebuild
+  an equirect strip from a live tile set to measure such offsets by correlation). Residuals after the warp: 2–6 px on the pool lines. The
+  rest of the recipe is unchanged (8x, cyl2equi, tiles → `living-v5`, `living-day-v5`).
+  The other rooms were not traced; the porch's ceiling vault and the dining arches are drawn
+  that way rather than seam steps, so the same method would help less there.
 - Viewer (`PanoViewer.tsx`): opens at 68° (50° portrait), zoom 45–85° (60° portrait), tilt
   −30…+14° (−15…+8° portrait). Pannellum applies min/maxPitch to the *edges* of the view
   (`config.minPitch + vfov/2`), so the strip's ±57.5° limit is never reached on any screen
