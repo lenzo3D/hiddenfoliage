@@ -24,7 +24,9 @@
 const X2 = (x: number) => (x - 875) * 1.146 + 990;
 const Y2 = (y: number) => (y - 170) * 1.12 + 592;
 
-export type TourStyle = { id: string; label: string; src: string };
+// A style may carry its own opening view and links when its drawing lays the room out
+// differently from the room's other style (the generated daytime living room does).
+export type TourStyle = { id: string; label: string; src: string; yaw0?: number; links?: TourLink[] };
 export type TourLink = { to: string; yaw: number; pitch?: number; label: string };
 export type TourRoom = {
   id: string;
@@ -55,7 +57,16 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 770, y: 730 },
     yaw0: 0,
     styles: [
-      { id: "day", label: "Daytime", src: "/images/360/living-day-v5" },
+      {
+        id: "day",
+        label: "Daytime",
+        src: "/images/360/living-day-v6", // generated 2026-09-10 from the developer's render (drawn-panorama class; not seamless, verticals bow ~15 px)
+        yaw0: 0, // the long table with the glazing and pool to the right
+        links: [
+          { to: "porch", label: "Car porch", yaw: -156, pitch: -4 }, // the door at the far left
+          { to: "dining", label: "Dining area", yaw: -40, pitch: -4 }, // the kitchen run
+        ],
+      },
       { id: "evening", label: "Evening", src: "/images/360/living-v5" },
     ],
     links: [
@@ -71,7 +82,15 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "first",
     marker: { x: 1180, y: 720 },
     yaw0: 0,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/dining-v4" }],
+    styles: [
+      {
+        id: "day",
+        label: "Daytime",
+        src: "/images/360/dining-v5", // generated 2026-09-10 from the developer's render (drawn-panorama class; seamless, verticals bow ~11 px)
+        yaw0: 0, // the table, glazing and pool to the left, kitchen and timber wall to the right
+        links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area" }], // the sofas at the far end of the room
+      },
+    ],
     links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area" }],
   },
   {

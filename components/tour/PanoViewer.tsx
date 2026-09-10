@@ -65,7 +65,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // ceiling coves still arch slightly.
       const portrait = box.clientHeight > box.clientWidth;
       const hfov0 = portrait ? 46 : 56;
-      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
+      const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: style.yaw0 ?? room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
       viewerRef.current = window.pannellum.viewer(box, {
@@ -83,7 +83,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         maxHfov: portrait ? 56 : 68,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
-        hotSpots: room.links.map((l) => ({
+        hotSpots: (style.links ?? room.links).map((l) => ({
           yaw: l.yaw,
           pitch: l.pitch ?? 0,
           cssClass: "tour-hotspot",
