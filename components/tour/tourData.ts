@@ -3,14 +3,17 @@
 // other inside the viewer, and which style variants exist per room.
 //
 // Each panorama is a Pannellum multires tile set in `public/images/360/<room>-v4/`
-// (`src` is that directory): six cube faces of 4512 px cut into 512 px JPEG
+// (`-v5` for the living room, whose drawings were also straightened; `src` is that directory): six cube faces of 4512 px cut into 512 px JPEG
 // tiles over five levels, from a 14192×4536 equirectangular strip covering
 // ±57.5° of latitude. The client's 360 drawings are CYLINDRICAL panoramas
 // (vertical = R·tan(latitude), R = W/2π), not equirectangular — rendered on a
 // sphere every straight line bowed. Each one is seam-inpainted across its wrap
 // join (LaMa), upscaled 4x (4xNomos8kDAT) and 2x again on the GPU, re-projected
 // to a true equirectangular strip (cyl2equi), then cut into cube tiles
-// (equi2tiles); recipe in docs/HANDOFF.md. Yaw convention: the image centre is
+// (equi2tiles); recipe in docs/HANDOFF.md. The living room's two drawings first go
+// through scripts/tour/straighten/ (trace + warp): their two ends disagreed by up to
+// 79 px below eye level, and the seam between them sat on the pool wall, so the pool
+// read as a bowl. The warp makes each pool line one continuous line across the seam. Yaw convention: the image centre is
 // 0°, left edge −180°, right edge +180°. `yaw0` is the opening view; each
 // link's yaw points at the doorway or opening that leads to the target, checked
 // against the floor plan by re-projecting each room (see the "Tour:" commits).
@@ -52,8 +55,8 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 770, y: 730 },
     yaw0: 0,
     styles: [
-      { id: "day", label: "Daytime", src: "/images/360/living-day-v4" },
-      { id: "evening", label: "Evening", src: "/images/360/living-v4" },
+      { id: "day", label: "Daytime", src: "/images/360/living-day-v5" },
+      { id: "evening", label: "Evening", src: "/images/360/living-v5" },
     ],
     links: [
       // The porch is on the plan's road side, left of the shelving wall; the
