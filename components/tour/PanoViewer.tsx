@@ -56,14 +56,15 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       // rendered as a sphere every straight line bowed, whatever the field
       // of view. The tile sets are cut from true equirectangular strips
       // (tourData.ts), so the cube is correct and walls, shelving and
-      // ceilings stay straight from 45° to 85° across. Open at 68° (a normal
-      // lens); portrait phones see far more vertically for the same width,
-      // so they open narrower. Tilt is limited to keep the view on the strip
+      // ceilings stay straight. Open at 56° and zoom 40–68° (46° / up to 56° on
+      // portrait phones, which see far more vertically for the same width):
+      // the drawings' own curves grow with the field of view, and 56° is
+      // where a bowed wall stops reading as bowed on a laptop. Tilt is limited to keep the view on the strip
       // (the source reaches ±57.5°; beyond it the tiles hold the page's dark
       // ground), and the upward tilt a little more, because the drawn
       // ceiling coves still arch slightly.
       const portrait = box.clientHeight > box.clientWidth;
-      const hfov0 = portrait ? 50 : 68;
+      const hfov0 = portrait ? 46 : 56;
       const view = keepView && prev ? { yaw: prev.getYaw(), pitch: prev.getPitch(), hfov: prev.getHfov() } : { yaw: room.yaw0, pitch: 0, hfov: hfov0 };
       prev?.destroy();
       setReady(false);
@@ -78,8 +79,8 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         friction: 0.12, // a touch more glide than default
         minPitch: portrait ? -15 : -30,
         maxPitch: portrait ? 8 : 14,
-        minHfov: 45,
-        maxHfov: portrait ? 60 : 85,
+        minHfov: 40,
+        maxHfov: portrait ? 56 : 68,
         ...view,
         backgroundColor: [7 / 255, 11 / 255, 8 / 255],
         hotSpots: room.links.map((l) => ({

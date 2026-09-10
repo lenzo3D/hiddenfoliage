@@ -158,7 +158,11 @@ about what's verified vs assumed. Never invent a property fact — see
   rest of the recipe is unchanged (8x, cyl2equi, tiles → `living-v5`, `living-day-v5`).
   The other rooms were not traced; the porch's ceiling vault and the dining arches are drawn
   that way rather than seam steps, so the same method would help less there.
-- Viewer (`PanoViewer.tsx`): opens at 68° (50° portrait), zoom 45–85° (60° portrait), tilt
+- Viewer (`PanoViewer.tsx`): opens at 56° (46° portrait), zoom 40–68° (56° portrait) — the drawings' own
+  curves grow with the field of view, and 56° is where a bowed wall stops reading as bowed on a laptop
+  (Sept 2026; was 68°/45–85°). A 2-D warp that also forces the drawn verticals straight was tried
+  (`straighten/warp2d.py`, `trace_vert.py`): it straightens the mullions but shears the kitchen island
+  and breaks the pool wall at the seam, so it is not used. Tilt
   −30…+14° (−15…+8° portrait). Pannellum applies min/maxPitch to the *edges* of the view
   (`config.minPitch + vfov/2`), so the strip's ±57.5° limit is never reached on any screen
   shape; outside the strip the tiles hold the page's dark ground anyway.
