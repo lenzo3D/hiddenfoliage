@@ -49,7 +49,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     // Opens facing the drive and the gate; the front door is behind the camera.
     yaw0: 0,
     styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v4" }],
-    links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area" }],
+    links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area", walk: true }],
   },
   {
     id: "living",
@@ -64,7 +64,7 @@ export const TOUR_ROOMS: TourRoom[] = [
         src: "/images/360/living-day-v7", // generated 2026-09-11 from the developer's render: shelving wall, sofas, pool to the right
         yaw0: -22, // the shelving wall and sofas, with the dining arrow in view at the right edge
         links: [
-          { to: "porch", label: "Car porch", yaw: -160, pitch: -4 }, // the door at the far left
+          { to: "porch", label: "Car porch", yaw: -160, pitch: -4, walk: true }, // the door at the far left
           { to: "dining", label: "Dining area", yaw: 8, pitch: -3, walk: true }, // the table at the far end
         ],
       },
@@ -73,7 +73,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     links: [
       // The porch is on the plan's road side, left of the shelving wall; the
       // opening between the timber wall and the pillar (yaw −80) leads that way.
-      { to: "porch", yaw: -80, pitch: -2, label: "Car porch" },
+      { to: "porch", yaw: -80, pitch: -2, label: "Car porch", walk: true },
       { to: "dining", yaw: 100, pitch: -3, label: "Dining area", walk: true },
     ],
   },
