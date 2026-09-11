@@ -179,6 +179,14 @@ about what's verified vs assumed. Never invent a property fact — see
   drawing vs the bearing of that neighbour on the plan). Free movement is impossible with drawings: the
   two viewpoints are not even mutually consistent (both show the pool on the right), so arrival always
   faces the target's opening view rather than the direction of travel.
+- **Detail pass (Sept 2026, all six panoramas, `*-v5`/`-v6`/`-v8`).** The 4x stage is now DAT plus a
+  diffusion detail layer: `scripts/tour/sdx4.py` runs stabilityai/stable-diffusion-x4-upscaler tiled
+  (192 px input tiles, 32 px feathered overlap, 25 steps, noise level 6, wrap-padded seam, ~10 min per
+  room on the M5 Pro) and the result contributes only its high frequencies: `x4b = DAT + 0.6 × (SD −
+  gaussian(SD, σ 3))`. Judged on the living shelving: at 0.6 the timber grain and ceramic edges resolve
+  without the roughness pure diffusion adds; pure diffusion also re-draws small objects. Then the usual
+  2x, cyl2equi, tiles. Sources: generated living-day and dining as-is; evening living re-straightened
+  (λ 4.0) from the ROLLED file; porch/bedroom/bathroom = ROLLED rolled 180°, band 48 LaMa seam fix.
 - Viewer (`PanoViewer.tsx`): opens at 56° (46° portrait), zoom 40–68° (56° portrait) — the drawings' own
   curves grow with the field of view, and 56° is where a bowed wall stops reading as bowed on a laptop
   (Sept 2026; was 68°/45–85°). A 2-D warp that also forces the drawn verticals straight was tried
