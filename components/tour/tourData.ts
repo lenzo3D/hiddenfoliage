@@ -48,7 +48,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     marker: { x: 400, y: 660 },
     // Opens facing the drive and the gate; the front door is behind the camera.
     yaw0: 0,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v4" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/porch-v5" }],
     links: [{ to: "living", yaw: 180, pitch: -2, label: "Living area", walk: true }],
   },
   {
@@ -69,7 +69,7 @@ export const TOUR_ROOMS: TourRoom[] = [
           { to: "dining", label: "Dining area", yaw: 8, pitch: -3, walk: true }, // the table at the far end
         ],
       },
-      { id: "evening", label: "Evening", src: "/images/360/living-v5" },
+      { id: "evening", label: "Evening", src: "/images/360/living-v6" },
     ],
     links: [
       // The porch is on the plan's road side, left of the shelving wall; the
@@ -102,7 +102,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(676), y: Y2(330) },
     yaw0: 10,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v4" }],
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v5" }],
     links: [{ to: "bathroom", yaw: -173, pitch: -2, label: "Master bathroom" }],
   },
   {
@@ -111,7 +111,7 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(651), y: Y2(200) },
     yaw0: 25,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v4" }],
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v5" }],
     links: [{ to: "bedroom", yaw: -169, pitch: -2, label: "Master bedroom" }],
   },
 ];
