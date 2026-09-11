@@ -60,11 +60,11 @@ export const TOUR_ROOMS: TourRoom[] = [
       {
         id: "day",
         label: "Daytime",
-        src: "/images/360/living-day-v6", // generated 2026-09-10 from the developer's render (drawn-panorama class; not seamless, verticals bow ~15 px)
-        yaw0: 0, // the long table with the glazing and pool to the right
+        src: "/images/360/living-day-v7", // generated 2026-09-11 from the developer's render: shelving wall, sofas, pool to the right
+        yaw0: -45, // the shelving wall and sofas
         links: [
-          { to: "porch", label: "Car porch", yaw: -156, pitch: -4 }, // the door at the far left
-          { to: "dining", label: "Dining area", yaw: -40, pitch: -4 }, // the kitchen run
+          { to: "porch", label: "Car porch", yaw: -160, pitch: -4 }, // the door at the far left
+          { to: "dining", label: "Dining area", yaw: 8, pitch: -3 }, // the table at the far end
         ],
       },
       { id: "evening", label: "Evening", src: "/images/360/living-v5" },

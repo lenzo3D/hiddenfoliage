@@ -165,7 +165,7 @@ about what's verified vs assumed. Never invent a property fact — see
   (LaMa band 48 px at the wrap, 8x, cyl2equi, tiles) with no warp. Its layout differs from the old dining
   drawing, so `TourStyle` now takes optional `yaw0`/`links` per style (`PanoViewer` prefers them): opens at 0°
   on the table, Living area link at −2° (the sofas at the far end). The daytime living room is likewise a generated file
-  (`Codex Image 10 Sept 2026, 21_19_22.png`, not seamless, verticals bow ~15 px) as `living-day-v6`, opening at
+  (`Codex Image 10 Sept 2026, 21_19_22.png`, not seamless, verticals bow ~15 px) as `living-day-v7 (2026-09-11 image; v6 was the 10 Sept one)`, opening at
   0° with Car porch at −156° and Dining at −40°; `living-day-v5` (the client's drawing) stays in history. Acceptance test for any future 360 file:
   2:1, seamless wrap, poles at top/bottom, verticals vertical — `straighten/trace_vert.py` reports the bow.
 - Viewer (`PanoViewer.tsx`): opens at 56° (46° portrait), zoom 40–68° (56° portrait) — the drawings' own
