@@ -27,7 +27,8 @@ const Y2 = (y: number) => (y - 170) * 1.12 + 592;
 // A style may carry its own opening view and links when its drawing lays the room out
 // differently from the room's other style (the generated daytime living room does).
 export type TourStyle = { id: string; label: string; src: string; yaw0?: number; links?: TourLink[] };
-export type TourLink = { to: string; yaw: number; pitch?: number; label: string };
+/** `walk`: the two drawings show the same open-plan space, so the move plays as a step forward (floor arrow). */
+export type TourLink = { to: string; yaw: number; pitch?: number; label: string; walk?: boolean };
 export type TourRoom = {
   id: string;
   name: string;
@@ -61,10 +62,10 @@ export const TOUR_ROOMS: TourRoom[] = [
         id: "day",
         label: "Daytime",
         src: "/images/360/living-day-v7", // generated 2026-09-11 from the developer's render: shelving wall, sofas, pool to the right
-        yaw0: -45, // the shelving wall and sofas
+        yaw0: -22, // the shelving wall and sofas, with the dining arrow in view at the right edge
         links: [
           { to: "porch", label: "Car porch", yaw: -160, pitch: -4 }, // the door at the far left
-          { to: "dining", label: "Dining area", yaw: 8, pitch: -3 }, // the table at the far end
+          { to: "dining", label: "Dining area", yaw: 8, pitch: -3, walk: true }, // the table at the far end
         ],
       },
       { id: "evening", label: "Evening", src: "/images/360/living-v5" },
@@ -73,7 +74,7 @@ export const TOUR_ROOMS: TourRoom[] = [
       // The porch is on the plan's road side, left of the shelving wall; the
       // opening between the timber wall and the pillar (yaw −80) leads that way.
       { to: "porch", yaw: -80, pitch: -2, label: "Car porch" },
-      { to: "dining", yaw: 100, pitch: -3, label: "Dining area" },
+      { to: "dining", yaw: 100, pitch: -3, label: "Dining area", walk: true },
     ],
   },
   {
@@ -88,10 +89,10 @@ export const TOUR_ROOMS: TourRoom[] = [
         label: "Daytime",
         src: "/images/360/dining-v5", // generated 2026-09-10 from the developer's render (drawn-panorama class; seamless, verticals bow ~11 px)
         yaw0: 0, // the table, glazing and pool to the left, kitchen and timber wall to the right
-        links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area" }], // the sofas at the far end of the room
+        links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area", walk: true }], // the sofas at the far end of the room
       },
     ],
-    links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area" }],
+    links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area", walk: true }],
   },
   {
     id: "bedroom",

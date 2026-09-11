@@ -168,6 +168,17 @@ about what's verified vs assumed. Never invent a property fact — see
   (`Codex Image 10 Sept 2026, 21_19_22.png`, not seamless, verticals bow ~15 px) as `living-day-v7 (2026-09-11 image; v6 was the 10 Sept one)`, opening at
   0° with Car porch at −156° and Dining at −40°; `living-day-v5` (the client's drawing) stays in history. Acceptance test for any future 360 file:
   2:1, seamless wrap, poles at top/bottom, verticals vertical — `straighten/trace_vert.py` reports the bow.
+- **Walkable pair (Sept 2026).** One Pannellum viewer lives for the whole visit and every room/style is a
+  *scene* (`scenes` config, `sceneFadeDuration` 900 ms), so moving between rooms is a crossfade. A link with
+  `walk: true` (living ↔ dining, the two generated drawings of the same open-plan space) shows a floor
+  arrow (`.tour-walk`, a perspective-tilted disc at pitch −20) and plays as a step: `lookAt` toward the
+  arrow at hfov−14 over 750 ms, `loadScene` into the target slightly wide (hfov+10) facing its `yaw0`,
+  `setHfov` back over 900 ms. "Walk through" runs that automatically (pan to the arrow, step, look around,
+  step back); any mouse/touch/key cancels it. A small plan bottom-right shows the level, the rooms with
+  panoramas and your heading; the heading is pinned to the plan by each room's first link (its yaw in the
+  drawing vs the bearing of that neighbour on the plan). Free movement is impossible with drawings: the
+  two viewpoints are not even mutually consistent (both show the pool on the right), so arrival always
+  faces the target's opening view rather than the direction of travel.
 - Viewer (`PanoViewer.tsx`): opens at 56° (46° portrait), zoom 40–68° (56° portrait) — the drawings' own
   curves grow with the field of view, and 56° is where a bowed wall stops reading as bowed on a laptop
   (Sept 2026; was 68°/45–85°). A 2-D warp that also forces the drawn verticals straight was tried

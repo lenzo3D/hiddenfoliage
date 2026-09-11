@@ -56,7 +56,7 @@ export default function TourClient() {
         <LevelPlan levelId="first" title="First storey" onPick={setActiveRoom} />
         <LevelPlan levelId="second" title="Second storey" onPick={setActiveRoom} />
       </div>
-      {activeRoom && <PanoViewer key={activeRoom} roomId={activeRoom} onNavigate={setActiveRoom} onClose={() => setActiveRoom(null)} />}
+      {activeRoom && <PanoViewer roomId={activeRoom} onNavigate={setActiveRoom} onClose={() => setActiveRoom(null)} />}
     </>
   );
 }
