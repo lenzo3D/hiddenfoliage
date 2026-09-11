@@ -87,7 +87,7 @@ export const TOUR_ROOMS: TourRoom[] = [
       {
         id: "day",
         label: "Daytime",
-        yawBounds: [-150, 160], // Limit view edges before the inconsistent rear wrap and timber door.
+        yawBounds: [-150, 140], // Limit view edges before the inconsistent rear wrap and timber door.
         src: "/images/360/dining-v6", // generated 2026-09-10 from the developer's render (drawn-panorama class; seamless, verticals bow ~11 px)
         yaw0: 0, // the table, glazing and pool to the left, kitchen and timber wall to the right
         links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area", walk: true }], // the sofas at the far end of the room
