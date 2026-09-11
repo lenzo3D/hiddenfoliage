@@ -35,6 +35,10 @@ type PannellumViewer = {
   lookAt: (pitch?: number, yaw?: number, hfov?: number, animated?: number | false) => void;
   setHfov: (hfov: number, animated?: number | false) => void;
   setYaw: (yaw: number, animated?: number | false) => void;
+  stopMovement: () => void;
+  resize: () => void;
+  setPitchBounds: (bounds: number[]) => void;
+  setHfovBounds: (bounds: number[]) => void;
   on: (type: string, fn: (...a: unknown[]) => void) => void;
   off: (type: string, fn?: (...a: unknown[]) => void) => void;
 };
@@ -57,7 +61,38 @@ const parseScene = (id: string) => {
   return { room, style: room.styles.find((s) => s.id === styleId) ?? room.styles[0] };
 };
 const linksOf = (room: TourRoom, style: TourStyle) => style.links ?? room.links;
-const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+const wait = (ms: number, signal: AbortSignal) => new Promise<boolean>((resolve) => {
+  if (signal.aborted) return resolve(false);
+  const finish = () => {
+    clearTimeout(timer);
+    signal.removeEventListener("abort", finish);
+    resolve(!signal.aborted);
+  };
+  const timer = setTimeout(finish, ms);
+  signal.addEventListener("abort", finish, { once: true });
+});
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Register before loadScene: cached scenes can become ready immediately.
+function loadScene(v: PannellumViewer, id: string, pitch: number, yaw: number, hfov: number, signal: AbortSignal) {
+  return new Promise<boolean>((resolve, reject) => {
+    if (signal.aborted) return resolve(false);
+    const clean = () => {
+      clearTimeout(timer);
+      v.off("load", loaded);
+      v.off("error", failed);
+      signal.removeEventListener("abort", aborted);
+    };
+    const loaded = () => { if (v.getScene() === id) { clean(); resolve(true); } };
+    const failed = () => { clean(); reject(new Error("This room could not be loaded. Please try again.")); };
+    const aborted = () => { clean(); resolve(false); };
+    const timer = setTimeout(failed, 30000);
+    v.on("load", loaded);
+    v.on("error", failed);
+    signal.addEventListener("abort", aborted, { once: true });
+    try { v.loadScene(id, pitch, yaw, hfov); } catch { failed(); }
+  });
+}
 
 // Plan-space heading. Each room knows the yaw (in its own drawing) of at
 // least one neighbour, and the plan knows where both rooms sit, so the
@@ -71,6 +106,8 @@ function headingOffset(room: TourRoom, style: TourStyle) {
 }
 
 export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: string; onNavigate: (id: string) => void; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<PannellumViewer | null>(null);
   const [current, setCurrent] = useState(() => {
@@ -81,6 +118,10 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
   const [walking, setWalking] = useState(false);
   const [touring, setTouring] = useState(false);
   const cancelTour = useRef(false);
+  const tourRef = useRef(false);
+  const busyRef = useRef(false);
+  const lifetime = useRef<AbortController | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const wedgeRef = useRef<SVGGElement>(null);
   const { room, style } = current;
 
@@ -95,24 +136,35 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
   const go = useCallback(
     async (to: string, mode: "walk" | "jump", via?: TourLink) => {
       const v = viewerRef.current;
-      if (!v) return;
-      const target = roomById(to)!;
+      const signal = lifetime.current?.signal;
+      if (!v || !signal || signal.aborted || busyRef.current || !v.isLoaded()) return;
+      const target = roomById(to);
+      if (!target) return;
+      busyRef.current = true;
+      setWalking(true);
+      setError(null);
       const tStyle = target.styles.find((s) => s.id === parseScene(v.getScene()).style.id) ?? target.styles[0];
       const { hfov0 } = viewOf();
       const yaw0 = tStyle.yaw0 ?? target.yaw0;
-      if (mode === "walk" && via) {
-        setWalking(true);
-        v.lookAt(-4, via.yaw, hfov0 - 14, 750);
-        await wait(780);
-        v.loadScene(sceneId(target, tStyle), -2, yaw0, hfov0 + 10);
-        await wait(120);
-        v.setHfov(hfov0, 900);
-        await wait(900);
-        setWalking(false);
-      } else {
-        v.loadScene(sceneId(target, tStyle), 0, yaw0, hfov0);
+      const animated = mode === "walk" && via && !reducedMotion();
+      try {
+        if (animated) {
+          v.lookAt(-4, via.yaw, Math.max(40, hfov0 - 14), 750);
+          if (!await wait(780, signal)) return;
+          if (tourRef.current && cancelTour.current) return;
+        }
+        setReady(false);
+        if (!await loadScene(v, sceneId(target, tStyle), animated ? -2 : 0, yaw0, animated ? hfov0 + 10 : hfov0, signal)) return;
+        onNavigate(to);
+        if (animated) v.setHfov(hfov0, 900);
+        // Keep navigation serial through Pannellum's scene fade as well.
+        await wait(reducedMotion() ? 0 : 950, signal);
+      } catch (cause) {
+        if (!signal.aborted) setError(cause instanceof Error ? cause.message : "This room could not be loaded.");
+      } finally {
+        busyRef.current = false;
+        if (!signal.aborted) setWalking(false);
       }
-      onNavigate(to);
     },
     [onNavigate, viewOf],
   );
@@ -124,6 +176,9 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
   // Build the one viewer with every room and style as a scene.
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    lifetime.current = controller;
+    let observer: ResizeObserver | undefined;
     (async () => {
       const box = boxRef.current;
       if (!box) return;
@@ -139,6 +194,8 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
             type: "multires",
             multiRes: { basePath: asset(s.src), ...TILES },
             yaw: s.yaw0 ?? r.yaw0,
+            minYaw: s.yawBounds?.[0] ?? -180,
+            maxYaw: s.yawBounds?.[1] ?? 180,
             hotSpots: linksOf(r, s).map((l) => ({
               yaw: l.yaw,
               pitch: l.walk ? -20 : (l.pitch ?? 0),
@@ -150,9 +207,20 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
                     "</span>"
                   : '<span class="tour-hotspot-ring" aria-hidden="true"></span><span class="tour-hotspot-label">' + l.label + "</span>";
                 el.setAttribute("role", "button");
+                el.tabIndex = 0;
+                el.addEventListener("keydown", (event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    cancelTour.current = true;
+                    void goRef.current(l.to, l.walk ? "walk" : "jump", l);
+                  }
+                });
                 el.setAttribute("aria-label", (l.walk ? "Walk to " : "Go to ") + l.label);
               },
-              clickHandlerFunc: () => goRef.current(l.to, l.walk ? "walk" : "jump", l),
+              clickHandlerFunc: () => {
+                cancelTour.current = true;
+                void goRef.current(l.to, l.walk ? "walk" : "jump", l);
+              },
             })),
           };
       // The drawings were cylindrical panoramas, not equirectangular ones:
@@ -169,7 +237,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       const v = window.pannellum.viewer(box, {
         default: {
           firstScene: sceneId(first, first.styles[0]),
-          sceneFadeDuration: 900,
+          sceneFadeDuration: reducedMotion() ? 0 : 900,
           autoLoad: true,
           showControls: false,
           compass: false,
@@ -187,13 +255,30 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
         scenes,
       });
       viewerRef.current = v;
-      v.on("scenechange", (id) => setCurrent(parseScene(id as string)));
-      v.on("load", () => setReady(true));
+      const resize = () => {
+        const { portrait } = viewOf();
+        v.setPitchBounds(portrait ? [-15, 8] : [-30, 14]);
+        v.setHfovBounds([40, portrait ? 56 : 68]);
+        v.setHfov(Math.min(v.getHfov(), portrait ? 56 : 68), false);
+        v.resize();
+      };
+      observer = new ResizeObserver(resize);
+      observer.observe(box);
+      v.on("scenechange", (id) => { setCurrent(parseScene(id as string)); setReady(false); resize(); });
+      v.on("load", () => { setReady(true); setError(null); });
+      // Multires can initialize synchronously inside viewer(), before listeners attach.
+      if (v.isLoaded()) setReady(true);
+      v.on("error", () => { setError("This room could not be loaded. Close the view and try again."); cancelTour.current = true; });
       // Any hand on the viewer ends the auto-walk.
       for (const ev of ["mousedown", "touchstart"]) v.on(ev, () => (cancelTour.current = true));
-    })();
+    })().catch(() => {
+      if (!cancelled) setError("The panorama viewer could not start. Please close and try again.");
+    });
     return () => {
       cancelled = true;
+      cancelTour.current = true;
+      controller.abort();
+      observer?.disconnect();
       viewerRef.current?.destroy();
       viewerRef.current = null;
     };
@@ -215,57 +300,85 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
     return () => cancelAnimationFrame(raf);
   }, [room, style]);
 
-  const setStyle = (s: TourStyle) => {
+  const setStyle = async (s: TourStyle) => {
     const v = viewerRef.current;
-    if (!v) return;
-    // Hold the view across a style change.
-    v.loadScene(sceneId(room, s), v.getPitch(), v.getYaw(), v.getHfov());
+    const signal = lifetime.current?.signal;
+    if (!v || !signal || busyRef.current || !v.isLoaded() || s.id === style.id) return;
+    cancelTour.current = true;
+    v.stopMovement();
+    busyRef.current = true;
+    setWalking(true);
+    setReady(false);
+    setError(null);
+    // These drawings have different layouts: use each one's authored opening view.
+    try {
+      if (await loadScene(v, sceneId(room, s), 0, s.yaw0 ?? room.yaw0, viewOf().hfov0, signal)) {
+        await wait(reducedMotion() ? 0 : 950, signal);
+      }
+    } catch {
+      if (!signal.aborted) setError("This view could not be loaded. Close the tour and try again.");
+    } finally {
+      busyRef.current = false;
+      if (!signal.aborted) setWalking(false);
+    }
   };
 
-  // Auto-walk: pan to the arrow, step through, look around, step back.
+  // Visit the whole connected ground floor, ending back at the starting room.
   const tour = useCallback(async () => {
     const v = viewerRef.current;
-    if (!v || touring) return;
+    const signal = lifetime.current?.signal;
+    if (!v || !signal || tourRef.current || busyRef.current || !v.isLoaded()) return;
     cancelTour.current = false;
+    tourRef.current = true;
     setTouring(true);
-    const stop = () => cancelTour.current;
-    const pan = async (yaw: number, ms: number) => {
-      v.setYaw(yaw, ms);
-      const t0 = Date.now();
-      while (Date.now() - t0 < ms + 60) {
-        if (stop()) return;
-        await wait(50);
+    const stop = () => signal.aborted || cancelTour.current;
+    const start = parseScene(v.getScene()).room.id;
+    const route = start === "porch" ? ["living", "dining", "living", "porch"]
+      : start === "dining" ? ["living", "porch", "living", "dining"]
+      : ["dining", "living", "porch", "living"];
+    try {
+      for (const destination of route) {
+        if (stop()) break;
+        const here = parseScene(v.getScene());
+        const link = linksOf(here.room, here.style).find((l) => l.to === destination && l.walk);
+        if (!link) break;
+        await goRef.current(destination, "walk", link);
+        if (stop() || parseScene(v.getScene()).room.id !== destination) break;
+        if (!await wait(1800, signal)) break;
+        if (stop()) break;
       }
-    };
-    const walkLink = (r: TourRoom, s: TourStyle) => linksOf(r, s).find((l) => l.walk);
-    let here = parseScene(v.getScene());
-    for (let step = 0; step < 2 && !stop(); step++) {
-      const l = walkLink(here.room, here.style);
-      if (!l) break;
-      await pan(l.yaw, 1800);
-      if (stop()) break;
-      await goRef.current(l.to, "walk", l);
-      if (stop()) break;
-      await wait(500);
-      here = parseScene(v.getScene());
-      await pan(v.getYaw() + 70, 3200);
-      await pan(v.getYaw() - 70, 3200);
+    } finally {
+      tourRef.current = false;
+      if (!signal.aborted) setTouring(false);
     }
-    setTouring(false);
-  }, [touring]);
+  }, []);
 
   // Scroll lock + Escape while the overlay is up.
   useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       cancelTour.current = true;
+      if (tourRef.current) viewerRef.current?.stopMovement();
       if (e.key === "Escape") onClose();
+      if (e.key === "Tab") {
+        const controls = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), [tabindex="0"]') ?? [])
+          .filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== "hidden");
+        const first = controls[0], last = controls[controls.length - 1];
+        if (e.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+          e.preventDefault(); last?.focus();
+        } else if (!e.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+          e.preventDefault(); first?.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
+      previousFocus?.focus();
     };
   }, [onClose]);
 
@@ -275,8 +388,18 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
   const bounds = PLAN_BOUNDS;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background" role="dialog" aria-modal="true" aria-label={`${room.name}, 360 view`}>
+    <div ref={dialogRef} className="tour-overlay fixed inset-0 z-50 bg-background" onPointerDownCapture={() => {
+      if (tourRef.current) { cancelTour.current = true; viewerRef.current?.stopMovement(); }
+    }} onWheelCapture={() => { cancelTour.current = true; viewerRef.current?.stopMovement(); }} role="dialog" aria-modal="true" aria-label={`${room.name}, 360 view`}>
       <div ref={boxRef} className="absolute inset-0 [&_.pnlm-load-box]:hidden" />
+
+      {(!ready || error) && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center" role={error ? "alert" : "status"}>
+          <p className={`${label} max-w-[80vw] bg-background/90 px-6 py-4 text-center text-foreground`}>
+            {error ?? `Opening ${room.name.toLowerCase()}…`}
+          </p>
+        </div>
+      )}
 
       {/* Room name and credit, top-left — the annotation register. */}
       <div className={`pointer-events-none absolute left-[6vw] top-[4.5vh] transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
@@ -287,6 +410,7 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
       {/* Close, top-right. */}
       <button
         type="button"
+        ref={closeRef}
         onClick={onClose}
         className={`absolute right-[6vw] top-[4.5vh] flex min-h-11 items-center gap-3 ${label} text-foreground/90 transition-colors hover:text-foreground`}
       >
@@ -295,13 +419,14 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
 
       {/* Bottom bar: style tabs and the walk button left, the plan right. */}
       <div className="pointer-events-none absolute inset-x-[6vw] bottom-[4.5vh] flex flex-wrap items-end justify-between gap-4">
-        <div className="pointer-events-auto flex items-end gap-6">
+        <div className="pointer-events-auto flex flex-wrap items-end gap-x-6 gap-y-1">
           {room.styles.length > 1 &&
             room.styles.map((s) => (
               <button
                 key={s.id}
                 type="button"
-                onClick={() => setStyle(s)}
+                onClick={() => void setStyle(s)}
+                disabled={!ready || walking}
                 aria-pressed={s.id === style.id}
                 className={`min-h-11 border-b pb-1 ${label} transition-colors ${
                   s.id === style.id ? "border-foreground/70 text-foreground" : "border-transparent text-stone hover:text-foreground/80"
@@ -314,15 +439,15 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
             <button
               type="button"
               onClick={tour}
-              disabled={touring || walking}
-              className={`min-h-11 border-b border-transparent pb-1 ${label} text-stone transition-colors hover:text-foreground/80 disabled:opacity-50`}
+              disabled={!ready || walking || touring}
+              className={`min-h-11 border-b border-transparent pb-1 ${label} text-foreground/90 transition-colors hover:text-foreground disabled:opacity-50`}
             >
               {touring ? "Walking…" : "Walk through"}
             </button>
           )}
         </div>
         <div className={`pointer-events-none flex items-end gap-5 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
-          <p className={`${label} text-stone/60`}>{hasWalk ? "Drag to look · tap an arrow to walk" : "Drag to look around"}</p>
+          <p className={`${label} text-foreground/90`}>{hasWalk ? "Drag to look · tap an arrow to walk" : "Drag to look around"}</p>
           {/* The plan: this level's outline, every room with a panorama, you and your heading. */}
           <svg
             viewBox={`${bounds.x} ${bounds.y} ${bounds.w} ${bounds.h}`}

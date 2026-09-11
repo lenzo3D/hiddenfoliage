@@ -208,3 +208,8 @@ textarea:-webkit-autofill {
     transition: none;
   }
 }
+
+/* Keep tour annotations legible over pale stone and sunlit glazing. */
+.tour-overlay { text-shadow: 0 1px 4px rgb(0 0 0 / 0.9), 0 0 12px rgb(0 0 0 / 0.5); }
+.tour-walk:focus-visible .tour-walk-disc { outline: 2px solid currentColor; outline-offset: 5px; }
+.tour-overlay button:disabled { cursor: default; }

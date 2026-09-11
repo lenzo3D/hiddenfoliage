@@ -26,7 +26,7 @@ const Y2 = (y: number) => (y - 170) * 1.12 + 592;
 
 // A style may carry its own opening view and links when its drawing lays the room out
 // differently from the room's other style (the generated daytime living room does).
-export type TourStyle = { id: string; label: string; src: string; yaw0?: number; links?: TourLink[] };
+export type TourStyle = { id: string; label: string; src: string; yaw0?: number; yawBounds?: [number, number]; links?: TourLink[] };
 /** `walk`: the two drawings show the same open-plan space, so the move plays as a step forward (floor arrow). */
 export type TourLink = { to: string; yaw: number; pitch?: number; label: string; walk?: boolean };
 export type TourRoom = {
@@ -87,6 +87,7 @@ export const TOUR_ROOMS: TourRoom[] = [
       {
         id: "day",
         label: "Daytime",
+        yawBounds: [-150, 160], // Limit view edges before the inconsistent rear wrap and timber door.
         src: "/images/360/dining-v6", // generated 2026-09-10 from the developer's render (drawn-panorama class; seamless, verticals bow ~11 px)
         yaw0: 0, // the table, glazing and pool to the left, kitchen and timber wall to the right
         links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area", walk: true }], // the sofas at the far end of the room

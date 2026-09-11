@@ -5,7 +5,7 @@
 // ivory marker. Tap a marker and the 360 viewer opens over the page; inside
 // it, doorway hotspots move between rooms and Close returns here.
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { LEVELS, PLAN_BOUNDS } from "../floorPlans";
 import { ShapeEl } from "../PlanSvg";
 import { label } from "../Editorial";
@@ -50,13 +50,15 @@ function LevelPlan({ levelId, title, onPick }: { levelId: "first" | "second"; ti
 export default function TourClient() {
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
 
+  const close = useCallback(() => setActiveRoom(null), []);
+
   return (
     <>
       <div className="mt-[8vh] space-y-[12vh] md:mt-[10vh] md:space-y-[14vh]">
         <LevelPlan levelId="first" title="First storey" onPick={setActiveRoom} />
         <LevelPlan levelId="second" title="Second storey" onPick={setActiveRoom} />
       </div>
-      {activeRoom && <PanoViewer roomId={activeRoom} onNavigate={setActiveRoom} onClose={() => setActiveRoom(null)} />}
+      {activeRoom && <PanoViewer roomId={activeRoom} onNavigate={setActiveRoom} onClose={close} />}
     </>
   );
 }
