@@ -61,6 +61,7 @@ export const TOUR_ROOMS: TourRoom[] = [
       {
         id: "day",
         label: "Daytime",
+        yawBounds: [-120, 150], // View edges: shelving on the left, pool glazing on the right.
         src: "/images/360/living-day-v8", // generated 2026-09-11 from the developer's render: shelving wall, sofas, pool to the right
         yaw0: -22, // the shelving wall and sofas, with the dining arrow in view at the right edge
         links: [

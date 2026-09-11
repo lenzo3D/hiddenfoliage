@@ -435,6 +435,13 @@ export default function PanoViewer({ roomId, onNavigate, onClose }: { roomId: st
                 {s.label}
               </button>
             ))}
+          {style.yawBounds && linksOf(room, style).filter((link) => link.yaw < style.yawBounds![0] || link.yaw > style.yawBounds![1]).map((link) => (
+            <button key={link.to} type="button" disabled={!ready || walking}
+              onClick={() => { cancelTour.current = true; void goRef.current(link.to, "jump"); }}
+              className={`min-h-11 border-b border-transparent pb-1 ${label} text-foreground/90 disabled:opacity-50`}>
+              {link.label} <span aria-hidden="true">↗</span>
+            </button>
+          ))}
           {hasWalk && (
             <button
               type="button"
