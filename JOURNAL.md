@@ -106,22 +106,22 @@ What I actually wanted: the dining room to show only its good side (glass, table
 ITERATIONS
 Attempt 1:
 - What Claude did: rebuilt the GPU toolchain (it vanishes between sessions), ran the new image through the detail pipeline, set the view's edges to −120°/+100° (inside the glass wall to the bar wall), verified both extremes in headless Chrome, published (live 14:39).
-- My reaction: no reaction yet
-- Why: —
-- My instruction to refine: —
+- My reaction: partially satisfied
+- Why: "I pass it, even though it is shit that is the limitations of free tools" — accepted as the ceiling of AI-generated drawings and a free pipeline, not as good.
+- My instruction to refine: none.
 Attempt 2:
 - What Claude did: saved the journal rule as a standing memory in every project and wrote this JOURNAL.md, backfilling the last four days from the session history.
-- My reaction: pending
-- Why: —
-- My instruction to refine: —
+- My reaction: satisfied
+- Why: the rule and the backfilled entries are what I asked for.
+- My instruction to refine: none.
 
 RESOLUTION
-Final state: deferred (awaiting my look at the live dining room)
+Final state: satisfied (passed with reservations)
 What finally worked: reusing the yawBounds mechanism another session had added; the per-image recipe is now routine (about 20 minutes an image).
-Root cause of earlier misses: —
+Root cause of earlier misses: none today; the quality ceiling is the source material (drawn panoramas from free generators), not the pipeline.
 
 PATTERNS
-What I kept pushing back on: —
+What I kept pushing back on: quality, until the limit of free tools was named and accepted.
 What I never had to say twice: the turning limit; "upscale" meaning the full detail pipeline.
-What should be a standing rule going forward: journal every session; keep the per-image recipe as a one-command chain.
+What should be a standing rule going forward: journal every session; keep the per-image recipe as a one-command chain; when a result is capped by the inputs, say so up front so the pass/fail is about the inputs, not the work.
 ---
