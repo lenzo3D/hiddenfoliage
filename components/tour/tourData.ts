@@ -88,10 +88,14 @@ export const TOUR_ROOMS: TourRoom[] = [
       {
         id: "day",
         label: "Daytime",
-        yawBounds: [-150, 140], // Limit view edges before the inconsistent rear wrap and timber door.
-        src: "/images/360/dining-v6", // generated 2026-09-10 from the developer's render (drawn-panorama class; seamless, verticals bow ~11 px)
-        yaw0: 0, // the table, glazing and pool to the left, kitchen and timber wall to the right
-        links: [{ to: "living", yaw: -2, pitch: -3, label: "Living area", walk: true }], // the sofas at the far end of the room
+        // Generated 2026-09-12 from the developer's render: glass wall and pool to the left, the
+        // table ahead, the bar and island to the right, the timber wall with the fridge beyond it.
+        // The view may turn about 220°: its edges stop inside the glass wall (−120) and at the bar
+        // wall (+100), so the fridge wall and the wrap behind the viewer are never seen.
+        yawBounds: [-120, 100],
+        src: "/images/360/dining-v7",
+        yaw0: 0, // the table, with the pool to the left and the bar to the right
+        links: [{ to: "living", yaw: -8, pitch: -3, label: "Living area", walk: true }], // the sofas at the far end, left of the table
       },
     ],
     links: [{ to: "living", yaw: -145, pitch: -3, label: "Living area", walk: true }],
