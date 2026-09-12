@@ -150,3 +150,28 @@ What I kept pushing back on: —
 What I never had to say twice: a screenshot of each extreme is enough to set a limit.
 What should be a standing rule going forward: every room gets a turning limit that hides its unfinished side.
 ---
+---
+Date: 2026-09-12
+Session: Master bathroom turning limit.
+
+TASK
+What I asked for: "Cap the turn at these angles for master bathroom" (screenshots: the door with the towel; the right-hand basin with the plant).
+What I actually wanted: same as the bedroom — hide the corridor and the wrap.
+
+ITERATIONS
+Attempt 1:
+- What Claude did: located the views (about −125° and +120°), set the edges to −153°/+150°, published.
+- My reaction: pending
+- Why: —
+- My instruction to refine: —
+
+RESOLUTION
+Final state: deferred (awaiting my look)
+What finally worked: yawBounds, as for the dining room and bedroom.
+Root cause of earlier misses: —
+
+PATTERNS
+What I kept pushing back on: —
+What I never had to say twice: two screenshots per room set the limit.
+What should be a standing rule going forward: same as the bedroom entry.
+---

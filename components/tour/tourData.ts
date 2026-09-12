@@ -117,7 +117,9 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(651), y: Y2(200) },
     yaw0: 25,
-    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v5" }],
+    // The view's edges stop at the door with the towel (−153) and at the right-hand basin's end wall
+    // (+150), before the timber door: the corridor and the wrap are never shown.
+    styles: [{ id: "evening", label: "Evening", src: "/images/360/bathroom-v5", yawBounds: [-153, 150] }],
     links: [{ to: "bedroom", yaw: -169, pitch: -2, label: "Master bedroom" }],
   },
 ];
