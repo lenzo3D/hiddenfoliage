@@ -6,6 +6,12 @@
       "runtimeExecutable": "/opt/homebrew/bin/npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "hidden-foliage-static",
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": ["scripts/serve-static.py", "3001"],
+      "port": 3001
     }
   ]
 }
