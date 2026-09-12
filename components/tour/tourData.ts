@@ -106,7 +106,9 @@ export const TOUR_ROOMS: TourRoom[] = [
     level: "second",
     marker: { x: X2(676), y: Y2(330) },
     yaw0: 10,
-    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v5" }],
+    // The view's edges stop at the timber wall under the painting (−115) and at the armchairs by the
+    // lattice screen (+135): the corridor behind and the wrap are never shown.
+    styles: [{ id: "day", label: "Daytime", src: "/images/360/bedroom-v5", yawBounds: [-115, 135] }],
     links: [{ to: "bathroom", yaw: -173, pitch: -2, label: "Master bathroom" }],
   },
   {

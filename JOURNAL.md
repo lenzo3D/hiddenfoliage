@@ -125,3 +125,28 @@ What I kept pushing back on: quality, until the limit of free tools was named an
 What I never had to say twice: the turning limit; "upscale" meaning the full detail pipeline.
 What should be a standing rule going forward: journal every session; keep the per-image recipe as a one-command chain; when a result is capped by the inputs, say so up front so the pass/fail is about the inputs, not the work.
 ---
+---
+Date: 2026-09-12
+Session: Master bedroom turning limit.
+
+TASK
+What I asked for: "Cap the turn at these angles for the master bedroom" (two screenshots: the timber wall under the painting, and the lattice screen with the chairs).
+What I actually wanted: the bedroom to show only its finished sides, like the dining room; hide the corridor and the wrap behind.
+
+ITERATIONS
+Attempt 1:
+- What Claude did: located the two views on the bedroom panorama (about −95° and +105°), set the view's edges to −115°/+135° (250° of turn), built and published.
+- My reaction: pending
+- Why: —
+- My instruction to refine: —
+
+RESOLUTION
+Final state: deferred (awaiting my look)
+What finally worked: the same yawBounds mechanism as the dining room.
+Root cause of earlier misses: —
+
+PATTERNS
+What I kept pushing back on: —
+What I never had to say twice: a screenshot of each extreme is enough to set a limit.
+What should be a standing rule going forward: every room gets a turning limit that hides its unfinished side.
+---
